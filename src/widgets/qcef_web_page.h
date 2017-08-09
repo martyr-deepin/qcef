@@ -6,7 +6,9 @@
 #define QCEF_WIDGETS_QCEF_WEB_PAGE_H
 
 #include <QObject>
+
 #include <QUrl>
+
 #include "base/qcef_export.h"
 
 class QWindow;

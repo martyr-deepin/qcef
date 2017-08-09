@@ -5,8 +5,9 @@
 #ifndef QCEF_WIDGETS_QCEF_WEB_VIEW_H
 #define QCEF_WIDGETS_QCEF_WEB_VIEW_H
 
-#include <QUrl>
 #include <QWidget>
+
+#include <QUrl>
 
 #include "base/qcef_export.h"
 

@@ -5,10 +5,11 @@
 #ifndef QCEF_CORE_QCEF_CLIENT_HANDLER_H
 #define QCEF_CORE_QCEF_CLIENT_HANDLER_H
 
+#include "include/cef_client.h"
+
 #include <list>
 
 #include "base/qcef_export.h"
-#include "include/cef_client.h"
 
 class QCEF_EXPORT QCefClientHandler : public CefClient,
                                       public CefDisplayHandler,
