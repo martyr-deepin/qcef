@@ -6,8 +6,10 @@
 
 #include <QTimer>
 
-#include "widgets/qcef_context.h"
-#include "browser_demo/browser_window.h"
+#include "browser_window.h"
+
+#include <qcef_context.h>
+#include <qcef_global_settings.h>
 
 int main(int argc, char** argv) {
   QCefGlobalSettings settings;

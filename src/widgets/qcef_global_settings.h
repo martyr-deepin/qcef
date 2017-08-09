@@ -7,12 +7,12 @@
 
 #include <string>
 
-#include "base/qcef_export.h"
+#include "qcef_widgets_export.h"
 
 struct QCefGlobalSettingsPrivate;
 
 // Setup cef switches during initialization.
-class QCEF_EXPORT QCefGlobalSettings {
+class QCEF_WIDGETS_EXPORT QCefGlobalSettings {
  public:
   QCefGlobalSettings();
   ~QCefGlobalSettings();

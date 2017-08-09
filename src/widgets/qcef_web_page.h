@@ -9,7 +9,7 @@
 
 #include <QUrl>
 
-#include "base/qcef_export.h"
+#include "qcef_widgets_export.h"
 
 class QWindow;
 class QWebChannel;
@@ -18,7 +18,7 @@ class QCefWebSettings;
 
 // A QCefWebPage object holds web document, history, actions, and provides
 // access to cef browser internal states.
-class QCEF_EXPORT QCefWebPage : public QObject {
+class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   Q_OBJECT
   Q_PROPERTY(QUrl url READ url WRITE setUrl)
   Q_PROPERTY(QString page_error_content

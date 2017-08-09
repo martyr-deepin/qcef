@@ -5,11 +5,11 @@
 #ifndef QCEF_CORE_QCEF_APP_H
 #define QCEF_CORE_QCEF_APP_H
 
-#include "base/qcef_export.h"
+#include "widgets/qcef_widgets_export.h"
 #include "include/cef_app.h"
 
 // Implement application-level callbacks for the browser process.
-class QCEF_EXPORT QCefApp : public CefApp,
+class QCEF_WIDGETS_EXPORT QCefApp : public CefApp,
                             public CefBrowserProcessHandler {
  public:
   QCefApp();

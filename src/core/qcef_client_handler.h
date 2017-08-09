@@ -9,9 +9,9 @@
 
 #include <list>
 
-#include "base/qcef_export.h"
+#include "widgets/qcef_widgets_export.h"
 
-class QCEF_EXPORT QCefClientHandler : public CefClient,
+class QCEF_WIDGETS_EXPORT QCefClientHandler : public CefClient,
                                       public CefDisplayHandler,
                                       public CefLifeSpanHandler,
                                       public CefLoadHandler {

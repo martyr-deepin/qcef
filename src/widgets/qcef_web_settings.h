@@ -7,12 +7,12 @@
 
 #include <string>
 
-#include "base/qcef_export.h"
+#include "qcef_widgets_export.h"
 
 struct QCefWebSettingsPrivate;
 
 // Settings used for each web page.
-class QCEF_EXPORT QCefWebSettings {
+class QCEF_WIDGETS_EXPORT QCefWebSettings {
  public:
   QCefWebSettings();
   ~QCefWebSettings();

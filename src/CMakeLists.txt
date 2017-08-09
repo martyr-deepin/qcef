@@ -67,10 +67,13 @@ set(LINK_LIBS
     ${GTK2_LIBRARIES}
     )
 
+set(DATA_FILES
+    data/libqcef.pc
+    )
+
 set(BASE_FILES
     base/file_util.cpp
     base/file_util.h
-    base/qcef_export.h
     )
 
 set(CORE_FILES
@@ -102,6 +105,7 @@ set(WIDGETS_FILES
     widgets/qcef_web_settings.h
     widgets/qcef_web_view.cpp
     widgets/qcef_web_view.h
+    widgets/qcef_widgets_export.h
     )
 
 set(WIDGETS_HEADER_FILES
@@ -110,6 +114,7 @@ set(WIDGETS_HEADER_FILES
     widgets/qcef_web_page.h
     widgets/qcef_web_settings.h
     widgets/qcef_web_view.h
+    widgets/qcef_widgets_export.h
     )
 
 ## Libraries and executables.
@@ -119,7 +124,7 @@ set(CEF_TARGET_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 
 # Logical target used to link the libcef library.
 ADD_LOGICAL_TARGET("libcef_lib"
-                   "${CEF_TARGET_OUT_DIR}/licef.so"
+                   "${CEF_TARGET_OUT_DIR}/libcef.so"
                    "${CEF_TARGET_OUT_DIR}/libcef.so")
 
 # Executable target.
@@ -129,13 +134,6 @@ add_library(${CEF_TARGET} SHARED
             ${WIDGETS_FILES}
             )
 SET_LIBRARY_TARGET_PROPERTIES(${CEF_TARGET})
-#add_executable(${CEF_TARGET}
-#               browser_demo/qcef_demo_browser.cpp
-#               ${BASE_FILES}
-#               ${CORE_FILES}
-#               ${WIDGETS_FILES}
-#               )
-#set_executable_target_properties(${CEF_TARGET})
 add_dependencies(${CEF_TARGET} libcef_dll_wrapper)
 target_link_libraries(${CEF_TARGET}
                       ${LINK_LIBS}
@@ -171,20 +169,6 @@ add_dependencies(${CEF_TARGET} CEF_TARBALL)
 # Copy binary and resource files to the target output directory.
 EXTRACT_CEF_TARBALL("CEF_TARBALL")
 
-set(BROWSER_DEMO_FILES
-    browser_demo/main.cpp
-    browser_demo/browser_window.cpp
-    browser_demo/browser_window.h
-    )
-
-add_executable(qcef-demo
-               ${CORE_HEADER_FILES}
-               ${BROWSER_DEMO_FILES}
-               )
-SET_EXECUTABLE_TARGET_PROPERTIES(qcef-demo)
-add_dependencies(qcef-demo ${CEF_TARGET})
-target_link_libraries(qcef-demo ${CEF_TARGET})
-
 ## Installation
 set(QCEF_OUTPUT_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib/qcef")
 install(TARGETS "${CEF_TARGET}"
@@ -193,6 +177,10 @@ install(TARGETS "${CEF_TARGET}"
 # Install header files.
 install(FILES ${WIDGETS_HEADER_FILES}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/include/qcef/widgets)
+
+# Install pkgconfig files.
+install(FILES ${DATA_FILES}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig/)
 
 # Fix sandbox permission.
 install(FILES "${CEF_TARGET_OUT_DIR}/chrome-sandbox"

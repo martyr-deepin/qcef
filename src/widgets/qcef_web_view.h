@@ -9,13 +9,13 @@
 
 #include <QUrl>
 
-#include "base/qcef_export.h"
+#include "qcef_widgets_export.h"
 
 struct QCefWebViewPrivate;
 class QCefWebPage;
 
 // This widget class is used to view web document.
-class QCEF_EXPORT QCefWebView : public QWidget {
+class QCEF_WIDGETS_EXPORT QCefWebView : public QWidget {
   Q_OBJECT
   Q_PROPERTY(QUrl url READ url WRITE setUrl)
 

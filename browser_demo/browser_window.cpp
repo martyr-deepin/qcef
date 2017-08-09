@@ -2,7 +2,7 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-#include "browser_demo/browser_window.h"
+#include "browser_window.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -11,9 +11,9 @@
 #include <QVBoxLayout>
 #include <QWebChannel>
 
-#include "widgets/qcef_context.h"
-#include "widgets/qcef_web_page.h"
-#include "widgets/qcef_web_view.h"
+#include <qcef_context.h>
+#include <qcef_web_page.h>
+#include <qcef_web_view.h>
 
 struct BrowserWindowPrivate {
   QFrame* address_bar = nullptr;
