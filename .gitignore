@@ -8,3 +8,5 @@ debian/libqcef.substvars
 debian/libqcef/
 obj-x86-linux-gnu/
 obj-x86_64-linux-gnu/
+debian/tmp/
+debian/.debhelper/

@@ -31,8 +31,7 @@ Description: Qt5 binding of CEF3.
 
 Package: libqcef-dev
 Architecture: any
-Depends: ${shlibs:Depends},
-         ${misc:Depends},
+Depends: ${misc:Depends},
          libqcef,
 Description: Qt5 binding of CEF3.
  qcef provides a web browser engine that makes it easy to embed into other
