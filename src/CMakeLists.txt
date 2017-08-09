@@ -74,18 +74,19 @@ set(BASE_FILES
     )
 
 set(CORE_FILES
-    core/qcef_util.cpp
-    core/qcef_util.h
     core/qcef_app.cc
     core/qcef_app.h
+    core/qcef_browser_transport.cpp
+    core/qcef_browser_transport.h
     core/qcef_client_handler.cc
     core/qcef_client_handler.h
-    core/qcef_browser_transport.cpp
-    core/qcef_browser_transport.h core/qcef_renderer_handler.cpp core/qcef_renderer_handler.h core/qcef_web_channel_consts.h core/qcef_renderer_transport_handler.cpp core/qcef_renderer_transport_handler.h)
-
-set(CORE_HEADER_FILES
-    core/qcef_app.h
-    core/qcef_client_handler.h
+    core/qcef_renderer_handler.cpp
+    core/qcef_renderer_handler.h
+    core/qcef_renderer_transport_handler.cpp
+    core/qcef_renderer_transport_handler.h
+    core/qcef_util.cpp
+    core/qcef_util.h
+    core/qcef_web_channel_consts.h
     )
 
 set(WIDGETS_FILES
@@ -170,9 +171,6 @@ add_dependencies(${CEF_TARGET} CEF_TARBALL)
 # Copy binary and resource files to the target output directory.
 EXTRACT_CEF_TARBALL("CEF_TARBALL")
 
-# Set SUID permissions on the chrome-sandbox target.
-SET_LINUX_SUID_PERMISSIONS("${CEF_TARGET}" "${CEF_TARGET_OUT_DIR}/chrome-sandbox")
-
 set(BROWSER_DEMO_FILES
     browser_demo/main.cpp
     browser_demo/browser_window.cpp
@@ -186,3 +184,36 @@ add_executable(qcef-demo
 SET_EXECUTABLE_TARGET_PROPERTIES(qcef-demo)
 add_dependencies(qcef-demo ${CEF_TARGET})
 target_link_libraries(qcef-demo ${CEF_TARGET})
+
+## Installation
+set(QCEF_OUTPUT_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib/qcef")
+install(TARGETS "${CEF_TARGET}"
+        DESTINATION "${QCEF_OUTPUT_LIB_DIR}")
+
+# Install header files.
+install(FILES ${WIDGETS_HEADER_FILES}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/qcef/widgets)
+
+# Fix sandbox permission.
+install(FILES "${CEF_TARGET_OUT_DIR}/chrome-sandbox"
+        DESTINATION "${QCEF_OUTPUT_LIB_DIR}"
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                    GROUP_READ GROUP_EXECUTE
+                    WORLD_READ WORLD_EXECUTE SETUID SETGID
+        )
+
+# Install cef binary files.
+install(FILES
+        "${CEF_TARGET_OUT_DIR}/cef.pak"
+        "${CEF_TARGET_OUT_DIR}/cef_100_percent.pak"
+        "${CEF_TARGET_OUT_DIR}/cef_200_percent.pak"
+        "${CEF_TARGET_OUT_DIR}/cef_extensions.pak"
+        "${CEF_TARGET_OUT_DIR}/icudtl.dat"
+        "${CEF_TARGET_OUT_DIR}/libcef.so"
+        "${CEF_TARGET_OUT_DIR}/natives_blob.bin"
+        "${CEF_TARGET_OUT_DIR}/snapshot_blob.bin"
+        DESTINATION "${QCEF_OUTPUT_LIB_DIR}"
+        )
+install(DIRECTORY "${CEF_TARGET_OUT_DIR}/locales"
+        DESTINATION "${QCEF_OUTPUT_LIB_DIR}"
+        )
