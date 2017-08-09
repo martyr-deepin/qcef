@@ -10,7 +10,7 @@ override_dh_auto_configure:
 	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Release
 
 override_dh_auto_build:
-	dh_auto_build -- netease-cloud-music
+	dh_auto_build -- qcef
 
 override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
