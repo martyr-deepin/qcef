@@ -1,0 +1,41 @@
+Source: qcef
+Section: devel
+Priority: optional
+Maintainer: LiuLang<gsushzhsosgsu@gmail.com>
+Build-Depends: debhelper (>= 9),
+               cmake,
+               libfl-dev,
+               libfontconfig1-dev,
+               libgtk2.0-dev,
+               libharfbuzz-dev,
+               libnspr4-dev,
+               libnss3-dev,
+               libqt5x11extras5-dev,
+               libx11-dev,
+               libxext-dev,
+               libxss-dev,
+               libxtst-dev,
+               pkg-config,
+Standards-Version: 3.9.6
+Homepage: https://www.deepin.org
+
+Package: libqcef
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         libnspr4,
+         libnss3,
+Description: Qt5 binding of CEF3.
+ qcef provides a web browser engine that makes it easy to embed into other
+ Qt widgets.
+
+Package: libqcef-dev
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         libqcef,
+Description: Qt5 binding of CEF3.
+ qcef provides a web browser engine that makes it easy to embed into other
+ Qt widgets.
+ .
+ This package contains the header files of qcef.

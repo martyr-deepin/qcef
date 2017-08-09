@@ -1,0 +1,45 @@
+<!doctype html>
+<head>
+<title>Hello, WebEngine</title>
+</head>
+
+<body>
+<h1>Hello</h1>
+
+<p id="serverMsg"></p>
+
+<br />
+<input type="text" id="msg"/> 
+<input type="submit" id="send" value="Send to Server"/>
+
+<!-- Load web channel adapter -->
+<!--
+<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+-->
+
+<script>
+var globalTimer = setTimeout(() => {
+  if (typeof QWebChannel !== "undefined") {
+    clearTimeout(globalTimer);
+    console.log("QWebChannel is not null");
+    console.log(window.qt.webChannelTransport);
+
+    window.channel = new QWebChannel(window.qt.webChannelTransport,
+        (channel) => {
+      console.log("Channel initialized", channel);
+      // Export channel object.
+      //window.channel = channel;
+
+      var dialog = channel.objects.dialog;
+      console.log("dialog: ", dialog);
+
+      document.getElementById("send").onclick = function() {
+        var msg = document.getElementById("msg").value;
+        dialog && dialog.printMessage(msg);
+      };
+    });
+  }
+},
+  1);
+</script>
+</body>

@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+export QT_SELECT=qt5
+
+DH_AUTO_ARGS = --parallel --buildsystem=cmake
+
+%:
+	dh $@ --parallel
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Release
+
+override_dh_auto_build:
+	dh_auto_build -- netease-cloud-music
+
+override_dh_fixperms:
+	dh_fixperms --exclude chrome-sandbox
