@@ -199,7 +199,11 @@ add_subdirectory(${CEF_LIBCEF_DLL_WRAPPER_PATH} libcef_dll_wrapper)
 # Include application targets.
 # Comes from the <target>/CMakeLists.txt file in the current directory.
 add_subdirectory(src)
-#add_subdirectory(browser_demo)
+
+option(BUILD_DEMO "Also build browser_demo project" false)
+if (BUILD_DEMO)
+  add_subdirectory(browser_demo)
+endif ()
 
 # Display configuration settings.
 PRINT_CEF_CONFIG()
