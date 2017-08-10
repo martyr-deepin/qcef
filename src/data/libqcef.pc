@@ -6,5 +6,5 @@ includedir=${prefix}/include/qcef/widgets
 Name: QCEF
 Description: Qt5 binding of CEF3
 Version: 1.0
-Libs: -lqcef
+Libs: -L${libdir} -lqcef
 Cflags: -I${includedir}
