@@ -3,13 +3,11 @@
 // in the LICENSE file.
 
 #include <QApplication>
-
 #include <QTimer>
-
-#include "browser_window.h"
-
 #include <qcef_context.h>
 #include <qcef_global_settings.h>
+
+#include "browser_window.h"
 
 int main(int argc, char** argv) {
   QCefGlobalSettings settings;
