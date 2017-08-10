@@ -2,18 +2,11 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-#ifndef QCEF_CORE_QCEF_CONTEXT_H
-#define QCEF_CORE_QCEF_CONTEXT_H
+#ifndef QCEF_WIDGETS_QCEF_CONTEXT_H
+#define QCEF_WIDGETS_QCEF_CONTEXT_H
 
 #include "qcef_widgets_export.h"
 #include "qcef_global_settings.h"
-
-// Attach CEF event worker to Qt Message loop.
-// Call this function after QApplication object has been initialized.
-// TODO(LiuLang): Remove this type of message loop binding. It takes more
-// CPU time to pump CEF message workers into Qt message loop.
-// DEPRECATED.
-QCEF_WIDGETS_EXPORT bool AttachToQtMessageLoop();
 
 // Initialize cef app with specific settings.
 QCEF_WIDGETS_EXPORT int QCefInit(int argc,
@@ -27,4 +20,4 @@ QCEF_WIDGETS_EXPORT void QCefRunLoop();
 // closed or "Quit" menu item is activated.
 QCEF_WIDGETS_EXPORT void QCefQuitLoop();
 
-#endif  // QCEF_CORE_QCEF_CONTEXT_H
+#endif  // QCEF_WIDGETS_QCEF_CONTEXT_H

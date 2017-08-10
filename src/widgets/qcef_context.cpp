@@ -5,17 +5,14 @@
 #include "widgets/qcef_context.h"
 
 #include <glib-2.0/glib.h>
-#include <QApplication>
+#include <QCoreApplication>
 #include <QDebug>
-#include <QTimer>
 
 #include "core/qcef_app.h"
 #include "core/qcef_util.h"
 #include "include/cef_path_util.h"
 
 namespace {
-
-bool g_message_loop_inited = false;
 
 gboolean ProcessQtEvent(gpointer user_data) {
   Q_UNUSED(user_data);
@@ -24,25 +21,6 @@ gboolean ProcessQtEvent(gpointer user_data) {
 }
 
 }  // namespace
-
-bool AttachToQtMessageLoop() {
-  if (g_message_loop_inited) {
-    return false;
-  }
-
-  QTimer* timer = new QTimer();
-  timer->setInterval(10);
-  QObject::connect(timer, &QTimer::timeout, []() {
-    CefDoMessageLoopWork();
-  });
-  timer->start();
-
-  QObject::connect(qApp, &QApplication::aboutToQuit,
-                   timer, &QTimer::deleteLater);
-
-  g_message_loop_inited = true;
-  return true;
-}
 
 int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
   SetXErrorHandler();
@@ -76,7 +54,6 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
     // The sub-process has completed so return here.
     return exit_code;
   }
-
 
   // Merge CEF global settings.
   CefSettings cef_settings;
@@ -125,11 +102,7 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
 }
 
 void QCefRunLoop() {
-  g_timeout_add(100, ProcessQtEvent, nullptr);
-  QObject::connect(qApp, &QApplication::aboutToQuit, []() {
-    qDebug() << "QApp about to quit";
-    QCefQuitLoop();
-  });
+  g_timeout_add(50, ProcessQtEvent, nullptr);
   CefRunMessageLoop();
 
   // Shutdown loop internally.
