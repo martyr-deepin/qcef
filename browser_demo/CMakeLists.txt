@@ -28,5 +28,4 @@ set(BROWSER_DEMO_FILES
 
 add_executable(browser-demo
                ${BROWSER_DEMO_FILES})
-SET_EXECUTABLE_TARGET_PROPERTIES(browser-demo)
 target_link_libraries(browser-demo ${LINK_LIBS})
