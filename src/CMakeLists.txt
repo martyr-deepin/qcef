@@ -11,6 +11,13 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# Define absolute path to qcef module, i.e. /usr/lib/qcef.
+# See https://github.com/chromiumembedded/cef/pull/4.
+if (QCEF_OVERRIDE_PATH)
+  message("Override qcef path to " ${QCEF_OVERRIDE_PATH})
+  add_definitions("-DQCEF_OVERRIDE_PATH=\"${QCEF_OVERRIDE_PATH}\"")
+endif()
+
 if (CMAKE_BUILD_TYPE MATCHES Debug)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -Werror -Wextra")
   # -fno-rtti, Disable real-time type information

@@ -11,6 +11,7 @@
 
 #include "core/qcef_app.h"
 #include "core/qcef_util.h"
+#include "include/cef_path_util.h"
 
 namespace {
 
@@ -58,6 +59,15 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
     client_app->appendCommandLineSwitches(arguments);
   }
 
+#ifdef QCEF_OVERRIDE_PATH
+  if (!CefOverridePath(PK_DIR_EXE, QCEF_OVERRIDE_PATH)) {
+    qCritical() << "Failed to override PK_DIR_EXE";
+  }
+  if (!CefOverridePath(PK_DIR_MODULE, QCEF_OVERRIDE_PATH)) {
+    qCritical() << "Failed to override PK_DIR_MODULE";
+  }
+#endif
+
   // CEF applications have multiple sub-processes (render, plugin, GPU, etc)
   // that share the same executable. This function checks the command-line and,
   // if this is a sub-process, executes the appropriate logic.
@@ -66,6 +76,7 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
     // The sub-process has completed so return here.
     return exit_code;
   }
+
 
   // Merge CEF global settings.
   CefSettings cef_settings;

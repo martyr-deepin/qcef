@@ -17,8 +17,8 @@ QCEF_WIDGETS_EXPORT bool AttachToQtMessageLoop();
 
 // Initialize cef app with specific settings.
 QCEF_WIDGETS_EXPORT int QCefInit(int argc,
-                         char* argv[],
-                         const QCefGlobalSettings& settings);
+                                 char* argv[],
+                                 const QCefGlobalSettings& settings);
 
 // Run cef message loop when every thing is ready.
 QCEF_WIDGETS_EXPORT void QCefRunLoop();
