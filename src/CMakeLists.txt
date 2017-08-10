@@ -72,6 +72,7 @@ set(LINK_LIBS
 
     ${GLIB2_LIBRARIES}
     ${GTK2_LIBRARIES}
+    -lX11
     )
 
 set(DATA_FILES
@@ -129,11 +130,6 @@ set(WIDGETS_HEADER_FILES
 set(CEF_TARGET "qcef")
 set(CEF_TARGET_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 
-# Logical target used to link the libcef library.
-ADD_LOGICAL_TARGET("libcef_lib"
-                   "${CEF_TARGET_OUT_DIR}/libcef.so"
-                   "${CEF_TARGET_OUT_DIR}/libcef.so")
-
 # Executable target.
 add_library(${CEF_TARGET} SHARED
             ${BASE_FILES}
@@ -144,9 +140,8 @@ SET_LIBRARY_TARGET_PROPERTIES(${CEF_TARGET})
 add_dependencies(${CEF_TARGET} libcef_dll_wrapper)
 target_link_libraries(${CEF_TARGET}
                       ${LINK_LIBS}
-                      libcef_lib
-                      libcef_dll_wrapper
-                      ${CEF_STANDARD_LIBS})
+                      cef
+                      libcef_dll_wrapper)
 
 # Set rpath so that libraries can be placed next to the executable.
 set_target_properties(${CEF_TARGET} PROPERTIES INSTALL_RPATH "$ORIGIN")
@@ -160,11 +155,18 @@ macro(EXTRACT_CEF_TARBALL target)
   add_custom_command(
     TARGET ${target}
     PRE_BUILD
+    COMMAND rm -rvf qcef/
+    COMMAND mkdir -pv qcef/
     COMMAND tar xvf "${CMAKE_SOURCE_DIR}/cef/cef.${PROJECT_ARCH}.tar.gz"
-    COMMAND mv -vf Release/chrome-sandbox Release/libcef.so Release/natives_blob.bin Release/snapshot_blob.bin .
+    COMMAND mv -vf Release/libcef.so .
+    COMMAND mv -vf Release/chrome-sandbox Release/natives_blob.bin Release/snapshot_blob.bin qcef/
     COMMAND rm -rf Release/
     COMMAND rm -rf locales/
-    COMMAND mv -vf Resources/locales Resources/cef.pak Resources/cef_100_percent.pak Resources/cef_200_percent.pak Resources/cef_extensions.pak Resources/devtools_resources.pak Resources/icudtl.dat .
+    COMMAND mv -vf Resources/locales Resources/cef.pak
+        Resources/cef_100_percent.pak Resources/cef_200_percent.pak
+        Resources/cef_extensions.pak Resources/devtools_resources.pak
+        Resources/icudtl.dat
+        qcef/
     COMMAND rm -rf Resources/
     WORKING_DIRECTORY "${CEF_TARGET_OUT_DIR}"
     VERBATIM
@@ -177,8 +179,10 @@ add_dependencies(${CEF_TARGET} CEF_TARBALL)
 EXTRACT_CEF_TARBALL("CEF_TARBALL")
 
 ## Installation
-set(QCEF_OUTPUT_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib/qcef")
+set(QCEF_OUTPUT_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 install(TARGETS "${CEF_TARGET}"
+        DESTINATION "${QCEF_OUTPUT_LIB_DIR}")
+install(FILES "${CEF_TARGET_OUT_DIR}/libcef.so"
         DESTINATION "${QCEF_OUTPUT_LIB_DIR}")
 
 # Install header files.
@@ -189,26 +193,14 @@ install(FILES ${WIDGETS_HEADER_FILES}
 install(FILES ${DATA_FILES}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig/)
 
-# Fix sandbox permission.
-install(FILES "${CEF_TARGET_OUT_DIR}/chrome-sandbox"
-        DESTINATION "${QCEF_OUTPUT_LIB_DIR}"
-        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
-                    GROUP_READ GROUP_EXECUTE
-                    WORLD_READ WORLD_EXECUTE SETUID SETGID
-        )
-
 # Install cef binary files.
-install(FILES
-        "${CEF_TARGET_OUT_DIR}/cef.pak"
-        "${CEF_TARGET_OUT_DIR}/cef_100_percent.pak"
-        "${CEF_TARGET_OUT_DIR}/cef_200_percent.pak"
-        "${CEF_TARGET_OUT_DIR}/cef_extensions.pak"
-        "${CEF_TARGET_OUT_DIR}/icudtl.dat"
-        "${CEF_TARGET_OUT_DIR}/libcef.so"
-        "${CEF_TARGET_OUT_DIR}/natives_blob.bin"
-        "${CEF_TARGET_OUT_DIR}/snapshot_blob.bin"
-        DESTINATION "${QCEF_OUTPUT_LIB_DIR}"
-        )
-install(DIRECTORY "${CEF_TARGET_OUT_DIR}/locales"
-        DESTINATION "${QCEF_OUTPUT_LIB_DIR}"
-        )
+install(DIRECTORY "${CEF_TARGET_OUT_DIR}/qcef"
+        DESTINATION "${QCEF_OUTPUT_LIB_DIR}")
+
+# Fix sandbox permission.
+install(FILES "${CEF_TARGET_OUT_DIR}/qcef/chrome-sandbox"
+        DESTINATION "${QCEF_OUTPUT_LIB_DIR}/qcef"
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+        GROUP_READ GROUP_EXECUTE
+        WORLD_READ WORLD_EXECUTE
+        SETUID SETGID)
