@@ -1,11 +1,11 @@
 Chromium Embedded Framework (CEF) Minimal Binary Distribution for Linux
 -------------------------------------------------------------------------------
 
-Date:             August 09, 2017
+Date:             August 10, 2017
 
-CEF Version:      3.3071.1651.g7fb4d65
-CEF URL:          https://bitbucket.org/chromiumembedded/cef.git
-                  @7fb4d6567894b57654064826ebfe44a62081e41d
+CEF Version:      3.3071.1654.g79f4971
+CEF URL:          git@github.com:LiuLang/cef.git
+                  @79f497138519bcd74e9247048a5cad75bbb54bc1
 
 Chromium Verison: 59.0.3071.134
 Chromium URL:     Unknown
