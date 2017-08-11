@@ -15,6 +15,9 @@ struct QCefWebViewPrivate;
 class QCefWebPage;
 
 // This widget class is used to view web document.
+// When inheriting from QCefWebView, remember to disable rtti feature
+// by appending -fno-rtti to compiler flag list, or else an error like
+// "undefined reference to `typeinfo for QCefWebView'" will occur.
 class QCEF_WIDGETS_EXPORT QCefWebView : public QWidget {
   Q_OBJECT
   Q_PROPERTY(QUrl url READ url WRITE setUrl)

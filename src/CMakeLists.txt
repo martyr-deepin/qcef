@@ -26,7 +26,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
   # -fno-rtti, Disable real-time type information
   # -fno-exceptions Disable exceptions
   # -fsanitize=address Enable memory sanitize plugin
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Werror -Wextra -Wno-unused-parameter -fno-exceptions")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Werror -Wextra -Wno-unused-parameter -fno-rtti -fno-exceptions")
   # -fsanitize=address, Enable memory address sanitizer.
   #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
   # -fsanitize=leak, Enable memory leak sanitizer.
@@ -41,7 +41,7 @@ else()
   # -Wl, -O2 Enable linker optimizations
   #-Wl, --gc-sections Remove unused code resulting from -fdsta-sections and -ffunction-sections
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2 -Wl,-O1 -Wl,--gc-sections")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -Wl,-O1 -Wl,--gc-sections -Wno-unused-result")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -Wl,-O1 -Wl,--gc-sections -fno-rtti -Wno-unused-result")
 endif()
 
 find_package(PkgConfig REQUIRED)
