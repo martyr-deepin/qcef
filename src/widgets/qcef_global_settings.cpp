@@ -29,6 +29,8 @@ struct QCefGlobalSettingsPrivate {
   bool disable_command_line_args = false;
   QString cache_path = "";
   QString user_data_dir = "";
+  bool persist_session_cookies = false;
+  bool persist_user_preferences = false;
   QString user_agent = "";
   QString log_file = "";
   QCefGlobalSettings::LogSeverity log_severity =
@@ -90,6 +92,22 @@ void QCefGlobalSettings::setUserDataPath(const QString& path) {
 
 const QString& QCefGlobalSettings::userDataPath() const {
   return p_->user_data_dir;
+}
+
+void QCefGlobalSettings::setPersistSessionCcookies(bool enabled) {
+  p_->persist_session_cookies = enabled;
+}
+
+bool QCefGlobalSettings::persistSessionCookies() const {
+  return p_->persist_session_cookies;
+}
+
+void QCefGlobalSettings::setPersistUserPreferences(bool enabled) {
+  p_->persist_user_preferences = enabled;
+}
+
+bool QCefGlobalSettings::persistUserPreferences() const {
+  return p_->persist_user_preferences;
 }
 
 void QCefGlobalSettings::setUserAgent(const QString& ua) {

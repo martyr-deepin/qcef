@@ -82,6 +82,10 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
   CefString(&cef_settings.cache_path) = settings.cachePath().toStdString();
   CefString(&cef_settings.user_data_path) =
       settings.userDataPath().toStdString();
+  cef_settings.persist_session_cookies =
+      settings.persistSessionCookies() ? 1 : 0;
+  cef_settings.persist_user_preferences =
+      settings.persistUserPreferences() ? 1 : 0;
   CefString(&cef_settings.user_agent) = settings.userAgent().toStdString();
   CefString(&cef_settings.log_file) = settings.logFile().toStdString();
   switch (settings.logSeverity()) {

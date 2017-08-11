@@ -44,6 +44,20 @@ class QCEF_WIDGETS_EXPORT QCefGlobalSettings {
   void setUserDataPath(const QString& path);
   const QString& userDataPath() const;
 
+  // To persist session cookies (cookies without an expiry date or validity
+  // interval) by default when using the global cookie manager set this value to
+  // true (1). Session cookies are generally intended to be transient and most
+  // Web browsers do not persist them. A |cache_path| value must also be
+  // specified to enable this feature.
+  void setPersistSessionCcookies(bool enabled);
+  bool persistSessionCookies() const;
+
+  // To persist user preferences as a JSON file in the cache path directory set
+  // this value to true. A |cache_path| value must also be specified
+  // to enable this feature.
+  void setPersistUserPreferences(bool enabled);
+  bool persistUserPreferences() const;
+
   // Set User-Agent http header, if |ua| is empty, default value will be used.
   void setUserAgent(const QString& ua);
   const QString& userAgent() const;
