@@ -5,7 +5,6 @@
 #ifndef QCEF_CORE_QCEF_UTIL_H
 #define QCEF_CORE_QCEF_UTIL_H
 
-#include "widgets/qcef_widgets_export.h"
 #include "include/cef_command_line.h"
 #include "include/internal/cef_ptr.h"
 

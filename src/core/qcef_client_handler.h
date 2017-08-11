@@ -9,12 +9,10 @@
 
 #include <list>
 
-#include "widgets/qcef_widgets_export.h"
-
-class QCEF_WIDGETS_EXPORT QCefClientHandler : public CefClient,
-                                      public CefDisplayHandler,
-                                      public CefLifeSpanHandler,
-                                      public CefLoadHandler {
+class QCefClientHandler : public CefClient,
+                          public CefDisplayHandler,
+                          public CefLifeSpanHandler,
+                          public CefLoadHandler {
  public:
   class Delegate {
    public:
@@ -31,7 +29,8 @@ class QCEF_WIDGETS_EXPORT QCefClientHandler : public CefClient,
     virtual void OnLoadEnd(int httpStatusCode) = 0;
     virtual std::string OnLoadError(int errorCode) = 0;
 
-    virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+    virtual bool OnProcessMessageReceived(
+        CefRefPtr<CefBrowser> browser,
         CefProcessId source_process,
         CefRefPtr<CefProcessMessage> message) = 0;
 
@@ -106,7 +105,7 @@ class QCEF_WIDGETS_EXPORT QCefClientHandler : public CefClient,
 
  private:
   // Execute Delegate notifications on the main thread.
-//  void NotifyFullscreen(bool fullscreen);
+  // void NotifyFullscreen(bool fullscreen);
 
   Delegate* delegate_ = nullptr;
 

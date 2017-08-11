@@ -13,10 +13,10 @@
 // Communication channel between browser process and renderer process.
 class QCefBrowserTransport : public QWebChannelAbstractTransport {
   Q_OBJECT
+
  public:
-  QCefBrowserTransport(
-      CefRefPtr<CefBrowser> browser,
-      QObject* parent = nullptr);
+  QCefBrowserTransport(CefRefPtr<CefBrowser> browser,
+                       QObject* parent = nullptr);
 
   // Send messages from between browser process to render process.
   void sendMessage(const QJsonObject& message) override;

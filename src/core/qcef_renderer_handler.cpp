@@ -55,6 +55,7 @@ void QCefRendererHandler::OnContextCreated(CefRefPtr<CefBrowser> browser,
 void QCefRendererHandler::OnContextReleased(CefRefPtr<CefBrowser> browser,
                                             CefRefPtr<CefFrame> frame,
                                             CefRefPtr<CefV8Context> context) {
+  (void) frame;
   (void) context;
   CEF_REQUIRE_RENDERER_THREAD();
 

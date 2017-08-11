@@ -10,13 +10,13 @@
 // Handle messages in renderer processes.
 class QCefRendererHandler : public CefRenderProcessHandler {
  public:
-  void
-  OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
-                   CefRefPtr<CefV8Context> context) override;
+  void OnContextCreated(CefRefPtr<CefBrowser> browser,
+                        CefRefPtr<CefFrame> frame,
+                        CefRefPtr<CefV8Context> context) override;
 
-  void
-  OnContextReleased(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
-                    CefRefPtr<CefV8Context> context) override;
+  void OnContextReleased(CefRefPtr<CefBrowser> browser,
+                         CefRefPtr<CefFrame> frame,
+                         CefRefPtr<CefV8Context> context) override;
 
   bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
                                 CefProcessId source_process,

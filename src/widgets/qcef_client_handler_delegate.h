@@ -5,9 +5,9 @@
 #ifndef QCEF_WIDGETS_QCEF_CLIENT_HANDLER_DELEGATE_H
 #define QCEF_WIDGETS_QCEF_CLIENT_HANDLER_DELEGATE_H
 
-#include "include/cef_app.h"
-
 #include "core/qcef_client_handler.h"
+
+#include "include/cef_app.h"
 #include "core/qcef_util.h"
 #include "widgets/qcef_web_page.h"
 
