@@ -14,6 +14,8 @@ int main(int argc, char** argv) {
   settings.setNoSandbox(true);
   settings.setPepperFlash(true);
   settings.setRemoteDebug(true);
+  settings.setLogSeverity(QCefGlobalSettings::LogSeverity::Info);
+  settings.addCustomScheme("lrc");
   const int exit_code = QCefInit(argc, argv, settings);
   if (exit_code != 0) {
     return exit_code;
@@ -24,8 +26,6 @@ int main(int argc, char** argv) {
   browser_window.show();
   browser_window.resize(860, 640);
 
-//  AttachToQtMessageLoop();
-//  return app.exec();
   QCefRunLoop();
   return 0;
 }
