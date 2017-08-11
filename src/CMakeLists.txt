@@ -133,6 +133,11 @@ set(WIDGETS_HEADER_FILES
 set(CEF_TARGET "qcef")
 set(CEF_TARGET_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 
+# Logical target used to link the libcef library.
+ADD_LOGICAL_TARGET("libcef_lib"
+                   "${CEF_TARGET_OUT_DIR}/libcef.so"
+                   "${CEF_TARGET_OUT_DIR}/libcef.so")
+
 # Executable target.
 add_library(${CEF_TARGET} SHARED
             ${BASE_FILES}
@@ -143,7 +148,7 @@ SET_LIBRARY_TARGET_PROPERTIES(${CEF_TARGET})
 add_dependencies(${CEF_TARGET} libcef_dll_wrapper)
 target_link_libraries(${CEF_TARGET}
                       ${LINK_LIBS}
-                      cef
+                      libcef_lib
                       libcef_dll_wrapper)
 
 # Set rpath so that libraries can be placed next to the executable.
