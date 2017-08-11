@@ -31,11 +31,18 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
   // Add flash plugin parameters.
   if (settings.pepperFlash()) {
     QCefApp::AppendedArguments arguments;
-    arguments.push_back({"ppapi-flash-path", settings.getPepperFlashPath()});
+    arguments.push_back({"ppapi-flash-path",
+                         settings.getPepperFlashPath().toStdString()});
     arguments.push_back({"ppapi-flash-version",
-                         settings.getPepperFlashVersion()});
+                         settings.getPepperFlashVersion().toStdString()});
     client_app->appendCommandLineSwitches(arguments);
   }
+
+  std::vector<std::string> schemes;
+  for (const QString& scheme : settings.customSchemes()) {
+    schemes.push_back(scheme.toStdString());
+  }
+  client_app->addCustomSchemes(schemes);
 
 #ifdef QCEF_OVERRIDE_PATH
   if (!CefOverridePath(PK_DIR_EXE, QCEF_OVERRIDE_PATH)) {
@@ -61,28 +68,35 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
   cef_settings.no_sandbox = settings.noSandbox() ? 1 : 0;
   cef_settings.command_line_args_disabled =
       settings.disableCommandLineArgs() ? 1 : 0;
-  CefString(&cef_settings.cache_path) = settings.cachePath();
-  CefString(&cef_settings.user_data_path) = settings.userDataPath();
-  CefString(&cef_settings.user_agent) = settings.userAgent();
-  CefString(&cef_settings.log_file) = settings.logFile();
+  CefString(&cef_settings.cache_path) = settings.cachePath().toStdString();
+  CefString(&cef_settings.user_data_path) =
+      settings.userDataPath().toStdString();
+  CefString(&cef_settings.user_agent) = settings.userAgent().toStdString();
+  CefString(&cef_settings.log_file) = settings.logFile().toStdString();
   switch (settings.logSeverity()) {
     case QCefGlobalSettings::LogSeverity::Default: {
       cef_settings.log_severity = LOGSEVERITY_DEFAULT;
+      break;
     }
     case QCefGlobalSettings::LogSeverity::Verbose: {
       cef_settings.log_severity = LOGSEVERITY_VERBOSE;
+      break;
     }
     case QCefGlobalSettings::LogSeverity::Info: {
       cef_settings.log_severity = LOGSEVERITY_INFO;
+      break;
     }
     case QCefGlobalSettings::LogSeverity::Warning: {
       cef_settings.log_severity = LOGSEVERITY_WARNING;
+      break;
     }
     case QCefGlobalSettings::LogSeverity::Error: {
       cef_settings.log_severity = LOGSEVERITY_ERROR;
+      break;
     }
     case QCefGlobalSettings::LogSeverity::Disable: {
       cef_settings.log_severity = LOGSEVERITY_DISABLE;
+      break;
     }
   }
   if (settings.remoteDebug()) {
@@ -90,7 +104,8 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
   }
   cef_settings.ignore_certificate_errors =
       settings.ignoresCertificateErrors() ? 1 : 0;
-  CefString(&cef_settings.accept_language_list) = settings.acceptLanguageList();
+  CefString(&cef_settings.accept_language_list) =
+      settings.acceptLanguageList().toStdString();
 
   // Initialize CEF for the browser process.
   if (!CefInitialize(main_args, cef_settings, client_app.get(), nullptr)) {

@@ -27,17 +27,18 @@ struct QCefGlobalSettingsPrivate {
   bool single_process = false;
   bool no_sandbox = false;
   bool disable_command_line_args = false;
-  std::string cache_path = "";
-  std::string user_data_dir = "";
-  std::string user_agent = "";
-  std::string log_file = "";
+  QString cache_path = "";
+  QString user_data_dir = "";
+  QString user_agent = "";
+  QString log_file = "";
   QCefGlobalSettings::LogSeverity log_severity =
       QCefGlobalSettings::LogSeverity::Error;
   int remote_debug_port = 9222;
   bool ignore_certificate_errors = false;
   bool remote_debug = false;
-  std::string accept_language_list = "";
+  QString accept_language_list = "";
   bool pepper_flash = false;
+  QStringList custom_schemes;
 };
 
 QCefGlobalSettings::QCefGlobalSettings()
@@ -74,35 +75,35 @@ bool QCefGlobalSettings::disableCommandLineArgs() const {
   return p_->disable_command_line_args;
 }
 
-void QCefGlobalSettings::setCachePath(const std::string& path) {
+void QCefGlobalSettings::setCachePath(const QString& path) {
   p_->cache_path = path;
 }
 
-std::string QCefGlobalSettings::cachePath() const {
+const QString& QCefGlobalSettings::cachePath() const {
   return p_->cache_path;
 }
 
-void QCefGlobalSettings::setUserDataPath(const std::string& path) {
+void QCefGlobalSettings::setUserDataPath(const QString& path) {
   p_->user_data_dir = path;
 }
 
-std::string QCefGlobalSettings::userDataPath() const {
+const QString& QCefGlobalSettings::userDataPath() const {
   return p_->user_data_dir;
 }
 
-void QCefGlobalSettings::setUserAgent(const std::string ua) {
+void QCefGlobalSettings::setUserAgent(const QString& ua) {
   p_->user_agent = ua;
 }
 
-std::string QCefGlobalSettings::userAgent() const {
+const QString& QCefGlobalSettings::userAgent() const {
   return p_->user_agent;
 }
 
-void QCefGlobalSettings::setLogFile(const std::string filepath) {
+void QCefGlobalSettings::setLogFile(const QString& filepath) {
   p_->log_file = filepath;
 }
 
-std::string QCefGlobalSettings::logFile() const {
+const QString& QCefGlobalSettings::logFile() const {
   return p_->log_file;
 }
 
@@ -142,11 +143,11 @@ bool QCefGlobalSettings::ignoresCertificateErrors() const {
   return p_->ignore_certificate_errors;
 }
 
-void QCefGlobalSettings::setAcceptLanguageList(const std::string& list) {
+void QCefGlobalSettings::setAcceptLanguageList(const QString& list) {
   p_->accept_language_list = list;
 }
 
-std::string QCefGlobalSettings::acceptLanguageList() const {
+const QString& QCefGlobalSettings::acceptLanguageList() const {
   return p_->accept_language_list;
 }
 
@@ -158,11 +159,11 @@ bool QCefGlobalSettings::pepperFlash() const {
   return p_->pepper_flash;
 }
 
-std::string QCefGlobalSettings::getPepperFlashPath() const {
+QString QCefGlobalSettings::getPepperFlashPath() const {
   return kFlashLibrary;
 }
 
-std::string QCefGlobalSettings::getPepperFlashVersion() const {
+QString QCefGlobalSettings::getPepperFlashVersion() const {
   QByteArray content;
   QString version;
   if (ReadRawFile(kFlashManifest, content)) {
@@ -171,5 +172,13 @@ std::string QCefGlobalSettings::getPepperFlashVersion() const {
       version = object.value("version").toString("");
     }
   }
-  return version.toStdString();
+  return version;
+}
+
+void QCefGlobalSettings::addCustomScheme(const QString& scheme) {
+  p_->custom_schemes.append(scheme);
+}
+
+const QStringList& QCefGlobalSettings::customSchemes() const {
+  return p_->custom_schemes;
 }

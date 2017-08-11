@@ -29,15 +29,20 @@ class QCefApp : public CefApp,
   void OnRegisterCustomSchemes(
       CefRawPtr<CefSchemeRegistrar> registrar) override;
 
+  // Open API used to customize cef app.
   typedef std::vector<std::pair<std::string, std::string>> AppendedArguments;
   // Append |args| to command line.
   void appendCommandLineSwitches(const AppendedArguments& args);
+
+  typedef std::vector<std::string> SchemeList;
+  void addCustomSchemes(const SchemeList& scheme_list);
 
  private:
   // Include the default reference counting implementation.
   IMPLEMENT_REFCOUNTING(QCefApp);
 
   AppendedArguments appended_args_;
+  SchemeList scheme_list_;
 };
 
 #endif  // QCEF_CORE_QCEF_APP_H

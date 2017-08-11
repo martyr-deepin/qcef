@@ -7,7 +7,7 @@
 #include "core/qcef_renderer_handler.h"
 #include "include/wrapper/cef_helpers.h"
 
-QCefApp::QCefApp() : appended_args_() {
+QCefApp::QCefApp() : appended_args_(), scheme_list_() {
 
 }
 
@@ -27,7 +27,11 @@ void QCefApp::OnBeforeCommandLineProcessing(
 }
 
 void QCefApp::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar) {
-  CefApp::OnRegisterCustomSchemes(registrar);
+  // Register file:// scheme.
+  registrar->AddCustomScheme("file", true, true, false, true, true, false);
+  for (const std::string& scheme : scheme_list_) {
+    registrar->AddCustomScheme(scheme, true, true, false, true, true, false);
+  }
 }
 
 void QCefApp::appendCommandLineSwitches(const AppendedArguments& args) {
@@ -36,4 +40,8 @@ void QCefApp::appendCommandLineSwitches(const AppendedArguments& args) {
 
 CefRefPtr<CefRenderProcessHandler> QCefApp::GetRenderProcessHandler() {
   return new QCefRendererHandler();
+}
+
+void QCefApp::addCustomSchemes(const QCefApp::SchemeList& scheme_list) {
+  scheme_list_ = scheme_list;
 }
