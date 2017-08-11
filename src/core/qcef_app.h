@@ -37,12 +37,22 @@ class QCefApp : public CefApp,
   typedef std::vector<std::string> SchemeList;
   void addCustomSchemes(const SchemeList& scheme_list);
 
+  struct CrossOriginEntry {
+    std::string src_scheme;
+    std::string src_host;
+    std::string target_scheme;
+    std::string target_host;
+  };
+  typedef std::vector<CrossOriginEntry> CrossOriginList;
+  void addCrossOriginWhiteList(const CrossOriginList& list);
+
  private:
   // Include the default reference counting implementation.
   IMPLEMENT_REFCOUNTING(QCefApp);
 
   AppendedArguments appended_args_;
   SchemeList scheme_list_;
+  CrossOriginList cross_origin_white_list_;
 };
 
 #endif  // QCEF_CORE_QCEF_APP_H

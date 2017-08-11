@@ -5,16 +5,17 @@
 #include "core/qcef_app.h"
 
 #include "core/qcef_renderer_handler.h"
+#include "include/cef_origin_whitelist.h"
 #include "include/wrapper/cef_helpers.h"
 
-QCefApp::QCefApp() : appended_args_(), scheme_list_() {
+QCefApp::QCefApp() : appended_args_(),
+                     scheme_list_(),
+                     cross_origin_white_list_() {
 
 }
 
 void QCefApp::OnContextInitialized() {
   CEF_REQUIRE_UI_THREAD();
-
-  LOG(WARNING) << "OnContextInitialized()";
 }
 
 void QCefApp::OnBeforeCommandLineProcessing(
@@ -32,6 +33,13 @@ void QCefApp::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar) {
   for (const std::string& scheme : scheme_list_) {
     registrar->AddCustomScheme(scheme, true, true, false, true, true, false);
   }
+
+  for (const CrossOriginEntry& entry : cross_origin_white_list_) {
+    CefAddCrossOriginWhitelistEntry(entry.src_scheme + entry.src_host,
+                                    entry.target_scheme,
+                                    entry.target_host,
+                                    true);
+  }
 }
 
 void QCefApp::appendCommandLineSwitches(const AppendedArguments& args) {
@@ -44,4 +52,8 @@ CefRefPtr<CefRenderProcessHandler> QCefApp::GetRenderProcessHandler() {
 
 void QCefApp::addCustomSchemes(const QCefApp::SchemeList& scheme_list) {
   scheme_list_ = scheme_list;
+}
+
+void QCefApp::addCrossOriginWhiteList(const QCefApp::CrossOriginList& list) {
+  cross_origin_white_list_ = list;
 }

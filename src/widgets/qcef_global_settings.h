@@ -5,7 +5,9 @@
 #ifndef QCEF_WIDGETS_QCEF_GLOBAL_SETTINGS_H
 #define QCEF_WIDGETS_QCEF_GLOBAL_SETTINGS_H
 
+#include <QPair>
 #include <QStringList>
+#include <QUrl>
 
 #include "qcef_widgets_export.h"
 
@@ -91,6 +93,11 @@ class QCEF_WIDGETS_EXPORT QCefGlobalSettings {
   // Register custom scheme. i.e. addCustomScheme("local")
   void addCustomScheme(const QString& scheme);
   const QStringList& customSchemes() const;
+
+  // Decline cross-origin limitation from |srouce| url to |target| url.
+  void addCrossOriginWhiteEntry(const QUrl& source, const QUrl& target);
+  typedef QVector<QPair<QUrl, QUrl>> CrossOriginList;
+  const CrossOriginList& crossOriginWhiteList() const;
 
  private:
   QCefGlobalSettingsPrivate* p_ = nullptr;
