@@ -2,7 +2,7 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-#include "widgets/qcef_context.h"
+#include "core/qcef_context.h"
 
 #include <glib-2.0/glib.h>
 #include <QCoreApplication>

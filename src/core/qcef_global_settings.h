@@ -2,19 +2,19 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-#ifndef QCEF_WIDGETS_QCEF_GLOBAL_SETTINGS_H
-#define QCEF_WIDGETS_QCEF_GLOBAL_SETTINGS_H
+#ifndef QCEF_CORE_QCEF_GLOBAL_SETTINGS_H
+#define QCEF_CORE_QCEF_GLOBAL_SETTINGS_H
 
 #include <QPair>
 #include <QStringList>
 #include <QUrl>
 
-#include "qcef_widgets_export.h"
+#include "core/qcef_core_export.h"
 
 struct QCefGlobalSettingsPrivate;
 
 // Setup cef switches during initialization.
-class QCEF_WIDGETS_EXPORT QCefGlobalSettings {
+class QCEF_CORE_EXPORT QCefGlobalSettings {
  public:
   QCefGlobalSettings();
   ~QCefGlobalSettings();
@@ -117,4 +117,4 @@ class QCEF_WIDGETS_EXPORT QCefGlobalSettings {
   QCefGlobalSettingsPrivate* p_ = nullptr;
 };
 
-#endif  // QCEF_WIDGETS_QCEF_GLOBAL_SETTINGS_H
+#endif  // QCEF_CORE_QCEF_GLOBAL_SETTINGS_H

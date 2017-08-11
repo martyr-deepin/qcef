@@ -94,22 +94,34 @@ set(CORE_FILES
     core/qcef_browser_transport.h
     core/qcef_client_handler.cc
     core/qcef_client_handler.h
+    core/qcef_context.cpp
+    core/qcef_context.h
+    core/qcef_core_export.h
+    core/qcef_global_settings.cpp
+    core/qcef_global_settings.h
     core/qcef_renderer_handler.cpp
     core/qcef_renderer_handler.h
     core/qcef_renderer_transport_handler.cpp
     core/qcef_renderer_transport_handler.h
+    core/qcef_scheme_handler_factory.cpp
+    core/qcef_scheme_handler_factory.h
     core/qcef_util.cpp
     core/qcef_util.h
     core/qcef_web_channel_consts.h
     )
 
+set(CORE_EXPORT_FILES
+    core/qcef_context.h
+    core/qcef_core_export.h
+    core/qcef_global_settings.h
+    core/qcef_scheme_handler_factory.h
+    )
+
 set(WIDGETS_FILES
-    widgets/qcef_context.cpp
-    widgets/qcef_context.h
+
     widgets/qcef_client_handler_delegate.cpp
     widgets/qcef_client_handler_delegate.h
-    widgets/qcef_global_settings.cpp
-    widgets/qcef_global_settings.h
+
     widgets/qcef_web_page.cpp
     widgets/qcef_web_page.h
     widgets/qcef_web_settings.cpp
@@ -119,9 +131,9 @@ set(WIDGETS_FILES
     widgets/qcef_widgets_export.h
     )
 
-set(WIDGETS_HEADER_FILES
-    widgets/qcef_context.h
-    widgets/qcef_global_settings.h
+set(WIDGETS_EXPORT_FILES
+    core/qcef_context.h
+    core/qcef_global_settings.h
     widgets/qcef_web_page.h
     widgets/qcef_web_settings.h
     widgets/qcef_web_view.h
@@ -194,7 +206,9 @@ install(FILES "${CEF_TARGET_OUT_DIR}/libcef.so"
         DESTINATION "${QCEF_OUTPUT_LIB_DIR}")
 
 # Install header files.
-install(FILES ${WIDGETS_HEADER_FILES}
+install(FILES ${CORE_EXPORT_FILES}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/qcef/core)
+install(FILES ${WIDGETS_EXPORT_FILES}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/include/qcef/widgets)
 
 # Install pkgconfig files.
