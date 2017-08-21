@@ -24,7 +24,10 @@ set(LINK_LIBS
 set(BROWSER_DEMO_FILES
     main.cpp
     browser_window.cpp
-    browser_window.h)
+    browser_window.h
+
+    resources/resources.qrc
+    )
 
 add_executable(browser-demo
                ${BROWSER_DEMO_FILES})

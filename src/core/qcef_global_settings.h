@@ -10,6 +10,7 @@
 #include <QUrl>
 
 #include "qcef_core_export.h"
+#include "qcef_scheme_handler.h"
 
 struct QCefGlobalSettingsPrivate;
 
@@ -104,14 +105,17 @@ class QCEF_CORE_EXPORT QCefGlobalSettings {
   QString getPepperFlashPath() const;
   QString getPepperFlashVersion() const;
 
-  // Register custom scheme. i.e. addCustomScheme("local")
-  void addCustomScheme(const QString& scheme);
-  const QStringList& customSchemes() const;
+  // Register custom scheme. i.e. addCustomScheme("local:/domain")
+  void addCustomScheme(const QUrl& url);
+  const QList<QUrl>& customSchemes() const;
 
   // Decline cross-origin limitation from |srouce| url to |target| url.
   void addCrossOriginWhiteEntry(const QUrl& source, const QUrl& target);
   typedef QVector<QPair<QUrl, QUrl>> CrossOriginList;
   const CrossOriginList& crossOriginWhiteList() const;
+
+  void setCustomSchemeHandler(QCefSchemeHandler handler);
+  QCefSchemeHandler getCustomSchemeHandler() const;
 
  private:
   QCefGlobalSettingsPrivate* p_ = nullptr;

@@ -4,18 +4,29 @@
 
 #include "core/qcef_app.h"
 
+#include <set>
+
 #include "core/qcef_renderer_handler.h"
+#include "core/qcef_scheme_handler_factory.h"
 #include "include/cef_origin_whitelist.h"
 #include "include/wrapper/cef_helpers.h"
 
-QCefApp::QCefApp() : appended_args_(),
-                     scheme_list_(),
-                     cross_origin_white_list_() {
+QCefApp::QCefApp() {
 
 }
 
 void QCefApp::OnContextInitialized() {
   CEF_REQUIRE_UI_THREAD();
+
+  // Register custom scheme handler factory.
+  const auto factory = new QCefSchemeHandlerFactory();
+  factory->setCustomSchemeHandler(custom_scheme_handler_);
+
+  CefRegisterSchemeHandlerFactory("qrc", "", factory);
+
+  for (const CustomSchemeEntry& entry : custom_scheme_list_) {
+    CefRegisterSchemeHandlerFactory(entry.scheme, entry.host, factory);
+  }
 }
 
 void QCefApp::OnBeforeCommandLineProcessing(
@@ -28,16 +39,26 @@ void QCefApp::OnBeforeCommandLineProcessing(
 }
 
 void QCefApp::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar) {
-  // Register file:// scheme.
+  // Register file:/ and qrc:/ schemes.
   registrar->AddCustomScheme("file", true, true, false, true, true, false);
-  for (const std::string& scheme : scheme_list_) {
-    registrar->AddCustomScheme(scheme, true, true, false, true, true, false);
+  registrar->AddCustomScheme("qrc", true, true, false, true, true, false);
+
+  // Register custom scheme names.
+  if (!custom_scheme_list_.empty()) {
+    std::set<std::string> scheme_names;
+    for (const CustomSchemeEntry& entry : custom_scheme_list_) {
+      scheme_names.insert(entry.scheme);
+    }
+    for (const std::string& scheme : scheme_names) {
+      registrar->AddCustomScheme(scheme, true, true, false, true, true, false);
+    }
   }
 
+  // Register Cross-Origin white list.
   for (const CrossOriginEntry& entry : cross_origin_white_list_) {
-    CefAddCrossOriginWhitelistEntry(entry.src_scheme + entry.src_host,
+    CefAddCrossOriginWhitelistEntry(entry.src_scheme + entry.src_domain,
                                     entry.target_scheme,
-                                    entry.target_host,
+                                    entry.target_domain,
                                     true);
   }
 }
@@ -50,10 +71,14 @@ CefRefPtr<CefRenderProcessHandler> QCefApp::GetRenderProcessHandler() {
   return new QCefRendererHandler();
 }
 
-void QCefApp::addCustomSchemes(const QCefApp::SchemeList& scheme_list) {
-  scheme_list_ = scheme_list;
+void QCefApp::addCustomSchemes(const CustomSchemeList& list) {
+  custom_scheme_list_ = list;
 }
 
-void QCefApp::addCrossOriginWhiteList(const QCefApp::CrossOriginList& list) {
+void QCefApp::addCrossOriginWhiteList(const CrossOriginList& list) {
   cross_origin_white_list_ = list;
+}
+
+void QCefApp::setCustomSchemeHandler(QCefSchemeHandler handler) {
+  custom_scheme_handler_ = handler;
 }

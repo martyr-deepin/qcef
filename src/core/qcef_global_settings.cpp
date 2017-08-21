@@ -40,8 +40,10 @@ struct QCefGlobalSettingsPrivate {
   bool remote_debug = false;
   QString accept_language_list = "";
   bool pepper_flash = false;
-  QStringList custom_schemes;
+  QList<QUrl> custom_schemes;
   QCefGlobalSettings::CrossOriginList cross_origin_list;
+
+  QCefSchemeHandler custom_scheme_handler = nullptr;
 };
 
 QCefGlobalSettings::QCefGlobalSettings()
@@ -194,11 +196,11 @@ QString QCefGlobalSettings::getPepperFlashVersion() const {
   return version;
 }
 
-void QCefGlobalSettings::addCustomScheme(const QString& scheme) {
-  p_->custom_schemes.append(scheme);
+void QCefGlobalSettings::addCustomScheme(const QUrl& url) {
+  p_->custom_schemes.append(url);
 }
 
-const QStringList& QCefGlobalSettings::customSchemes() const {
+const QList<QUrl>& QCefGlobalSettings::customSchemes() const {
   return p_->custom_schemes;
 }
 
@@ -210,4 +212,13 @@ void QCefGlobalSettings::addCrossOriginWhiteEntry(const QUrl& source,
 const QCefGlobalSettings::CrossOriginList&
 QCefGlobalSettings::crossOriginWhiteList() const {
   return p_->cross_origin_list;
+}
+
+void
+QCefGlobalSettings::setCustomSchemeHandler(QCefSchemeHandler handler) {
+  p_->custom_scheme_handler = handler;
+}
+
+QCefSchemeHandler QCefGlobalSettings::getCustomSchemeHandler() const {
+  return p_->custom_scheme_handler;
 }

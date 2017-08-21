@@ -39,6 +39,7 @@ BrowserWindow::~BrowserWindow() {
 
 void BrowserWindow::printMessage(const QString& msg) {
   qDebug() << "print message:" << msg;
+  this->setWindowTitle(msg);
 }
 
 void BrowserWindow::initConnections() {

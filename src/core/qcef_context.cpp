@@ -38,11 +38,17 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
     client_app->appendCommandLineSwitches(arguments);
   }
 
-  QCefApp::SchemeList schemes;
-  for (const QString& scheme : settings.customSchemes()) {
-    schemes.push_back(scheme.toStdString());
+  QCefApp::CustomSchemeList custom_scheme_list;
+  for (const QUrl& url : settings.customSchemes()) {
+    QCefApp::CustomSchemeEntry entry = {
+        url.scheme().toStdString(),
+        url.host().toStdString()
+    };
+    custom_scheme_list.push_back(entry);
   }
-  client_app->addCustomSchemes(schemes);
+  client_app->addCustomSchemes(custom_scheme_list);
+
+  client_app->setCustomSchemeHandler(settings.getCustomSchemeHandler());
 
   QCefApp::CrossOriginList cross_origin_list;
   for (const QPair<QUrl, QUrl>& item : settings.crossOriginWhiteList()) {
