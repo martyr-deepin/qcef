@@ -9,7 +9,7 @@
 #include <QStringList>
 #include <QUrl>
 
-#include "core/qcef_core_export.h"
+#include "qcef_core_export.h"
 
 struct QCefGlobalSettingsPrivate;
 

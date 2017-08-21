@@ -1,7 +1,7 @@
 prefix=/usr
 exec_prefix=${prefix}
 libdir=${prefix}/lib
-includedir=${prefix}/include/qcef/widgets
+includedir=${prefix}/include/qcef
 
 Name: QCEF
 Description: Qt5 binding of CEF3

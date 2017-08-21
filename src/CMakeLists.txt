@@ -105,6 +105,7 @@ set(CORE_FILES
     core/qcef_renderer_transport_handler.h
     core/qcef_scheme_handler_factory.cpp
     core/qcef_scheme_handler_factory.h
+    core/qcef_url_scheme_handler.h
     core/qcef_util.cpp
     core/qcef_util.h
     core/qcef_web_channel_consts.h
@@ -114,14 +115,13 @@ set(CORE_EXPORT_FILES
     core/qcef_context.h
     core/qcef_core_export.h
     core/qcef_global_settings.h
-    core/qcef_scheme_handler_factory.h
+    core/qcef_url_scheme_handler.h
     )
 
 set(WIDGETS_FILES
 
     widgets/qcef_client_handler_delegate.cpp
     widgets/qcef_client_handler_delegate.h
-
     widgets/qcef_web_page.cpp
     widgets/qcef_web_page.h
     widgets/qcef_web_settings.cpp
@@ -132,8 +132,6 @@ set(WIDGETS_FILES
     )
 
 set(WIDGETS_EXPORT_FILES
-    core/qcef_context.h
-    core/qcef_global_settings.h
     widgets/qcef_web_page.h
     widgets/qcef_web_settings.h
     widgets/qcef_web_view.h
@@ -207,9 +205,9 @@ install(FILES "${CEF_TARGET_OUT_DIR}/libcef.so"
 
 # Install header files.
 install(FILES ${CORE_EXPORT_FILES}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/qcef/core)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/qcef)
 install(FILES ${WIDGETS_EXPORT_FILES}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/qcef/widgets)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include/qcef)
 
 # Install pkgconfig files.
 install(FILES ${DATA_FILES}

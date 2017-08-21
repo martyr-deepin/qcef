@@ -5,8 +5,8 @@
 #ifndef QCEF_CORE_QCEF_CONTEXT_H
 #define QCEF_CORE_QCEF_CONTEXT_H
 
-#include "core/qcef_core_export.h"
-#include "core/qcef_global_settings.h"
+#include "qcef_core_export.h"
+#include "qcef_global_settings.h"
 
 // Initialize cef app with specific settings.
 QCEF_CORE_EXPORT int QCefInit(int argc,

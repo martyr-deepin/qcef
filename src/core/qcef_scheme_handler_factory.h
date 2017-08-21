@@ -5,9 +5,14 @@
 #ifndef QCEF_CORE_QCEF_SCHEME_HANDLER_FACTORY_H
 #define QCEF_CORE_QCEF_SCHEME_HANDLER_FACTORY_H
 
-// Inherit this class to handle request with custom scheme name.
-class QcefSchemeHandlerFactory {
+#include "include/cef_scheme.h"
+#include "include/wrapper/cef_stream_resource_handler.h"
 
+class QCefSchemeHandlerFactory : public CefSchemeHandlerFactory {
+ public:
+  CefRefPtr<CefResourceHandler>
+  Create(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+         const CefString& scheme_name, CefRefPtr<CefRequest> request) override;
 };
 
 #endif  // QCEF_CORE_QCEF_SCHEME_HANDLER_FACTORY_H
