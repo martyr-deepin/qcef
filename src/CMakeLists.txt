@@ -96,6 +96,8 @@ set(CORE_FILES
     core/qcef_client_handler.h
     core/qcef_context.cpp
     core/qcef_context.h
+    core/qcef_cookie_store.cpp
+    core/qcef_cookie_store.h
     core/qcef_core_export.h
     core/qcef_global_settings.cpp
     core/qcef_global_settings.h
@@ -113,6 +115,7 @@ set(CORE_FILES
 
 set(CORE_EXPORT_FILES
     core/qcef_context.h
+    core/qcef_cookie_store.h
     core/qcef_core_export.h
     core/qcef_global_settings.h
     core/qcef_scheme_handler.h
