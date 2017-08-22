@@ -43,6 +43,9 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // Might be null pointer if it has not been initialized.
   QWebChannel* webChannel() const;
 
+  // Runs the JavaScript code contained in |script_source|.
+  void runJavaScript(const QString& script_source);
+
   bool canGoBack() const;
   bool canGoForward() const;
   void goBack();
@@ -55,6 +58,9 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
 
  signals:
   void loadStarted();
+  void loadingStateChanged(bool is_loading,
+                           bool can_go_back,
+                           bool can_go_forward);
   void loadFinished(bool ok);
 
   void fullscreenRequested(bool fullscreen);

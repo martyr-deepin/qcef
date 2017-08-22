@@ -25,9 +25,18 @@ class QCefClientHandler : public CefClient,
     virtual void OnBeforeClose() = 0;
 
     // CefLoadHandler methods
-    virtual void OnLoadStarted() = 0;
-    virtual void OnLoadEnd(int httpStatusCode) = 0;
-    virtual std::string OnLoadError(int errorCode) = 0;
+    virtual void OnLoadStarted(CefRefPtr<CefBrowser> browser,
+                               CefRefPtr<CefFrame> frame) = 0;
+    virtual void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+                                      bool isLoading,
+                                      bool canGoBack,
+                                      bool canGoForward) = 0;
+    virtual void OnLoadEnd(CefRefPtr<CefBrowser> browser,
+                           CefRefPtr<CefFrame> frame,
+                           int httpStatusCode) = 0;
+    virtual std::string OnLoadError(CefRefPtr<CefBrowser> browser,
+                                    CefRefPtr<CefFrame> frame,
+                                    int errorCode) = 0;
 
     virtual bool OnProcessMessageReceived(
         CefRefPtr<CefBrowser> browser,
@@ -91,9 +100,13 @@ class QCefClientHandler : public CefClient,
   void OnBeforeClose(CefRefPtr<CefBrowser> browser) override;
 
   // CefLoadHandler methods:
-  void OnLoadStart(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+  void OnLoadStart(CefRefPtr<CefBrowser> browser,
+                   CefRefPtr<CefFrame> frame,
                    TransitionType transition_type) override;
-
+  void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+                            bool isLoading,
+                            bool canGoBack,
+                            bool canGoForward) override;
   void OnLoadEnd(CefRefPtr<CefBrowser> browser,
                  CefRefPtr<CefFrame> frame,
                  int httpStatusCode) override;

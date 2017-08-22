@@ -22,7 +22,8 @@ unsigned long InitCefBrowserWindow(int width, int height);
 
 void SetXErrorHandler();
 
-void SetXWindowBounds(CefWindowHandle xwindow, int x, int y,
+void SetXWindowBounds(CefWindowHandle xwindow,
+                      int x, int y,
                       int width, int height);
 
 void SetXWindowTitle(CefWindowHandle window, const std::string& title);

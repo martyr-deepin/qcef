@@ -43,24 +43,52 @@ void QCefClientHandlerDelegate::OnBeforeClose() {
 
 void QCefClientHandlerDelegate::OnFaviconURLChange(
     const std::vector<CefString>& urls) {
-  if (urls.size() > 0) {
+  if (!urls.empty()) {
     const QString url = QString::fromStdString(urls[0]);
     emit web_page_->iconUrlChanged(url);
   }
 }
 
-void QCefClientHandlerDelegate::OnLoadStarted() {
-  emit web_page_->loadStarted();
+void QCefClientHandlerDelegate::OnLoadStarted(CefRefPtr<CefBrowser> browser,
+                                              CefRefPtr<CefFrame> frame) {
+  if (browser->GetIdentifier() == cef_browser()->GetIdentifier() &&
+      browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
+    emit web_page_->loadStarted();
+  }
 }
 
-void QCefClientHandlerDelegate::OnLoadEnd(int httpStatusCode) {
+void QCefClientHandlerDelegate::OnLoadingStateChange(
+    CefRefPtr<CefBrowser> browser,
+    bool is_loading,
+    bool can_go_back,
+    bool can_go_forward) {
+  if (browser->GetIdentifier() == cef_browser()->GetIdentifier()) {
+    emit web_page_->loadingStateChanged(is_loading,
+                                        can_go_back,
+                                        can_go_forward);
+  }
+}
+
+void QCefClientHandlerDelegate::OnLoadEnd(CefRefPtr<CefBrowser> browser,
+                                          CefRefPtr<CefFrame> frame,
+                                          int httpStatusCode) {
   Q_UNUSED(httpStatusCode);
-  emit web_page_->loadFinished(true);
+  if (browser->GetIdentifier() == cef_browser()->GetIdentifier() &&
+      browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
+    emit web_page_->loadFinished(true);
+  }
 }
 
-std::string QCefClientHandlerDelegate::OnLoadError(int errorCode) {
+std::string QCefClientHandlerDelegate::OnLoadError(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    int errorCode) {
   Q_UNUSED(errorCode);
-  emit web_page_->loadFinished(false);
+  if (browser->GetIdentifier() == cef_browser()->GetIdentifier() &&
+      browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
+    emit web_page_->loadFinished(false);
+  }
+
   // TODO(LiuLang): Pass |errorCode|.
   return web_page_->pageErrorContent().toStdString();
 }
@@ -107,4 +135,3 @@ void QCefClientHandlerDelegate::OnTitleChanged(const CefString& title) {
 void QCefClientHandlerDelegate::OnUrlChanged(const CefString& url) {
   emit web_page_->urlChanged(QUrl(QString::fromStdString(url)));
 }
-

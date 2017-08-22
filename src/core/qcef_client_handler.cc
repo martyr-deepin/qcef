@@ -56,13 +56,11 @@ void QCefClientHandler::OnLoadStart(
     CefRefPtr<CefBrowser> browser,
     CefRefPtr<CefFrame> frame,
     CefLoadHandler::TransitionType transition_type) {
-  (void) browser;
-  (void) frame;
   (void) transition_type;
   CEF_REQUIRE_UI_THREAD();
 
   if (delegate_ != nullptr) {
-    delegate_->OnLoadStarted();
+    delegate_->OnLoadStarted(browser, frame);
   }
 }
 
@@ -82,7 +80,7 @@ void QCefClientHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
   std::stringstream ss;
   std::string msg;
   if (delegate_ != nullptr) {
-    msg = delegate_->OnLoadError(errorCode);
+    msg = delegate_->OnLoadError(browser, frame, errorCode);
   }
   if (!msg.empty()) {
     ss << msg;
@@ -96,15 +94,27 @@ void QCefClientHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
   frame->LoadString(ss.str(), failedUrl);
 }
 
+
+void QCefClientHandler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+                                             bool isLoading,
+                                             bool canGoBack,
+                                             bool canGoForward) {
+  if (delegate_ != nullptr) {
+    delegate_->OnLoadingStateChange(browser,
+                                    isLoading,
+                                    canGoBack,
+                                    canGoForward);
+  }
+}
+
+
 void QCefClientHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser,
                                   CefRefPtr<CefFrame> frame,
                                   int httpStatusCode) {
-  (void) browser;
-  (void) frame;
   CEF_REQUIRE_UI_THREAD();
 
   if (delegate_ != nullptr) {
-    delegate_->OnLoadEnd(httpStatusCode);
+    delegate_->OnLoadEnd(browser, frame, httpStatusCode);
   }
 }
 
@@ -115,11 +125,13 @@ bool QCefClientHandler::OnProcessMessageReceived(
   CEF_REQUIRE_UI_THREAD();
 
   if (delegate_ != nullptr) {
-    return delegate_->OnProcessMessageReceived(
-        browser, source_process, message);
+    return delegate_->OnProcessMessageReceived(browser,
+                                               source_process,
+                                               message);
   } else {
-    return CefClient::OnProcessMessageReceived(
-        browser, source_process, message);
+    return CefClient::OnProcessMessageReceived(browser,
+                                               source_process,
+                                               message);
   }
 }
 

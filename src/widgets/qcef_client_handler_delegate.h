@@ -22,9 +22,18 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
   void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
   void OnBeforeClose() override;
   void OnFaviconURLChange(const std::vector<CefString>& urls) override;
-  void OnLoadStarted() override;
-  void OnLoadEnd(int httpStatusCode) override;
-  std::string OnLoadError(int errorCode) override;
+  void OnLoadStarted(CefRefPtr<CefBrowser> browser,
+                     CefRefPtr<CefFrame> frame) override;
+  void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+                            bool is_loading,
+                            bool can_go_back,
+                            bool can_go_forward) override;
+  void OnLoadEnd(CefRefPtr<CefBrowser> browser,
+                 CefRefPtr<CefFrame> frame,
+                 int httpStatusCode) override;
+  std::string OnLoadError(CefRefPtr<CefBrowser> browser,
+                          CefRefPtr<CefFrame> frame,
+                          int errorCode) override;
   bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
                                 CefProcessId source_process,
                                 CefRefPtr<CefProcessMessage> message) override;

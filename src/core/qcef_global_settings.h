@@ -109,7 +109,7 @@ class QCEF_CORE_EXPORT QCefGlobalSettings {
   void addCustomScheme(const QUrl& url);
   const QList<QUrl>& customSchemes() const;
 
-  // Decline cross-origin limitation from |srouce| url to |target| url.
+  // Decline cross-origin limitation from |source| url to |target| url.
   void addCrossOriginWhiteEntry(const QUrl& source, const QUrl& target);
   typedef QVector<QPair<QUrl, QUrl>> CrossOriginList;
   const CrossOriginList& crossOriginWhiteList() const;

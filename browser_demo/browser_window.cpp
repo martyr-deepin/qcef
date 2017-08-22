@@ -52,6 +52,21 @@ void BrowserWindow::initConnections() {
           this, &BrowserWindow::setWindowTitle);
   connect(page, &QCefWebPage::urlChanged,
           this, &BrowserWindow::onUrlChanged);
+  connect(page, &QCefWebPage::loadStarted, [=]() {
+    page->runJavaScript("console.log('loadStarted');");
+  });
+  connect(page, &QCefWebPage::loadingStateChanged,
+          [=](bool is_loading, bool can_go_back, bool can_go_forward) {
+    const QString script =
+        QString("console.log('loadingStateChanged, %1 %2 %3');")
+            .arg(static_cast<int>(is_loading))
+            .arg(static_cast<int>(can_go_back))
+            .arg(static_cast<int>(can_go_forward));
+    page->runJavaScript(script);
+  });
+  connect(page, &QCefWebPage::loadFinished, [=]() {
+    page->runJavaScript("console.log('loadFinished');");
+  });
 }
 
 void BrowserWindow::initUI() {
