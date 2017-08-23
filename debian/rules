@@ -8,8 +8,10 @@ DH_AUTO_ARGS = --parallel --buildsystem=cmake
 
 # Override qcef exe path to /usr/lib/qcef.
 override_dh_auto_configure:
-	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Release \
-		-DQCEF_OVERRIDE_PATH=/usr/lib/qcef
+	dh_auto_configure -- \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DLIB_INSTALL_DIR=/usr/lib/${DEB_HOST_MULTIARCH} \
+	  -DQCEF_OVERRIDE_PATH=/usr/lib/${DEB_HOST_MULTIARCH}/qcef
 
 override_dh_auto_build:
 	dh_auto_build -- qcef

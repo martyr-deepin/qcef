@@ -13,13 +13,14 @@ endif()
 
 # Define absolute path to qcef module, i.e. /usr/lib/qcef.
 # See https://github.com/chromiumembedded/cef/pull/4.
-if (QCEF_OVERRIDE_PATH)
-  message("Override qcef path to " ${QCEF_OVERRIDE_PATH})
-  add_definitions("-DQCEF_OVERRIDE_PATH=\"${QCEF_OVERRIDE_PATH}\"")
-else()
-  message("Override qcef path to ${CMAKE_CURRENT_BINARY_DIR}/qcef")
-  add_definitions("-DQCEF_OVERRIDE_PATH=\"${CMAKE_CURRENT_BINARY_DIR}/qcef\"")
+if (NOT DEFINED QCEF_OVERRIDE_PATH)
+  set(QCEF_OVERRIDE_PATH "${CMAKE_CURRENT_BINARY_DIR}/qcef")
 endif()
+add_definitions("-DQCEF_OVERRIDE_PATH=\"${QCEF_OVERRIDE_PATH}\"")
+
+if (NOT DEFINED LIB_INSTALL_DIR)
+  set(LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+endif ()
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -Wall -Werror -Wextra")
@@ -201,11 +202,10 @@ add_dependencies(${CEF_TARGET} CEF_TARBALL)
 EXTRACT_CEF_TARBALL("CEF_TARBALL")
 
 ## Installation
-set(QCEF_OUTPUT_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 install(TARGETS "${CEF_TARGET}"
-        DESTINATION "${QCEF_OUTPUT_LIB_DIR}")
+        DESTINATION "${LIB_INSTALL_DIR}")
 install(FILES "${CEF_TARGET_OUT_DIR}/libcef.so"
-        DESTINATION "${QCEF_OUTPUT_LIB_DIR}")
+        DESTINATION "${LIB_INSTALL_DIR}")
 
 # Install header files.
 install(FILES ${CORE_EXPORT_FILES}
@@ -215,15 +215,15 @@ install(FILES ${WIDGETS_EXPORT_FILES}
 
 # Install pkgconfig files.
 install(FILES ${DATA_FILES}
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig/)
+        DESTINATION ${LIB_INSTALL_DIR}/pkgconfig/)
 
 # Install cef binary files.
 install(DIRECTORY "${CEF_TARGET_OUT_DIR}/qcef"
-        DESTINATION "${QCEF_OUTPUT_LIB_DIR}")
+        DESTINATION "${LIB_INSTALL_DIR}/qcef")
 
 # Fix sandbox permission.
 install(FILES "${CEF_TARGET_OUT_DIR}/qcef/chrome-sandbox"
-        DESTINATION "${QCEF_OUTPUT_LIB_DIR}/qcef"
+        DESTINATION "${LIB_INSTALL_DIR}/qcef"
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE
