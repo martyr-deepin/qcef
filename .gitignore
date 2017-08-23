@@ -3,9 +3,9 @@ debian/files
 debian/libqcef-dev.debhelper.log
 debian/libqcef-dev.substvars
 debian/libqcef-dev/
-debian/libqcef.debhelper.log
-debian/libqcef.substvars
-debian/libqcef/
+debian/libqcef1.debhelper.log
+debian/libqcef1.substvars
+debian/libqcef1/
 obj-x86-linux-gnu/
 obj-x86_64-linux-gnu/
 debian/tmp/

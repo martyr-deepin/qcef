@@ -168,8 +168,9 @@ target_link_libraries(${CEF_TARGET}
 set_target_properties(${CEF_TARGET} PROPERTIES INSTALL_RPATH "$ORIGIN")
 set_target_properties(${CEF_TARGET} PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
 set_target_properties(${CEF_TARGET} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
-set_property(TARGET ${CEF_TARGET} PROPERTY VERSION 1.0)
-set_property(TARGET ${CEF_TARGET} PROPERTY SOVERSION 1.0)
+set_target_properties(${CEF_TARGET}
+                      PROPERTIES VERSION 1.0
+                      SOVERSION 1)
 
 # Extract CEF binary files
 macro(EXTRACT_CEF_TARBALL target)
