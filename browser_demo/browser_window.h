@@ -16,6 +16,10 @@ class BrowserWindow : public QFrame {
   explicit BrowserWindow(QWidget* parent = nullptr);
   ~BrowserWindow() override;
 
+
+ signals:
+  void onTimeout();
+
  public slots:
    void printMessage(const QString& msg);
 

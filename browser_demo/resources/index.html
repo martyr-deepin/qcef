@@ -47,17 +47,21 @@ var globalTimer = setTimeout(() => {
 
   <script>
 
-  new QWebChannel(qt.webChannelTransport,
-    function(channel) {
+  function bootstrap() {
+      document.getElementById("send").onclick = function() {
+          var msg = document.getElementById("msg").value;
+          dialog && dialog.printMessage(msg);
+      };
+
+      dialog.onTimeout.connect(function() {
+          console.log("dialog onTimeout");
+      })
+  }
+
+  new QWebChannel(qt.webChannelTransport, function(channel) {
       window.channel = channel;
       window.dialog = channel.objects.dialog;
-      console.log("dialog: ", dialog);
-
-      document.getElementById("send").onclick = function() {
-        var msg = document.getElementById("msg").value;
-        dialog && dialog.printMessage(msg);
-      };
-    }
-  );
+      bootstrap();
+  });
   </script>
 </body>

@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QTimer>
 #include <QVBoxLayout>
 #include <QWebChannel>
 
@@ -67,6 +68,14 @@ void BrowserWindow::initConnections() {
   connect(page, &QCefWebPage::loadFinished, [=]() {
     page->runJavaScript("console.log('loadFinished');");
   });
+
+  QTimer* timer = new QTimer(this);
+  timer->setInterval(1000);
+  connect(timer, &QTimer::timeout, [&]() {
+    qDebug() << "timer timeout";
+    emit this->onTimeout();
+  });
+  timer->start();
 }
 
 void BrowserWindow::initUI() {
