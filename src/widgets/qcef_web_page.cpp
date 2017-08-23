@@ -66,11 +66,16 @@ struct QCefWebPagePrivate {
   QCefBrowserTransport* transport = nullptr;
 };
 
-QCefWebPage::QCefWebPage(QObject* parent)
-    : QObject(parent), p_(new QCefWebPagePrivate()) {
+QCefWebPage::QCefWebPage(QCefWebSettings* settings, QObject* parent)
+    : QObject(parent),
+      p_(new QCefWebPagePrivate()) {
   p_->delegate = new QCefClientHandlerDelegate(this);
   p_->client_handler = new QCefClientHandler(p_->delegate);
-  p_->settings = new QCefWebSettings();
+  if (settings != nullptr) {
+    p_->settings = settings;
+  } else {
+    p_->settings = new QCefWebSettings();
+  }
   p_->channel = new QWebChannel();
 }
 

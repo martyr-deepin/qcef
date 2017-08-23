@@ -41,7 +41,6 @@ struct QCefGlobalSettingsPrivate {
   QString accept_language_list = "";
   bool pepper_flash = false;
   QList<QUrl> custom_schemes;
-  QCefGlobalSettings::CrossOriginList cross_origin_list;
 
   QCefSchemeHandler custom_scheme_handler = nullptr;
 };
@@ -202,16 +201,6 @@ void QCefGlobalSettings::addCustomScheme(const QUrl& url) {
 
 const QList<QUrl>& QCefGlobalSettings::customSchemes() const {
   return p_->custom_schemes;
-}
-
-void QCefGlobalSettings::addCrossOriginWhiteEntry(const QUrl& source,
-                                                  const QUrl& target) {
-  p_->cross_origin_list.append(qMakePair(source, target));
-}
-
-const QCefGlobalSettings::CrossOriginList&
-QCefGlobalSettings::crossOriginWhiteList() const {
-  return p_->cross_origin_list;
 }
 
 void

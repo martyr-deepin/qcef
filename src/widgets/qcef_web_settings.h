@@ -6,6 +6,8 @@
 #define QCEF_WIDGETS_QCEF_WEB_SETTINGS_H
 
 #include <string>
+#include <QUrl>
+#include <QVector>
 
 #include "qcef_widgets_export.h"
 
@@ -105,6 +107,18 @@ class QCEF_WIDGETS_EXPORT QCefWebSettings {
   // empty then "en-US,en" will be used.
   void setAcceptLanguageList(const std::string& list);
   std::string acceptLanguageList() const;
+
+  // Decline cross-origin limitation from |source| url to |target| url.
+  void addCrossOriginWhiteEntry(const QUrl& source,
+                                const QUrl& target,
+                                bool allow_subdomains);
+  struct CrossOriginEntry {
+    QUrl source;
+    QUrl target;
+    bool allow_subdomains;
+  };
+  typedef QVector<CrossOriginEntry> CrossOriginList;
+  const CrossOriginList& crossOriginWhiteList() const;
 
  private:
   QCefWebSettingsPrivate* p_ = nullptr;

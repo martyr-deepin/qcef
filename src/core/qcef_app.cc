@@ -8,7 +8,6 @@
 
 #include "core/qcef_renderer_handler.h"
 #include "core/qcef_scheme_handler_factory.h"
-#include "include/cef_origin_whitelist.h"
 #include "include/wrapper/cef_helpers.h"
 
 QCefApp::QCefApp() {
@@ -53,14 +52,6 @@ void QCefApp::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar) {
       registrar->AddCustomScheme(scheme, true, true, false, true, true, false);
     }
   }
-
-  // Register Cross-Origin white list.
-  for (const CrossOriginEntry& entry : cross_origin_white_list_) {
-    CefAddCrossOriginWhitelistEntry(entry.src_scheme + entry.src_domain,
-                                    entry.target_scheme,
-                                    entry.target_domain,
-                                    true);
-  }
 }
 
 void QCefApp::appendCommandLineSwitches(const AppendedArguments& args) {
@@ -73,10 +64,6 @@ CefRefPtr<CefRenderProcessHandler> QCefApp::GetRenderProcessHandler() {
 
 void QCefApp::addCustomSchemes(const CustomSchemeList& list) {
   custom_scheme_list_ = list;
-}
-
-void QCefApp::addCrossOriginWhiteList(const CrossOriginList& list) {
-  cross_origin_white_list_ = list;
 }
 
 void QCefApp::setCustomSchemeHandler(QCefSchemeHandler handler) {

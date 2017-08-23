@@ -7,20 +7,23 @@
 #include <QDebug>
 
 #include "widgets/qcef_web_page.h"
+#include "widgets/qcef_web_settings.h"
 
 struct QCefWebViewPrivate {
   QCefWebPage* page = nullptr;
 };
 
 QCefWebView::QCefWebView(QWidget* parent)
+    : QCefWebView(nullptr, parent) {
+}
+
+QCefWebView::QCefWebView(QCefWebSettings* settings, QWidget* parent)
     : QWidget(parent),
       p_(new QCefWebViewPrivate()) {
   this->setAttribute(Qt::WA_NativeWindow, true);
   this->setAttribute(Qt::WA_DontCreateNativeAncestors, true);
 
-  p_->page = new QCefWebPage(this);
-  // TODO(LiuLang): Move to load() or setUrl().
-  // Or else QCefWebSettings will not work.
+  p_->page = new QCefWebPage(settings, this);
   p_->page->createBrowser(this->windowHandle(), this->size());
 }
 

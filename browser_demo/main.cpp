@@ -15,7 +15,6 @@ int main(int argc, char** argv) {
   settings.setPepperFlash(true);
   settings.setRemoteDebug(true);
   settings.setLogSeverity(QCefGlobalSettings::LogSeverity::Info);
-//  settings.addCustomScheme(QUrl("lrc:/local"));
   const int exit_code = QCefInit(argc, argv, settings);
   if (exit_code != 0) {
     return exit_code;

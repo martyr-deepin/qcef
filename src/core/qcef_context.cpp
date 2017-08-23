@@ -50,17 +50,6 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
 
   client_app->setCustomSchemeHandler(settings.getCustomSchemeHandler());
 
-  QCefApp::CrossOriginList cross_origin_list;
-  for (const QPair<QUrl, QUrl>& item : settings.crossOriginWhiteList()) {
-    cross_origin_list.push_back({
-        item.first.scheme().toStdString(),
-        item.first.host().toStdString(),
-        item.second.scheme().toStdString(),
-        item.second.host().toStdString()
-    });
-  }
-  client_app->addCrossOriginWhiteList(cross_origin_list);
-
 #ifdef QCEF_OVERRIDE_PATH
   if (!CefOverridePath(PK_DIR_EXE, QCEF_OVERRIDE_PATH)) {
     qCritical() << "Failed to override PK_DIR_EXE";

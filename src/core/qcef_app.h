@@ -43,15 +43,6 @@ class QCefApp : public CefApp,
   typedef std::vector<CustomSchemeEntry> CustomSchemeList;
   void addCustomSchemes(const CustomSchemeList& list);
 
-  struct CrossOriginEntry {
-    std::string src_scheme;
-    std::string src_domain;
-    std::string target_scheme;
-    std::string target_domain;
-  };
-  typedef std::vector<CrossOriginEntry> CrossOriginList;
-  void addCrossOriginWhiteList(const CrossOriginList& list);
-
   void setCustomSchemeHandler(QCefSchemeHandler handler);
 
  private:
@@ -60,7 +51,6 @@ class QCefApp : public CefApp,
 
   AppendedArguments appended_args_;
   CustomSchemeList custom_scheme_list_;
-  CrossOriginList cross_origin_white_list_;
 
   QCefSchemeHandler custom_scheme_handler_ = nullptr;
 };

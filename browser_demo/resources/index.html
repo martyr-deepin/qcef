@@ -1,67 +1,42 @@
 <!doctype html>
 <head>
-<title>Hello, WebEngine</title>
+    <meta charset="UTF-8"/>
+    <title>Hello, WebEngine</title>
 </head>
 
 <body>
-<h1>Hello</h1>
+    <h1>Hello</h1>
 
-<p id="serverMsg"></p>
+    <p id="serverMsg"></p>
 
-<br />
-<input type="text" id="msg"/> 
-<input type="submit" id="send" value="Send to Server"/>
+    <br />
+    <input type="text" id="msg"/>
+    <input type="submit" id="send" value="Send to Server"/>
 
-<!-- Load web channel adapter -->
-<!--
-<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
--->
+    <script>
+        function testCrossDomain() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('get', 'http://music.163.com');
+            xhr.send();
+        }
 
-<!--
-<script>
-var globalTimer = setTimeout(() => {
-  if (typeof QWebChannel !== "undefined") {
-    clearTimeout(globalTimer);
-    console.log("QWebChannel is not null");
-    console.log(window.qt.webChannelTransport);
+        function bootstrap() {
+            document.getElementById("send").onclick = function () {
+                var msg = document.getElementById("msg").value;
+                dialog && dialog.printMessage(msg);
+            };
 
-    window.channel = new QWebChannel(window.qt.webChannelTransport,
-        (channel) => {
-      console.log("Channel initialized", channel);
-      // Export channel object.
-      //window.channel = channel;
+            dialog.onTimeout.connect(function () {
+                console.log("dialog onTimeout");
+            })
 
-      window.dialog = channel.objects.dialog;
-      console.log("dialog: ", dialog);
+            testCrossDomain();
+        }
 
-      document.getElementById("send").onclick = function() {
-        var msg = document.getElementById("msg").value;
-        dialog && dialog.printMessage(msg);
-      };
-    });
-  }
-},
-  1);
-</script>
--->
-
-  <script>
-
-  function bootstrap() {
-      document.getElementById("send").onclick = function() {
-          var msg = document.getElementById("msg").value;
-          dialog && dialog.printMessage(msg);
-      };
-
-      dialog.onTimeout.connect(function() {
-          console.log("dialog onTimeout");
-      })
-  }
-
-  new QWebChannel(qt.webChannelTransport, function(channel) {
-      window.channel = channel;
-      window.dialog = channel.objects.dialog;
-      bootstrap();
-  });
-  </script>
+        new QWebChannel(qt.webChannelTransport, function(channel) {
+            window.channel = channel;
+            window.dialog = channel.objects.dialog;
+            bootstrap();
+        });
+    </script>
 </body>

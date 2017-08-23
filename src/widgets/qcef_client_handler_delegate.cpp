@@ -9,6 +9,8 @@
 #include <QJsonObject>
 
 #include "core/qcef_web_channel_consts.h"
+#include "include/cef_origin_whitelist.h"
+#include "widgets/qcef_web_settings.h"
 
 QCefClientHandlerDelegate::QCefClientHandlerDelegate(QCefWebPage* web_page)
   : web_page_(web_page){
@@ -33,6 +35,15 @@ void QCefClientHandlerDelegate::OnBrowserCreated(
     CefRefPtr<CefBrowser> browser) {
   if (cef_browser_ == nullptr) {
     cef_browser_ = browser;
+  }
+
+  // Set Cross-Origin white list.
+  const auto white_list = web_page_->settings()->crossOriginWhiteList();
+  for (const QCefWebSettings::CrossOriginEntry& entry : white_list) {
+    CefAddCrossOriginWhitelistEntry(entry.source.toString().toStdString(),
+                                    entry.target.scheme().toStdString(),
+                                    entry.target.host().toStdString(),
+                                    true);
   }
 }
 

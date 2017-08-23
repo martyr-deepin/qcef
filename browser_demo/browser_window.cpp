@@ -14,6 +14,7 @@
 
 #include <qcef_context.h>
 #include <qcef_web_page.h>
+#include <qcef_web_settings.h>
 #include <qcef_web_view.h>
 
 struct BrowserWindowPrivate {
@@ -84,7 +85,12 @@ void BrowserWindow::initUI() {
   p_->forward_button = new QPushButton("Forward", this);
   p_->loading_button = new QPushButton("Refresh", this);
   p_->address_edit = new QLineEdit(this);
-  p_->web_view = new QCefWebView(this);
+
+  QCefWebSettings* settings = new QCefWebSettings();
+  settings->addCrossOriginWhiteEntry(QUrl("http://music.163.com"),
+                                     QUrl("http://126.com"),
+                                     true);
+  p_->web_view = new QCefWebView(settings, this);
 
   QHBoxLayout* toolbar_layout = new QHBoxLayout();
   toolbar_layout->setContentsMargins(0, 0, 0, 0);

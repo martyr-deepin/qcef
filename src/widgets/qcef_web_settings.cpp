@@ -29,6 +29,7 @@ struct QCefWebSettingsPrivate {
   QCefWebSettings::State application_cache = QCefWebSettings::StateDefault;
   QCefWebSettings::State webgl = QCefWebSettings::StateDefault;
   std::string accept_language_list = "";
+  QCefWebSettings::CrossOriginList cross_origin_list;
 };
 
 QCefWebSettings::QCefWebSettings() : p_(new QCefWebSettingsPrivate()) {
@@ -182,4 +183,15 @@ void QCefWebSettings::setAcceptLanguageList(const std::string& list) {
 
 std::string QCefWebSettings::acceptLanguageList() const {
   return p_->accept_language_list;
+}
+
+void QCefWebSettings::addCrossOriginWhiteEntry(const QUrl& source,
+                                               const QUrl& target,
+                                               bool allow_subdomains) {
+  p_->cross_origin_list.append({source, target, allow_subdomains});
+}
+
+const QCefWebSettings::CrossOriginList&
+QCefWebSettings::crossOriginWhiteList() const {
+  return p_->cross_origin_list;
 }

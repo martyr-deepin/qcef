@@ -26,7 +26,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
              WRITE setPageErrorContent)
 
  public:
-  explicit QCefWebPage(QObject* parent = nullptr);
+  explicit QCefWebPage(QCefWebSettings* settings, QObject* parent = nullptr);
   ~QCefWebPage() override;
 
   void load(const QUrl& url);

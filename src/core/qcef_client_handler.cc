@@ -4,19 +4,8 @@
 
 #include "core/qcef_client_handler.h"
 
-#include <X11/Xatom.h>
-#include <X11/Xlib.h>
-
-#include <sstream>
-#include <string>
-
-#include "include/base/cef_bind.h"
-#include "include/base/cef_logging.h"
 #include "include/cef_app.h"
-#include "include/cef_browser.h"
 #include "include/views/cef_browser_view.h"
-#include "include/views/cef_window.h"
-#include "include/wrapper/cef_closure_task.h"
 #include "include/wrapper/cef_helpers.h"
 
 QCefClientHandler::QCefClientHandler(Delegate* delegate) : delegate_(delegate) {
