@@ -142,7 +142,15 @@ QWebChannel* QCefWebPage::webChannel() const {
 
 void QCefWebPage::runJavaScript(const QString& script_source) {
   CefRefPtr<CefFrame> frame = p_->delegate->cef_browser()->GetMainFrame();
-  frame->ExecuteJavaScript(script_source.toStdString(), frame->GetURL(), 0);
+  frame->ExecuteJavaScript(script_source.toStdString(), "", 0);
+}
+
+void QCefWebPage::runJavaScript(const QString& script_source,
+                                const QString& script_url) {
+  CefRefPtr<CefFrame> frame = p_->delegate->cef_browser()->GetMainFrame();
+  frame->ExecuteJavaScript(script_source.toStdString(),
+                           script_url.toStdString(),
+                           0);
 }
 
 bool QCefWebPage::canGoBack() const {

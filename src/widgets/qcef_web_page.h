@@ -45,6 +45,10 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
 
   // Runs the JavaScript code contained in |script_source|.
   void runJavaScript(const QString& script_source);
+  // Runs the JavaScript code contained in |script_source|.
+  // |script_url| is reference of |script_source| which can be identified
+  // in web development console.
+  void runJavaScript(const QString& script_source, const QString& script_url);
 
   bool canGoBack() const;
   bool canGoForward() const;
@@ -57,6 +61,8 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void stopLoad();
 
  signals:
+  void renderContextCreated();
+
   void loadStarted();
   void loadingStateChanged(bool is_loading,
                            bool can_go_back,

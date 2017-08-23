@@ -102,6 +102,7 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
   const std::string name(message->GetName());
   if (name == kQCefRenderContextCreated) {
     web_page_->createTransportChannel();
+    emit web_page_->renderContextCreated();
     return true;
   }
   if (name == kQCefRenderContextReleased) {

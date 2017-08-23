@@ -22,6 +22,8 @@ class QCefRendererHandler : public CefRenderProcessHandler {
                                 CefProcessId source_process,
                                 CefRefPtr<CefProcessMessage> message) override;
 
+  void OnWebKitInitialized() override;
+
  private:
   IMPLEMENT_REFCOUNTING(QCefRendererHandler);
 };

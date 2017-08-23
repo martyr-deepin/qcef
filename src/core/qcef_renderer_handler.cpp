@@ -34,7 +34,7 @@ void RegisterRendererTransport(CefRefPtr<CefFrame> frame,
   const QString content = ReadFile(":/qtwebchannel/qwebchannel.js");
   Q_ASSERT(!content.isEmpty());
   const CefString code = content.toStdWString();
-  frame->ExecuteJavaScript(code, "/", 0);
+  frame->ExecuteJavaScript(code, "qrc://qtwebchannel/qwebchannel.js", 0);
 }
 
 }  // namespace
@@ -107,4 +107,7 @@ bool QCefRendererHandler::OnProcessMessageReceived(
   }
 
   return false;
+}
+
+void QCefRendererHandler::OnWebKitInitialized() {
 }

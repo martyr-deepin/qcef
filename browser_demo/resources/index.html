@@ -17,6 +17,7 @@
 <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
 -->
 
+<!--
 <script>
 var globalTimer = setTimeout(() => {
   if (typeof QWebChannel !== "undefined") {
@@ -30,7 +31,7 @@ var globalTimer = setTimeout(() => {
       // Export channel object.
       //window.channel = channel;
 
-      var dialog = channel.objects.dialog;
+      window.dialog = channel.objects.dialog;
       console.log("dialog: ", dialog);
 
       document.getElementById("send").onclick = function() {
@@ -42,4 +43,21 @@ var globalTimer = setTimeout(() => {
 },
   1);
 </script>
+-->
+
+  <script>
+
+  new QWebChannel(qt.webChannelTransport,
+    function(channel) {
+      window.channel = channel;
+      window.dialog = channel.objects.dialog;
+      console.log("dialog: ", dialog);
+
+      document.getElementById("send").onclick = function() {
+        var msg = document.getElementById("msg").value;
+        dialog && dialog.printMessage(msg);
+      };
+    }
+  );
+  </script>
 </body>
