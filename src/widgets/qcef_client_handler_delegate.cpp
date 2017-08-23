@@ -97,8 +97,12 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
     CefRefPtr<CefBrowser> browser,
     CefProcessId source_process,
     CefRefPtr<CefProcessMessage> message) {
-  Q_UNUSED(browser);
   Q_UNUSED(source_process);
+
+  if (browser->GetIdentifier() != cef_browser()->GetIdentifier()) {
+    return false;
+  }
+
   const std::string name(message->GetName());
   if (name == kQCefRenderContextCreated) {
     web_page_->createTransportChannel();

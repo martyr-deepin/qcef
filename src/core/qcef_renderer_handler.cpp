@@ -44,6 +44,9 @@ void QCefRendererHandler::OnContextCreated(CefRefPtr<CefBrowser> browser,
                                            CefRefPtr<CefV8Context> context) {
   CEF_REQUIRE_RENDERER_THREAD();
 
+  if (frame->GetIdentifier() != browser->GetMainFrame()->GetIdentifier()) {
+    return;
+  }
   RegisterRendererTransport(frame, context);
 
   CefRefPtr<CefProcessMessage> msg =
@@ -55,9 +58,12 @@ void QCefRendererHandler::OnContextCreated(CefRefPtr<CefBrowser> browser,
 void QCefRendererHandler::OnContextReleased(CefRefPtr<CefBrowser> browser,
                                             CefRefPtr<CefFrame> frame,
                                             CefRefPtr<CefV8Context> context) {
-  (void) frame;
   (void) context;
   CEF_REQUIRE_RENDERER_THREAD();
+
+  if (frame->GetIdentifier() != browser->GetMainFrame()->GetIdentifier()) {
+    return;
+  }
 
   CefRefPtr<CefProcessMessage> msg =
       CefProcessMessage::Create(kQCefRenderContextReleased);

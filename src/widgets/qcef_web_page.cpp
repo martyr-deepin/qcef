@@ -238,8 +238,9 @@ void QCefWebPage::releaseTransportChannel() {
 }
 
 void QCefWebPage::handleWebMessage(const QJsonObject& message) {
-#ifdef N_DEBUG
-  qDebug() << "WebPage::handleWebMessage():" << message;
-#endif
-  emit p_->transport->messageReceived(message, p_->transport);
+  if (p_->transport != nullptr) {
+    emit p_->transport->messageReceived(message, p_->transport);
+  } else {
+    qCritical() << __FUNCTION__ << "transport is null!";
+  }
 }
