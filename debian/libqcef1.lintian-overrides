@@ -1,0 +1,3 @@
+libqcef1: embedded-library usr/lib/libcef.so: libavutil
+libqcef1: embedded-library usr/lib/libcef.so: lcms2
+libqcef1: embedded-library usr/lib/libcef.so: srtp

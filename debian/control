@@ -1,33 +1,32 @@
 Source: qcef
-Section: devel
+Section: libdevel
 Priority: optional
-Maintainer: LiuLang<gsushzhsosgsu@gmail.com>
+Maintainer: LiuLang <gsushzhsosgsu@gmail.com>
 Build-Depends: debhelper (>= 9),
-               cmake,
-               libasound2,
-               libfl-dev,
-               libfontconfig1-dev,
-               libgconf-2-4,
-               libgtk2.0-dev,
-               libglib2.0-dev,
-               libharfbuzz-dev,
-               libnspr4,
-               libnss3,
-               libpulse0,
-               libqt5webchannel5-dev,
-               libqt5x11extras5-dev,
-               libx11-dev,
-               libxext-dev,
-               libxss-dev,
-               libxtst-dev,
-               pkg-config,
+ cmake,
+ libasound2,
+ libfl-dev,
+ libfontconfig1-dev,
+ libgconf-2-4,
+ libgtk2.0-dev,
+ libglib2.0-dev,
+ libharfbuzz-dev,
+ libnspr4,
+ libnss3,
+ libpulse0,
+ libqt5webchannel5-dev,
+ libqt5x11extras5-dev,
+ libx11-dev,
+ libxext-dev,
+ libxss-dev,
+ libxtst-dev,
+ pkg-config,
 Standards-Version: 3.9.6
 Homepage: https://www.deepin.org
 
-Package: libqcef
+Package: libqcef1
 Architecture: any
-Depends: ${shlibs:Depends},
-         ${misc:Depends},
+Depends: ${shlibs:Depends}, ${misc:Depends},
 Description: Qt5 binding of CEF3.
  qcef provides a web browser engine that makes it easy to embed into other
  Qt widgets.
@@ -35,7 +34,7 @@ Description: Qt5 binding of CEF3.
 Package: libqcef-dev
 Architecture: any
 Depends: ${misc:Depends},
-         libqcef,
+ libqcef1 ( = ${binary:Version})
 Description: Qt5 binding of CEF3.
  qcef provides a web browser engine that makes it easy to embed into other
  Qt widgets.
