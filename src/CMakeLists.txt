@@ -219,7 +219,7 @@ install(FILES ${DATA_FILES}
 
 # Install cef binary files.
 install(DIRECTORY "${CEF_TARGET_OUT_DIR}/qcef"
-        DESTINATION "${LIB_INSTALL_DIR}/qcef")
+        DESTINATION "${LIB_INSTALL_DIR}")
 
 # Fix sandbox permission.
 install(FILES "${CEF_TARGET_OUT_DIR}/qcef/chrome-sandbox"
