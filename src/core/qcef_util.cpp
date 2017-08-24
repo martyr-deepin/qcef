@@ -10,6 +10,8 @@
 #undef Success     // Definition conflicts with cef_message_router.h
 #undef RootWindow  // Definition conflicts with root_window.h
 
+#include "include/base/cef_logging.h"
+
 namespace {
 
 const char kProcessType[] = "type";
@@ -85,9 +87,9 @@ void SetXWindowTitle(CefWindowHandle window, const std::string& title) {
   // Retrieve the atoms required by the below XChangeProperty call.
   const char* kAtoms[] = {"_NET_WM_NAME", "UTF8_STRING"};
   Atom atoms[2];
-  int result = XInternAtoms(display, const_cast<char**>(kAtoms), 2, false,
+  int result = XInternAtoms(display, const_cast<char**>(kAtoms), 2, 0,
                             atoms);
-  if (!result) {
+  if (result == 0) {
     NOTREACHED();
   }
 
@@ -113,15 +115,15 @@ void SetXWindowVisible(CefWindowHandle xwindow, bool visible) {
       "_NET_WM_STATE_HIDDEN"
   };
   Atom atoms[3];
-  int result = XInternAtoms(xdisplay, const_cast<char**>(kAtoms), 3, false,
+  int result = XInternAtoms(xdisplay, const_cast<char**>(kAtoms), 3, 0,
                             atoms);
-  if (!result) {
+  if (result == 0) {
     NOTREACHED();
   }
 
   if (!visible) {
     // Set the hidden property state value.
-    scoped_ptr<Atom[]> data(new Atom[1]);
+    std::shared_ptr<Atom[]> data(new Atom[1]);
     data[0] = atoms[2];
 
     XChangeProperty(xdisplay,

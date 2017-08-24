@@ -58,14 +58,14 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 
   client_app->setCustomSchemeHandler(settings.getCustomSchemeHandler());
 
-//#ifdef QCEF_OVERRIDE_PATH
-//  if (!CefOverridePath(PK_DIR_EXE, QCEF_OVERRIDE_PATH)) {
-//    qCritical() << "Failed to override PK_DIR_EXE";
-//  }
-//  if (!CefOverridePath(PK_DIR_MODULE, QCEF_OVERRIDE_PATH)) {
-//    qCritical() << "Failed to override PK_DIR_MODULE";
-//  }
-//#endif
+#ifdef QCEF_OVERRIDE_PATH
+  if (!CefOverridePath(PK_DIR_EXE, QCEF_OVERRIDE_PATH)) {
+    qCritical() << "Failed to override PK_DIR_EXE";
+  }
+  if (!CefOverridePath(PK_DIR_MODULE, QCEF_OVERRIDE_PATH)) {
+    qCritical() << "Failed to override PK_DIR_MODULE";
+  }
+#endif
 
   // CEF applications have multiple sub-processes (render, plugin, GPU, etc)
   // that share the same executable. This function checks the command-line and,
