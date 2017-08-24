@@ -57,6 +57,7 @@ void MergeWebPageSettings(CefBrowserSettings& cef_settings,
 }  // namespace
 
 struct QCefWebPagePrivate {
+  bool browser_created = false;
   QUrl url = QUrl(kBlankUrl);
   QString page_error_content;
   QCefClientHandlerDelegate* delegate = nullptr;
@@ -117,9 +118,12 @@ void QCefWebPage::load(const QUrl& url) {
 
 void QCefWebPage::setUrl(const QUrl& url) {
   p_->url = url;
-  if (p_->browser_window_wrapper != nullptr) {
+  if (p_->browser_created) {
     const std::string url_str = url.toString().toStdString();
-    p_->delegate->cef_browser()->GetMainFrame()->LoadURL(url_str);
+    if (p_->delegate->cef_browser() != nullptr) {
+      // TODO(LiuLang): Support delayed loading.
+      p_->delegate->cef_browser()->GetMainFrame()->LoadURL(url_str);
+    }
   } else {
     QWidget* parent = qobject_cast<QWidget*>(this->parent());
     this->createBrowser(parent->windowHandle(), parent->size());
@@ -192,9 +196,11 @@ void QCefWebPage::stopLoad() {
 }
 
 void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
-  if (p_->browser_window_wrapper != nullptr) {
+  if (p_->browser_created) {
     return;
   }
+
+  p_->browser_created = true;
 
   CefRect rect;
   rect.x = 0;
@@ -208,6 +214,8 @@ void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
 
   const unsigned long wid = InitCefBrowserWindow(size.width(), size.height());
   p_->browser_window_wrapper = QWindow::fromWinId(wid);
+  p_->browser_window_wrapper->setParent(parent_window);
+
   window_info.SetAsChild(wid, rect);
 
   const std::string url = p_->url.url().toStdString();
@@ -216,17 +224,19 @@ void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
                                     CefString(url),
                                     cef_settings,
                                     nullptr);
-
-  QWindow::fromWinId(wid)->setParent(parent_window);
 }
 
 
 void QCefWebPage::resizeCefBrowser(const QSize& size) {
-  if (p_->browser_window_wrapper != nullptr) {
+  if (p_->browser_created) {
     SetXWindowBounds(p_->browser_window_wrapper->winId(),
                      0, 0, size.width(), size.height());
-    SetXWindowBounds(p_->delegate->cef_browser()->GetHost()->GetWindowHandle(),
-                     0, 0, size.width(), size.height());
+
+    auto browser = p_->delegate->cef_browser();
+    if (browser != nullptr) {
+      SetXWindowBounds(browser->GetHost()->GetWindowHandle(),
+                       0, 0, size.width(), size.height());
+    }
   }
 }
 
