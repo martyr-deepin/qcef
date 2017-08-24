@@ -10,6 +10,7 @@ DH_AUTO_ARGS = --parallel --buildsystem=cmake
 override_dh_auto_configure:
 	dh_auto_configure -- \
 	  -DCMAKE_BUILD_TYPE=Release \
+	  -DPROJECT_ARCH=${DEB_TARGET_ARCH} \
 	  -DLIB_INSTALL_DIR=/usr/lib/${DEB_HOST_MULTIARCH} \
 	  -DQCEF_OVERRIDE_PATH=/usr/lib/${DEB_HOST_MULTIARCH}/qcef
 

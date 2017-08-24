@@ -9,16 +9,13 @@
 
 #include "browser_window.h"
 
-int main(int argc, char** argv) {
+int main(int argc, char* argv[]) {
   QCefGlobalSettings settings;
   settings.setNoSandbox(true);
-  settings.setPepperFlash(true);
+//  settings.setPepperFlash(true);
   settings.setRemoteDebug(true);
   settings.setLogSeverity(QCefGlobalSettings::LogSeverity::Info);
-  const int exit_code = QCefInit(argc, argv, settings);
-  if (exit_code != 0) {
-    return exit_code;
-  }
+  QCefInit(argc, argv, settings);
 
   QApplication app(argc, argv);
   BrowserWindow browser_window;

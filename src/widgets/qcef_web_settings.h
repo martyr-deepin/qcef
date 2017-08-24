@@ -22,7 +22,7 @@ class QCEF_WIDGETS_EXPORT QCefWebSettings {
   enum State {
     StateDefault = 0,
     StateEnabled,
-    StateDisableD,
+    StateDisabled,
   };
 
   // Default encoding for Web content. If empty "ISO-8859-1" will be used.

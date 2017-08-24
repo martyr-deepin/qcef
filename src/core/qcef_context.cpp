@@ -14,6 +14,8 @@
 
 namespace {
 
+guint g_loop_source_id = 0;
+
 gboolean ProcessQtEvent(gpointer user_data) {
   Q_UNUSED(user_data);
   qApp->processEvents();
@@ -22,10 +24,16 @@ gboolean ProcessQtEvent(gpointer user_data) {
 
 }  // namespace
 
-int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
+int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   SetXErrorHandler();
 
-  CefMainArgs main_args(argc, argv);
+  int cef_argc = argc;
+  char** cef_argv = nullptr;
+  cef_argv = static_cast<char**>(calloc(static_cast<size_t>(cef_argc),
+                                        sizeof(argv[0])));
+  memcpy(cef_argv, argv, argc * sizeof(argv[0]));
+
+  CefMainArgs main_args(cef_argc, cef_argv);
   CefRefPtr<QCefApp> client_app(new QCefApp());
 
   // Add flash plugin parameters.
@@ -50,14 +58,14 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
 
   client_app->setCustomSchemeHandler(settings.getCustomSchemeHandler());
 
-#ifdef QCEF_OVERRIDE_PATH
-  if (!CefOverridePath(PK_DIR_EXE, QCEF_OVERRIDE_PATH)) {
-    qCritical() << "Failed to override PK_DIR_EXE";
-  }
-  if (!CefOverridePath(PK_DIR_MODULE, QCEF_OVERRIDE_PATH)) {
-    qCritical() << "Failed to override PK_DIR_MODULE";
-  }
-#endif
+//#ifdef QCEF_OVERRIDE_PATH
+//  if (!CefOverridePath(PK_DIR_EXE, QCEF_OVERRIDE_PATH)) {
+//    qCritical() << "Failed to override PK_DIR_EXE";
+//  }
+//  if (!CefOverridePath(PK_DIR_MODULE, QCEF_OVERRIDE_PATH)) {
+//    qCritical() << "Failed to override PK_DIR_MODULE";
+//  }
+//#endif
 
   // CEF applications have multiple sub-processes (render, plugin, GPU, etc)
   // that share the same executable. This function checks the command-line and,
@@ -122,12 +130,11 @@ int QCefInit(int argc, char* argv[], const QCefGlobalSettings& settings) {
     qCritical() << "CefInitialize() failed!";
     return 1;
   }
-
   return 0;
 }
 
 void QCefRunLoop() {
-  g_timeout_add(50, ProcessQtEvent, nullptr);
+  g_loop_source_id = g_timeout_add(50, ProcessQtEvent, nullptr);
   CefRunMessageLoop();
 
   // Shutdown loop internally.
@@ -135,5 +142,9 @@ void QCefRunLoop() {
 }
 
 void QCefQuitLoop() {
+  if (g_loop_source_id != 0) {
+    g_source_remove(g_loop_source_id);
+    g_loop_source_id = 0;
+  }
   CefQuitMessageLoop();
 }

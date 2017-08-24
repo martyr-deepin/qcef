@@ -40,6 +40,7 @@ void QCefClientHandlerDelegate::OnBrowserCreated(
   // Set Cross-Origin white list.
   const auto white_list = web_page_->settings()->crossOriginWhiteList();
   for (const QCefWebSettings::CrossOriginEntry& entry : white_list) {
+    qDebug() << "Add cross-origin white entry:" << entry.source << entry.target;
     CefAddCrossOriginWhitelistEntry(entry.source.toString().toStdString(),
                                     entry.target.scheme().toStdString(),
                                     entry.target.host().toStdString(),

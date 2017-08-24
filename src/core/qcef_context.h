@@ -10,7 +10,7 @@
 
 // Initialize cef app with specific settings.
 QCEF_CORE_EXPORT int QCefInit(int argc,
-                              char* argv[],
+                              char** argv,
                               const QCefGlobalSettings& settings);
 
 // Run cef message loop when every thing is ready.
