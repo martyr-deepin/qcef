@@ -4,7 +4,7 @@
 
 #include "core/qcef_context.h"
 
-#include <glib-2.0/glib.h>
+#include <glib.h>
 #include <QCoreApplication>
 #include <QDebug>
 
@@ -13,8 +13,6 @@
 #include "include/cef_path_util.h"
 
 namespace {
-
-guint g_loop_source_id = 0;
 
 gboolean ProcessQtEvent(gpointer user_data) {
   Q_UNUSED(user_data);
@@ -134,7 +132,7 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 }
 
 void QCefRunLoop() {
-  g_loop_source_id = g_timeout_add(50, ProcessQtEvent, nullptr);
+  g_timeout_add(50, ProcessQtEvent, nullptr);
   CefRunMessageLoop();
 
   // Shutdown loop internally.
@@ -142,9 +140,5 @@ void QCefRunLoop() {
 }
 
 void QCefQuitLoop() {
-  if (g_loop_source_id != 0) {
-    g_source_remove(g_loop_source_id);
-    g_loop_source_id = 0;
-  }
   CefQuitMessageLoop();
 }

@@ -63,6 +63,7 @@ struct QCefWebPagePrivate {
   QCefClientHandlerDelegate* delegate = nullptr;
   CefRefPtr<QCefClientHandler> client_handler = nullptr;
   QWindow* browser_window_wrapper = nullptr;
+  QWindow* browser_window = nullptr;
   QCefWebSettings* settings = nullptr;
   QWebChannel* channel = nullptr;
   QCefBrowserTransport* transport = nullptr;
@@ -91,6 +92,11 @@ QCefWebPage::~QCefWebPage() {
   if (p_->browser_window_wrapper != nullptr) {
     delete p_->browser_window_wrapper;
     p_->browser_window_wrapper = nullptr;
+  }
+
+  if (p_->browser_window != nullptr) {
+    delete p_->browser_window;
+    p_->browser_window = nullptr;
   }
 
   if (p_->settings != nullptr) {
@@ -212,11 +218,13 @@ void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
   CefBrowserSettings cef_settings;
   MergeWebPageSettings(cef_settings, *p_->settings);
 
-  const unsigned long wid = InitCefBrowserWindow(size.width(), size.height());
-  p_->browser_window_wrapper = QWindow::fromWinId(wid);
+  p_->browser_window_wrapper = new QWindow();
+  p_->browser_window_wrapper->create();
   p_->browser_window_wrapper->setParent(parent_window);
+  p_->browser_window_wrapper->setVisible(true);
+  p_->browser_window_wrapper->resize(parent_window->size());
 
-  window_info.SetAsChild(wid, rect);
+  window_info.SetAsChild(p_->browser_window_wrapper->winId(), rect);
 
   const std::string url = p_->url.url().toStdString();
   CefBrowserHost::CreateBrowserSync(window_info,
@@ -229,13 +237,15 @@ void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
 
 void QCefWebPage::resizeCefBrowser(const QSize& size) {
   if (p_->browser_created) {
-    SetXWindowBounds(p_->browser_window_wrapper->winId(),
-                     0, 0, size.width(), size.height());
+    p_->browser_window_wrapper->resize(size);
 
     auto browser = p_->delegate->cef_browser();
     if (browser != nullptr) {
-      SetXWindowBounds(browser->GetHost()->GetWindowHandle(),
-                       0, 0, size.width(), size.height());
+      if (p_->browser_window == nullptr) {
+        p_->browser_window =
+            QWindow::fromWinId(browser->GetHost()->GetWindowHandle());
+      }
+      p_->browser_window->resize(size);
     }
   }
 }

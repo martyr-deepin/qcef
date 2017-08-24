@@ -17,17 +17,6 @@ enum class ProcessType {
 
 ProcessType GetProcessType(CefRefPtr<CefCommandLine> command_line);
 
-// Create an inter-media x window used to wrap cef browser window.
-unsigned long InitCefBrowserWindow(int width, int height);
-
 void SetXErrorHandler();
-
-void SetXWindowBounds(CefWindowHandle xwindow,
-                      int x, int y,
-                      int width, int height);
-
-void SetXWindowTitle(CefWindowHandle window, const std::string& title);
-
-void SetXWindowVisible(CefWindowHandle xwindow, bool visible);
 
 #endif  // QCEF_CORE_QCEF_UTIL_H
