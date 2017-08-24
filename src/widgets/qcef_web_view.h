@@ -25,10 +25,6 @@ class QCEF_WIDGETS_EXPORT QCefWebView : public QWidget {
 
  public:
   explicit QCefWebView(QWidget* parent = nullptr);
-
-  // Construct web page with customize browser |settings|.
-  // Note that QCefWebView takes ownership of |settings|.
-  explicit QCefWebView(QCefWebSettings* settings, QWidget* parent = nullptr);
   ~QCefWebView() override;
 
   // Loads the specified |url| and displays it.

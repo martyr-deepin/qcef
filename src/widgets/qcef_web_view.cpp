@@ -14,17 +14,12 @@ struct QCefWebViewPrivate {
 };
 
 QCefWebView::QCefWebView(QWidget* parent)
-    : QCefWebView(nullptr, parent) {
-}
-
-QCefWebView::QCefWebView(QCefWebSettings* settings, QWidget* parent)
     : QWidget(parent),
       p_(new QCefWebViewPrivate()) {
   this->setAttribute(Qt::WA_NativeWindow, true);
   this->setAttribute(Qt::WA_DontCreateNativeAncestors, true);
 
-  p_->page = new QCefWebPage(settings, this);
-  p_->page->createBrowser(this->windowHandle(), this->size());
+  p_->page = new QCefWebPage(this);
 }
 
 QCefWebView::~QCefWebView() {

@@ -26,7 +26,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
              WRITE setPageErrorContent)
 
  public:
-  explicit QCefWebPage(QCefWebSettings* settings, QObject* parent = nullptr);
+  explicit QCefWebPage(QObject* parent = nullptr);
   ~QCefWebPage() override;
 
   void load(const QUrl& url);
@@ -37,6 +37,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   const QString& pageErrorContent() const;
 
   // Returns a pointer to the page's settings object.
+  // Update browser settings before loading any url or html content.
   QCefWebSettings* settings() const;
 
   // Returns a pointer to the web channel instance used by this page.

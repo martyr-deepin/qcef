@@ -86,11 +86,11 @@ void BrowserWindow::initUI() {
   p_->loading_button = new QPushButton("Refresh", this);
   p_->address_edit = new QLineEdit(this);
 
-  QCefWebSettings* settings = new QCefWebSettings();
+  p_->web_view = new QCefWebView(this);
+  QCefWebSettings* settings = p_->web_view->page()->settings();
   settings->addCrossOriginWhiteEntry(QUrl("http://music.163.com"),
                                      QUrl("http://126.com"),
                                      true);
-  p_->web_view = new QCefWebView(settings, this);
 
   QHBoxLayout* toolbar_layout = new QHBoxLayout();
   toolbar_layout->setContentsMargins(0, 0, 0, 0);

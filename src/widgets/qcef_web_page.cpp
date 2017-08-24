@@ -8,6 +8,7 @@
 #include <QJsonObject>
 #include <QSize>
 #include <QWebChannel>
+#include <QWidget>
 #include <QWindow>
 
 #include "include/cef_app.h"
@@ -66,16 +67,12 @@ struct QCefWebPagePrivate {
   QCefBrowserTransport* transport = nullptr;
 };
 
-QCefWebPage::QCefWebPage(QCefWebSettings* settings, QObject* parent)
+QCefWebPage::QCefWebPage(QObject* parent)
     : QObject(parent),
       p_(new QCefWebPagePrivate()) {
   p_->delegate = new QCefClientHandlerDelegate(this);
   p_->client_handler = new QCefClientHandler(p_->delegate);
-  if (settings != nullptr) {
-    p_->settings = settings;
-  } else {
-    p_->settings = new QCefWebSettings();
-  }
+  p_->settings = new QCefWebSettings();
   p_->channel = new QWebChannel();
 }
 
@@ -119,10 +116,14 @@ void QCefWebPage::load(const QUrl& url) {
 }
 
 void QCefWebPage::setUrl(const QUrl& url) {
-  Q_ASSERT(p_->client_handler != nullptr);
   p_->url = url;
-  const std::string url_str = url.toString().toStdString();
-  p_->delegate->cef_browser()->GetMainFrame()->LoadURL(url_str);
+  if (p_->browser_window_wrapper != nullptr) {
+    const std::string url_str = url.toString().toStdString();
+    p_->delegate->cef_browser()->GetMainFrame()->LoadURL(url_str);
+  } else {
+    QWidget* parent = qobject_cast<QWidget*>(this->parent());
+    this->createBrowser(parent->windowHandle(), parent->size());
+  }
 }
 
 QUrl QCefWebPage::url() const {
@@ -191,6 +192,10 @@ void QCefWebPage::stopLoad() {
 }
 
 void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
+  if (p_->browser_window_wrapper != nullptr) {
+    return;
+  }
+
   CefRect rect;
   rect.x = 0;
   rect.y = 0;
@@ -217,10 +222,12 @@ void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
 
 
 void QCefWebPage::resizeCefBrowser(const QSize& size) {
-  SetXWindowBounds(p_->browser_window_wrapper->winId(),
-                   0, 0, size.width(), size.height());
-  SetXWindowBounds(p_->delegate->cef_browser()->GetHost()->GetWindowHandle(),
-                   0, 0, size.width(), size.height());
+  if (p_->browser_window_wrapper != nullptr) {
+    SetXWindowBounds(p_->browser_window_wrapper->winId(),
+                     0, 0, size.width(), size.height());
+    SetXWindowBounds(p_->delegate->cef_browser()->GetHost()->GetWindowHandle(),
+                     0, 0, size.width(), size.height());
+  }
 }
 
 void QCefWebPage::createTransportChannel() {
