@@ -1,5 +1,6 @@
 #!/usr/bin/make -f
 export QT_SELECT=qt5
+export DH_VERBOSE=1
 
 DH_AUTO_ARGS = --parallel --buildsystem=cmake
 
@@ -10,7 +11,7 @@ DH_AUTO_ARGS = --parallel --buildsystem=cmake
 override_dh_auto_configure:
 	dh_auto_configure -- \
 	  -DCMAKE_BUILD_TYPE=Release \
-	  -DPROJECT_ARCH=${DEB_TARGET_ARCH} \
+	  -DPROJECT_ARCH=${DEB_TARGET_GNU_CPU} \
 	  -DLIB_INSTALL_DIR=/usr/lib/${DEB_HOST_MULTIARCH} \
 	  -DQCEF_OVERRIDE_PATH=/usr/lib/${DEB_HOST_MULTIARCH}/qcef
 

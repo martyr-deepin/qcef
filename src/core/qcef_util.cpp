@@ -123,16 +123,14 @@ void SetXWindowVisible(CefWindowHandle xwindow, bool visible) {
 
   if (!visible) {
     // Set the hidden property state value.
-    std::shared_ptr<Atom[]> data(new Atom[1]);
-    data[0] = atoms[2];
-
+    Atom data[] = {atoms[2]};
     XChangeProperty(xdisplay,
                     xwindow,
                     atoms[0],  // name
                     atoms[1],  // type
                     32,  // size in bits of items in 'value'
                     PropModeReplace,
-                    reinterpret_cast<const unsigned char*>(data.get()),
+                    reinterpret_cast<const unsigned char*>(&data),
                     1);  // num items
   } else {
     // Set an empty array of property state values.

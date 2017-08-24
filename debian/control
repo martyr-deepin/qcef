@@ -21,6 +21,7 @@ Build-Depends: debhelper (>= 9),
  libxss-dev,
  libxtst-dev,
  pkg-config,
+ qttools5-dev-tools,
 Standards-Version: 3.9.6
 Homepage: https://www.deepin.org
 
