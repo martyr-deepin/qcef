@@ -23,8 +23,10 @@ void QCefApp::OnContextInitialized() {
 
   CefRegisterSchemeHandlerFactory("qrc", "", factory);
 
-  for (const CustomSchemeEntry& entry : custom_scheme_list_) {
-    CefRegisterSchemeHandlerFactory(entry.scheme, entry.host, factory);
+  for (const QUrl& entry : custom_scheme_list_) {
+    CefRegisterSchemeHandlerFactory(entry.scheme().toStdString(),
+                                    entry.host().toStdString(),
+                                    factory);
   }
 }
 
@@ -44,12 +46,9 @@ void QCefApp::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar) {
 
   // Register custom scheme names.
   if (!custom_scheme_list_.empty()) {
-    std::set<std::string> scheme_names;
-    for (const CustomSchemeEntry& entry : custom_scheme_list_) {
-      scheme_names.insert(entry.scheme);
-    }
-    for (const std::string& scheme : scheme_names) {
-      registrar->AddCustomScheme(scheme, true, true, false, true, true, false);
+    for (const QUrl& entry : custom_scheme_list_) {
+      registrar->AddCustomScheme(entry.scheme().toStdString(),
+                                 true, true, false, true, true, false);
     }
   }
 }
@@ -59,13 +58,17 @@ void QCefApp::appendCommandLineSwitches(const AppendedArguments& args) {
 }
 
 CefRefPtr<CefRenderProcessHandler> QCefApp::GetRenderProcessHandler() {
-  return new QCefRendererHandler();
+  return new QCefRendererHandler(sync_methods_);
 }
 
-void QCefApp::addCustomSchemes(const CustomSchemeList& list) {
+void QCefApp::addCustomSchemes(const QList<QUrl>& list) {
   custom_scheme_list_ = list;
 }
 
 void QCefApp::setCustomSchemeHandler(QCefSchemeHandler handler) {
   custom_scheme_handler_ = handler;
+}
+
+void QCefApp::setSyncMethods(const QCefSyncMethodMap& map) {
+  sync_methods_ = map;
 }

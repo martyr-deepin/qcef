@@ -8,6 +8,7 @@
 #include "include/cef_app.h"
 
 #include "core/qcef_scheme_handler.h"
+#include "core/qcef_sync_method.h"
 
 // Implement application-level callbacks for the browser process.
 class QCefApp : public CefApp,
@@ -36,23 +37,20 @@ class QCefApp : public CefApp,
   // Append |args| to command line.
   void appendCommandLineSwitches(const AppendedArguments& args);
 
-  struct CustomSchemeEntry {
-    std::string scheme;
-    std::string host;
-  };
-  typedef std::vector<CustomSchemeEntry> CustomSchemeList;
-  void addCustomSchemes(const CustomSchemeList& list);
+  void addCustomSchemes(const QList<QUrl>& list);
 
   void setCustomSchemeHandler(QCefSchemeHandler handler);
+
+  void setSyncMethods(const QCefSyncMethodMap& map);
 
  private:
   // Include the default reference counting implementation.
   IMPLEMENT_REFCOUNTING(QCefApp);
 
   AppendedArguments appended_args_;
-  CustomSchemeList custom_scheme_list_;
-
+  QList<QUrl> custom_scheme_list_;
   QCefSchemeHandler custom_scheme_handler_ = nullptr;
+  QCefSyncMethodMap sync_methods_;
 };
 
 #endif  // QCEF_CORE_QCEF_APP_H

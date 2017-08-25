@@ -9,6 +9,7 @@
 #include "base/file_util.h"
 #include "core/qcef_web_channel_consts.h"
 #include "core/qcef_renderer_transport_handler.h"
+#include "core/qcef_sync_method_handler.h"
 #include "include/wrapper/cef_helpers.h"
 
 namespace {
@@ -39,10 +40,28 @@ void RegisterRendererTransport(CefRefPtr<CefFrame> frame,
 
 }  // namespace
 
+QCefRendererHandler::QCefRendererHandler(const QCefSyncMethodMap& map)
+    : sync_methods_(map) {
+}
+
 void QCefRendererHandler::OnContextCreated(CefRefPtr<CefBrowser> browser,
                                            CefRefPtr<CefFrame> frame,
                                            CefRefPtr<CefV8Context> context) {
   CEF_REQUIRE_RENDERER_THREAD();
+
+  // Register sync methods.
+  auto sync_handler = new QCefSyncMethodHandler(sync_methods_);
+
+  context->Enter();
+  // Retrieve the context's window object.
+  CefRefPtr<CefV8Value> window = context->GetGlobal();
+  for (const QString& function_name : sync_methods_.keys()) {
+    const std::string name = function_name.toStdString();
+    CefRefPtr<CefV8Value> function = CefV8Value::CreateFunction(name,
+                                                                sync_handler);
+    window->SetValue(name, function, V8_PROPERTY_ATTRIBUTE_NONE);
+  }
+  context->Exit();
 
   if (frame->GetIdentifier() != browser->GetMainFrame()->GetIdentifier()) {
     return;

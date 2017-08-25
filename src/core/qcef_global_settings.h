@@ -5,12 +5,14 @@
 #ifndef QCEF_CORE_QCEF_GLOBAL_SETTINGS_H
 #define QCEF_CORE_QCEF_GLOBAL_SETTINGS_H
 
+#include <QHash>
 #include <QPair>
 #include <QStringList>
 #include <QUrl>
 
 #include "qcef_core_export.h"
 #include "qcef_scheme_handler.h"
+#include "qcef_sync_method.h"
 
 struct QCefGlobalSettingsPrivate;
 
@@ -110,7 +112,10 @@ class QCEF_CORE_EXPORT QCefGlobalSettings {
   const QList<QUrl>& customSchemes() const;
 
   void setCustomSchemeHandler(QCefSchemeHandler handler);
-  QCefSchemeHandler getCustomSchemeHandler() const;
+  const QCefSchemeHandler& getCustomSchemeHandler() const;
+
+  void registerSyncMethod(const QString& name, QCefSyncMethod handler);
+  const QCefSyncMethodMap& getSyncMethods() const;
 
  private:
   QCefGlobalSettingsPrivate* p_ = nullptr;

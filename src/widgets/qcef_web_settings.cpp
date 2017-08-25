@@ -5,7 +5,7 @@
 #include "widgets/qcef_web_settings.h"
 
 struct QCefWebSettingsPrivate {
-  std::string default_encoding;
+  QString default_encoding;
   QCefWebSettings::State remote_fonts = QCefWebSettings::StateDefault;
   QCefWebSettings::State javascript = QCefWebSettings::StateDefault;
   QCefWebSettings::State javascript_open_windows =
@@ -28,7 +28,7 @@ struct QCefWebSettingsPrivate {
   QCefWebSettings::State databases = QCefWebSettings::StateDefault;
   QCefWebSettings::State application_cache = QCefWebSettings::StateDefault;
   QCefWebSettings::State webgl = QCefWebSettings::StateDefault;
-  std::string accept_language_list = "";
+  QString accept_language_list = "";
   QCefWebSettings::CrossOriginList cross_origin_list;
 };
 
@@ -41,11 +41,11 @@ QCefWebSettings::~QCefWebSettings() {
   p_ = nullptr;
 }
 
-void QCefWebSettings::setDefaultEncoding(const std::string& encoding) {
+void QCefWebSettings::setDefaultEncoding(const QString& encoding) {
   p_->default_encoding = encoding;
 }
 
-std::string QCefWebSettings::defaultEncoding() const {
+QString QCefWebSettings::defaultEncoding() const {
   return p_->default_encoding;
 }
 
@@ -177,11 +177,11 @@ QCefWebSettings::State QCefWebSettings::webGL() const {
   return p_->webgl;
 }
 
-void QCefWebSettings::setAcceptLanguageList(const std::string& list) {
+void QCefWebSettings::setAcceptLanguageList(const QString& list) {
   p_->accept_language_list = list;
 }
 
-std::string QCefWebSettings::acceptLanguageList() const {
+QString QCefWebSettings::acceptLanguageList() const {
   return p_->accept_language_list;
 }
 

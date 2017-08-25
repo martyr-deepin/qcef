@@ -25,6 +25,8 @@ set(BROWSER_DEMO_FILES
     main.cpp
     browser_window.cpp
     browser_window.h
+    sync_methods.cpp
+    sync_methods.h
 
     resources/resources.qrc
     )

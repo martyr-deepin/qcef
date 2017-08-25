@@ -43,6 +43,7 @@ struct QCefGlobalSettingsPrivate {
   QList<QUrl> custom_schemes;
 
   QCefSchemeHandler custom_scheme_handler = nullptr;
+  QCefSyncMethodMap sync_method_handlers;
 };
 
 QCefGlobalSettings::QCefGlobalSettings()
@@ -208,6 +209,15 @@ QCefGlobalSettings::setCustomSchemeHandler(QCefSchemeHandler handler) {
   p_->custom_scheme_handler = handler;
 }
 
-QCefSchemeHandler QCefGlobalSettings::getCustomSchemeHandler() const {
+const QCefSchemeHandler& QCefGlobalSettings::getCustomSchemeHandler() const {
   return p_->custom_scheme_handler;
+}
+
+void QCefGlobalSettings::registerSyncMethod(const QString& name,
+                                            QCefSyncMethod handler) {
+  p_->sync_method_handlers.insert(name, handler);
+}
+
+const QCefSyncMethodMap& QCefGlobalSettings::getSyncMethods() const {
+  return p_->sync_method_handlers;
 }

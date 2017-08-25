@@ -44,17 +44,11 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
     client_app->appendCommandLineSwitches(arguments);
   }
 
-  QCefApp::CustomSchemeList custom_scheme_list;
-  for (const QUrl& url : settings.customSchemes()) {
-    QCefApp::CustomSchemeEntry entry = {
-        url.scheme().toStdString(),
-        url.host().toStdString()
-    };
-    custom_scheme_list.push_back(entry);
-  }
-  client_app->addCustomSchemes(custom_scheme_list);
+  client_app->addCustomSchemes(settings.customSchemes());
 
   client_app->setCustomSchemeHandler(settings.getCustomSchemeHandler());
+
+  client_app->setSyncMethods(settings.getSyncMethods());
 
 #ifdef QCEF_OVERRIDE_PATH
   if (!CefOverridePath(PK_DIR_EXE, QCEF_OVERRIDE_PATH)) {

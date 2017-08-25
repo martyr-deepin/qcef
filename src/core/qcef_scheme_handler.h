@@ -7,8 +7,6 @@
 
 #include <QUrl>
 
-#include "qcef_core_export.h"
-
 // User may implement this function to handle url requests with custom scheme
 // names.
 // Note that qrc: and file:/ have already been handled properly.

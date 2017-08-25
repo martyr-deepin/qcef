@@ -24,7 +24,8 @@ const char kBlankUrl[] = "about:blank";
 
 void MergeWebPageSettings(CefBrowserSettings& cef_settings,
                           const QCefWebSettings& settings) {
-  CefString(&cef_settings.default_encoding) = settings.defaultEncoding();
+  CefString(&cef_settings.default_encoding) =
+      settings.defaultEncoding().toStdString();
   cef_settings.remote_fonts = static_cast<cef_state_t>(settings.remoteFonts());
   cef_settings.javascript = static_cast<cef_state_t>(settings.javascript());
   cef_settings.javascript_open_windows =
@@ -51,7 +52,8 @@ void MergeWebPageSettings(CefBrowserSettings& cef_settings,
   cef_settings.application_cache =
       static_cast<cef_state_t>(settings.applicationCache());
   cef_settings.webgl = static_cast<cef_state_t>(settings.webGL());
-  CefString(&cef_settings.accept_language_list) = settings.acceptLanguageList();
+  CefString(&cef_settings.accept_language_list) =
+      settings.acceptLanguageList().toStdString();
 }
 
 }  // namespace

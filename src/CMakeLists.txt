@@ -106,6 +106,9 @@ set(CORE_FILES
     core/qcef_scheme_handler.h
     core/qcef_scheme_handler_factory.cpp
     core/qcef_scheme_handler_factory.h
+    core/qcef_sync_method.h
+    core/qcef_sync_method_handler.cpp
+    core/qcef_sync_method_handler.h
     core/qcef_util.cpp
     core/qcef_util.h
     core/qcef_web_channel_consts.h
@@ -117,6 +120,7 @@ set(CORE_EXPORT_FILES
     core/qcef_core_export.h
     core/qcef_global_settings.h
     core/qcef_scheme_handler.h
+    core/qcef_sync_method.h
     )
 
 set(WIDGETS_FILES

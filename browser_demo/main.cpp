@@ -8,6 +8,7 @@
 #include <qcef_global_settings.h>
 
 #include "browser_window.h"
+#include "sync_methods.h"
 
 int main(int argc, char* argv[]) {
   QCefGlobalSettings settings;
@@ -15,6 +16,9 @@ int main(int argc, char* argv[]) {
 //  settings.setPepperFlash(true);
   settings.setRemoteDebug(true);
   settings.setLogSeverity(QCefGlobalSettings::LogSeverity::Info);
+
+  // Register echoMessage in web page.
+  settings.registerSyncMethod("echoMessage", EchoMessage);
   QCefInit(argc, argv, settings);
 
   QApplication app(argc, argv);

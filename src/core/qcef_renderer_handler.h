@@ -7,9 +7,13 @@
 
 #include "include/cef_render_process_handler.h"
 
+#include "core/qcef_sync_method.h"
+
 // Handle messages in renderer processes.
 class QCefRendererHandler : public CefRenderProcessHandler {
  public:
+  QCefRendererHandler() { }
+  explicit QCefRendererHandler(const QCefSyncMethodMap& map);
   void OnContextCreated(CefRefPtr<CefBrowser> browser,
                         CefRefPtr<CefFrame> frame,
                         CefRefPtr<CefV8Context> context) override;
@@ -26,6 +30,8 @@ class QCefRendererHandler : public CefRenderProcessHandler {
 
  private:
   IMPLEMENT_REFCOUNTING(QCefRendererHandler);
+
+  QCefSyncMethodMap sync_methods_;
 };
 
 #endif  // QCEF_CORE_QCEF_RENDERER_HANDLER_H

@@ -5,7 +5,7 @@
 #ifndef QCEF_WIDGETS_QCEF_WEB_SETTINGS_H
 #define QCEF_WIDGETS_QCEF_WEB_SETTINGS_H
 
-#include <string>
+#include <QString>
 #include <QUrl>
 #include <QVector>
 
@@ -26,8 +26,8 @@ class QCEF_WIDGETS_EXPORT QCefWebSettings {
   };
 
   // Default encoding for Web content. If empty "ISO-8859-1" will be used.
-  void setDefaultEncoding(const std::string& encoding);
-  std::string defaultEncoding() const;
+  void setDefaultEncoding(const QString& encoding);
+  QString defaultEncoding() const;
 
   // Controls the loading of fonts from remote sources.
   void setRemoteFonts(State state);
@@ -105,8 +105,8 @@ class QCEF_WIDGETS_EXPORT QCefWebSettings {
   // will be used in the "Accept-Language" HTTP header. May be set globally
   // using the CefBrowserSettings.accept_language_list value. If both values are
   // empty then "en-US,en" will be used.
-  void setAcceptLanguageList(const std::string& list);
-  std::string acceptLanguageList() const;
+  void setAcceptLanguageList(const QString& list);
+  QString acceptLanguageList() const;
 
   // Decline cross-origin limitation from |source| url to |target| url.
   void addCrossOriginWhiteEntry(const QUrl& source,
