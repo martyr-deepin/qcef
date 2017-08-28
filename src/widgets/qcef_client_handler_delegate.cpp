@@ -63,7 +63,7 @@ void QCefClientHandlerDelegate::OnFaviconURLChange(
     const std::vector<CefString>& urls) {
   if (!urls.empty()) {
     const QString url = QString::fromStdString(urls[0]);
-    emit web_page_->iconUrlChanged(url);
+    web_page_->updateIconUrl(QUrl(url));
   }
 }
 
@@ -157,9 +157,9 @@ void QCefClientHandlerDelegate::OnSetFullscreen(bool fullscreen) {
 }
 
 void QCefClientHandlerDelegate::OnTitleChanged(const CefString& title) {
-  emit web_page_->titleChanged(QString::fromStdString(title));
+  web_page_->updateTitle(QString::fromStdString(title));
 }
 
 void QCefClientHandlerDelegate::OnUrlChanged(const CefString& url) {
-  emit web_page_->urlChanged(QUrl(QString::fromStdString(url)));
+  web_page_->updateUrl(QUrl(QString::fromStdString(url)));
 }

@@ -60,7 +60,10 @@ void MergeWebPageSettings(CefBrowserSettings& cef_settings,
 
 struct QCefWebPagePrivate {
   bool browser_created = false;
-  QUrl url = QUrl(kBlankUrl);
+  QUrl url;
+  QUrl iconUrl;
+  QIcon icon;
+  QString title;
   QString page_error_content;
   QCefClientHandlerDelegate* delegate = nullptr;
   CefRefPtr<QCefClientHandler> client_handler = nullptr;
@@ -140,8 +143,20 @@ void QCefWebPage::setUrl(const QUrl& url) {
   }
 }
 
+QIcon QCefWebPage::icon() const {
+  return p_->icon;
+}
+
+QUrl QCefWebPage::iconUrl() const {
+  return p_->iconUrl;
+}
+
+QString QCefWebPage::title() const {
+  return p_->title;
+}
+
 QUrl QCefWebPage::url() const {
-  return QUrl();
+  return p_->url;
 }
 
 void QCefWebPage::setPageErrorContent(const QString& page_error_content) {
@@ -181,11 +196,11 @@ bool QCefWebPage::canGoForward() const {
   return p_->delegate->cef_browser()->CanGoForward();
 }
 
-void QCefWebPage::goBack() {
+void QCefWebPage::back() {
   p_->delegate->cef_browser()->GoBack();
 }
 
-void QCefWebPage::goForward() {
+void QCefWebPage::forward() {
   p_->delegate->cef_browser()->GoForward();
 }
 
@@ -201,7 +216,7 @@ bool QCefWebPage::isLoading() const {
   return p_->delegate->cef_browser()->IsLoading();
 }
 
-void QCefWebPage::stopLoading() {
+void QCefWebPage::stop() {
   p_->delegate->cef_browser()->StopLoad();
 }
 
@@ -284,4 +299,21 @@ void QCefWebPage::handleWebMessage(const QJsonObject& message) {
   } else {
     qCritical() << __FUNCTION__ << "transport is null!";
   }
+}
+
+void QCefWebPage::updateIconUrl(const QUrl& url) {
+  if (url != p_->iconUrl) {
+    p_->iconUrl = url;
+    emit this->iconUrlChanged(p_->iconUrl);
+  }
+}
+
+void QCefWebPage::updateTitle(const QString& title) {
+  p_->title = title;
+  emit this->titleChanged(p_->title);
+}
+
+void QCefWebPage::updateUrl(const QUrl& url) {
+  p_->url = url;
+  emit this->urlChanged(p_->url);
 }

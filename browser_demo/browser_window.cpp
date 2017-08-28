@@ -58,34 +58,38 @@ void BrowserWindow::initConnections() {
   connect(page, &QCefWebPage::loadStarted, [=]() {
     page->runJavaScript("console.log('loadStarted');");
   });
-  connect(page, &QCefWebPage::loadingStateChanged,
-          [=](bool is_loading, bool can_go_back, bool can_go_forward) {
-            const QString script =
-                QString("console.log('loadingStateChanged, %1 %2 %3');")
-                    .arg(static_cast<int>(is_loading))
-                    .arg(static_cast<int>(can_go_back))
-                    .arg(static_cast<int>(can_go_forward));
-            page->runJavaScript(script);
-            p_->refresh_button->setEnabled(!is_loading);
-            p_->stop_button->setEnabled(is_loading);
-            p_->back_button->setEnabled(can_go_back);
-            p_->forward_button->setEnabled(can_go_forward);
-            qDebug() << "state changed:" << is_loading << can_go_back << can_go_forward;
+  connect(page, &QCefWebPage::loadingStateChanged, [=](bool is_loading,
+                                                       bool can_go_back,
+                                                       bool can_go_forward) {
+    const QString script =
+        QString("console.log('loadingStateChanged, %1 %2 %3');")
+            .arg(static_cast<int>(is_loading))
+            .arg(static_cast<int>(can_go_back))
+            .arg(static_cast<int>(can_go_forward));
+    page->runJavaScript(script);
+    p_->refresh_button->setEnabled(!is_loading);
+    p_->stop_button->setEnabled(is_loading);
+    p_->back_button->setEnabled(can_go_back);
+    p_->forward_button->setEnabled(can_go_forward);
+    qDebug() << "state changed:" << is_loading << can_go_back << can_go_forward;
   });
   connect(page, &QCefWebPage::loadFinished, [=]() {
     page->runJavaScript("console.log('loadFinished');");
     p_->refresh_button->setEnabled(true);
     p_->stop_button->setEnabled(false);
   });
+  connect(page, &QCefWebPage::iconUrlChanged, [=](const QUrl& iconUrl) {
+    qDebug() << "icon url changed:" << iconUrl;
+  });
 
   connect(p_->back_button, &QPushButton::clicked,
-          page, &QCefWebPage::goBack);
+          page, &QCefWebPage::back);
   connect(p_->forward_button, &QPushButton::clicked,
-          page, &QCefWebPage::goForward);
+          page, &QCefWebPage::forward);
   connect(p_->refresh_button, &QPushButton::clicked,
           page, &QCefWebPage::reload);
   connect(p_->stop_button, &QPushButton::clicked,
-          page, &QCefWebPage::stopLoading);
+          page, &QCefWebPage::stop);
 }
 
 void BrowserWindow::initUI() {

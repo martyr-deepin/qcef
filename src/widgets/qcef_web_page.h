@@ -6,7 +6,7 @@
 #define QCEF_WIDGETS_QCEF_WEB_PAGE_H
 
 #include <QObject>
-
+#include <QIcon>
 #include <QUrl>
 
 #include "qcef_widgets_export.h"
@@ -20,7 +20,24 @@ class QCefWebSettings;
 // access to cef browser internal states.
 class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   Q_OBJECT
-  Q_PROPERTY(QUrl url READ url WRITE setUrl)
+
+  // This property holds the title of the web page currently viewed
+  // By default, this property contains an empty string.
+  Q_PROPERTY(QString title READ title NOTIFY titleChanged)
+
+  // This property holds the URL of the web page currently viewed
+  // Setting this property clears the view and loads the URL.*
+  // By default, this property contains an empty, invalid URL.
+  Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
+
+  // This property holds the icon associated with the page currently viewed
+  // By default, this property contains a null icon.
+  Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
+
+  // This property holds the URL of the icon associated with the page currently
+  // viewed. By default, this property contains an empty URL.
+  Q_PROPERTY(QUrl iconUrl READ iconUrl NOTIFY iconUrlChanged)
+
   Q_PROPERTY(QString page_error_content
              READ pageErrorContent
              WRITE setPageErrorContent)
@@ -31,6 +48,10 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
 
   void load(const QUrl& url);
   void setUrl(const QUrl& url);
+
+  QIcon icon() const;
+  QUrl iconUrl() const;
+  QString title() const;
   QUrl url() const;
 
   void setPageErrorContent(const QString& page_error_content);
@@ -53,13 +74,13 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
 
   bool canGoBack() const;
   bool canGoForward() const;
-  void goBack();
-  void goForward();
+  void back();
+  void forward();
 
   void reload();
   void reloadIgnoreCache();
   bool isLoading() const;
-  void stopLoading();
+  void stop();
 
  signals:
   void renderContextCreated();
@@ -74,9 +95,14 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
 
   void titleChanged(const QString& title);
   void urlChanged(const QUrl& url);
+
+  // Notified when page icon is updated.
+  // This signal is emitted later than iconUrlChanged() signal. It takes
+  // time to download that icon file in worker thread.
   void iconChanged(const QIcon& icon);
-  // TODO(LiuLang): Remove this signal.
-  void iconUrlChanged(const QString& icon_url);
+
+  // Notified when page icon is changed.
+  void iconUrlChanged(const QUrl& icon_url);
 
  private:
   friend class QCefWebView;
@@ -92,6 +118,10 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void createTransportChannel();
   void releaseTransportChannel();
   void handleWebMessage(const QJsonObject& message);
+
+  void updateIconUrl(const QUrl& url);
+  void updateTitle(const QString& title);
+  void updateUrl(const QUrl& url);
 
   QCefWebPagePrivate* p_ = nullptr;
 };
