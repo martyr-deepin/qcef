@@ -22,7 +22,7 @@ class QCefClientHandler : public CefClient,
 
     // Called when the browser is created.
     virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) = 0;
-    virtual void OnBeforeClose() = 0;
+    virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) = 0;
 
     // CefLoadHandler methods
     virtual void OnLoadStarted(CefRefPtr<CefBrowser> browser,

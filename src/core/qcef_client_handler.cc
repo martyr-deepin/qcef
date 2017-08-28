@@ -32,12 +32,10 @@ bool QCefClientHandler::DoClose(CefRefPtr<CefBrowser> browser) {
 }
 
 void QCefClientHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
-  (void) browser;
-
   CEF_REQUIRE_UI_THREAD();
 
   if (delegate_ != nullptr) {
-    delegate_->OnBeforeClose();
+    delegate_->OnBeforeClose(browser);
   }
 }
 

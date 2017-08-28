@@ -33,6 +33,8 @@ void QCefClientHandlerDelegate::OnBeforePopup(const CefString& target_url) {
 
 void QCefClientHandlerDelegate::OnBrowserCreated(
     CefRefPtr<CefBrowser> browser) {
+  qDebug() << "QCefClientHandlerDelegate::OnBrowserCreated: "
+           << browser << cef_browser_;
   if (cef_browser_ == nullptr) {
     cef_browser_ = browser;
   }
@@ -48,9 +50,13 @@ void QCefClientHandlerDelegate::OnBrowserCreated(
   }
 }
 
-void QCefClientHandlerDelegate::OnBeforeClose() {
-  cef_browser_ = nullptr;
-  // TODO(LiuLang): Emit close signal.
+void QCefClientHandlerDelegate::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
+  qDebug() << "QCefClientHandlerDelegate::OnBeforeClose" << browser
+           << cef_browser_;
+  if (cef_browser_->GetIdentifier() == browser->GetIdentifier()) {
+    cef_browser_ = nullptr;
+    // TODO(LiuLang): Emit close signal.
+  }
 }
 
 void QCefClientHandlerDelegate::OnFaviconURLChange(
@@ -127,13 +133,18 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
   }
   if (name == kQCefRenderQtMessage) {
     CefRefPtr<CefListValue> args = message->GetArgumentList();
+    if (args->GetSize() != 1) {
+      qWarning() << __FUNCTION__ << "args size mismatch, expect 1, got"
+                 << args->GetSize();
+      return false;
+    }
     const QString msg = QString::fromStdString(args->GetString(0));
+    qDebug() << __FUNCTION__ << " message :" << msg;
     const QJsonDocument doc(QJsonDocument::fromJson(msg.toUtf8()));
     if (doc.isObject()) {
       web_page_->handleWebMessage(doc.object());
     } else {
-      qWarning() << "QCefClientHandlerDelegate::OnProcessMessageReceived()"
-                 << "invalid json message:" << msg;
+      qWarning() << __FUNCTION__ << " invalid json message:" << msg;
     }
     return true;
   }

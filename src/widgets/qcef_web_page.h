@@ -59,7 +59,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void reload();
   void reloadIgnoreCache();
   bool isLoading() const;
-  void stopLoad();
+  void stopLoading();
 
  signals:
   void renderContextCreated();

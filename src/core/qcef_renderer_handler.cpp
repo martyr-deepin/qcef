@@ -63,6 +63,7 @@ void QCefRendererHandler::OnContextCreated(CefRefPtr<CefBrowser> browser,
   }
   context->Exit();
 
+  // Register qt web channel transport.
   if (frame->GetIdentifier() != browser->GetMainFrame()->GetIdentifier()) {
     return;
   }
@@ -70,7 +71,7 @@ void QCefRendererHandler::OnContextCreated(CefRefPtr<CefBrowser> browser,
 
   CefRefPtr<CefProcessMessage> msg =
       CefProcessMessage::Create(kQCefRenderContextCreated);
-  CefRefPtr<CefListValue> args = msg->GetArgumentList();
+//  CefRefPtr<CefListValue> args = msg->GetArgumentList();
   browser->SendProcessMessage(PID_BROWSER, msg);
 }
 
@@ -86,7 +87,7 @@ void QCefRendererHandler::OnContextReleased(CefRefPtr<CefBrowser> browser,
 
   CefRefPtr<CefProcessMessage> msg =
       CefProcessMessage::Create(kQCefRenderContextReleased);
-  CefRefPtr<CefListValue> args = msg->GetArgumentList();
+//  CefRefPtr<CefListValue> args = msg->GetArgumentList();
   browser->SendProcessMessage(PID_BROWSER, msg);
 }
 
@@ -99,14 +100,17 @@ bool QCefRendererHandler::OnProcessMessageReceived(
 
   const std::string name = std::string(message->GetName());
   if (name == kQCefRenderQtMessage) {
-    CefRefPtr<CefListValue> args = message->GetArgumentList();
     CefRefPtr<CefFrame> frame = browser->GetMainFrame();
     if (frame == nullptr) {
-      qWarning() << "QCefRendererHandler::OnProcessMessageReceived()"
-                 << "frame is null!";
+      qWarning() << __FUNCTION__ << "main frame is null!";
       return false;
     }
 
+    CefRefPtr<CefListValue> args = message->GetArgumentList();
+    if (args->GetSize() != 1) {
+      qWarning() << __FUNCTION__ << "args size mismatch, expect 1!";
+      return false;
+    }
     CefRefPtr<CefV8Context> context = frame->GetV8Context();
     context->Enter();
 
@@ -114,10 +118,8 @@ bool QCefRendererHandler::OnProcessMessageReceived(
     auto transport = window->GetValue("qt")->GetValue("webChannelTransport");
     auto handler = transport->GetValue("onmessage");
 
-#ifdef N_DEBUG
     const std::string data = args->GetString(0);
     qDebug() << "Renderer received message from browser: " << data.c_str();
-#endif
     CefV8ValueList vlist;
     CefRefPtr<CefV8Value> resp = CefV8Value::CreateObject(nullptr, nullptr);
     resp->SetValue("data",

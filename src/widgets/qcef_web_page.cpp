@@ -69,6 +69,7 @@ struct QCefWebPagePrivate {
   QCefWebSettings* settings = nullptr;
   QWebChannel* channel = nullptr;
   QCefBrowserTransport* transport = nullptr;
+  bool channel_connected = false;
 };
 
 QCefWebPage::QCefWebPage(QObject* parent)
@@ -81,6 +82,7 @@ QCefWebPage::QCefWebPage(QObject* parent)
 }
 
 QCefWebPage::~QCefWebPage() {
+  qDebug() << __FUNCTION__;
   if (p_->delegate != nullptr) {
     delete p_->delegate;
     p_->delegate = nullptr;
@@ -106,14 +108,14 @@ QCefWebPage::~QCefWebPage() {
     p_->settings = nullptr;
   }
 
-  if (p_->channel != nullptr) {
-    delete p_->channel;
-    p_->channel = nullptr;
-  }
-
   if (p_->transport != nullptr) {
     delete p_->transport;
     p_->transport = nullptr;
+  }
+
+  if (p_->channel != nullptr) {
+    delete p_->channel;
+    p_->channel = nullptr;
   }
 
   delete p_;
@@ -199,7 +201,7 @@ bool QCefWebPage::isLoading() const {
   return p_->delegate->cef_browser()->IsLoading();
 }
 
-void QCefWebPage::stopLoad() {
+void QCefWebPage::stopLoading() {
   p_->delegate->cef_browser()->StopLoad();
 }
 
@@ -253,6 +255,7 @@ void QCefWebPage::resizeCefBrowser(const QSize& size) {
 }
 
 void QCefWebPage::createTransportChannel() {
+  qDebug() << __FUNCTION__;
   Q_ASSERT(p_->transport == nullptr);
   if (p_->transport != nullptr) {
     delete p_->transport;
@@ -260,11 +263,14 @@ void QCefWebPage::createTransportChannel() {
   }
   p_->transport = new QCefBrowserTransport(p_->delegate->cef_browser());
   p_->channel->connectTo(p_->transport);
+  p_->channel_connected = true;
 }
 
 void QCefWebPage::releaseTransportChannel() {
+  qDebug() << __FUNCTION__;
   Q_ASSERT(p_->transport != nullptr);
   if (p_->transport != nullptr) {
+    p_->channel_connected = false;
     p_->channel->disconnectFrom(p_->transport);
     delete p_->transport;
     p_->transport = nullptr;
@@ -272,7 +278,8 @@ void QCefWebPage::releaseTransportChannel() {
 }
 
 void QCefWebPage::handleWebMessage(const QJsonObject& message) {
-  if (p_->transport != nullptr) {
+  qDebug() << __FUNCTION__ << "msg:" << message;
+  if (p_->transport != nullptr && p_->channel_connected) {
     emit p_->transport->messageReceived(message, p_->transport);
   } else {
     qCritical() << __FUNCTION__ << "transport is null!";

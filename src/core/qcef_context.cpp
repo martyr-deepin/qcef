@@ -126,7 +126,7 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 }
 
 void QCefRunLoop() {
-  g_timeout_add(50, ProcessQtEvent, nullptr);
+  g_timeout_add(10, ProcessQtEvent, nullptr);
   CefRunMessageLoop();
 
   // Shutdown loop internally.
