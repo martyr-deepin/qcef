@@ -6,8 +6,9 @@
 #define QCEF_CORE_QCEF_CLIENT_HANDLER_H
 
 #include "include/cef_client.h"
+#include "qcef_dialog_handler.h"
 
-#include <list>
+class QCefDialogHandler;
 
 class QCefClientHandler : public CefClient,
                           public CefDisplayHandler,
@@ -72,6 +73,8 @@ class QCefClientHandler : public CefClient,
   CefRefPtr<CefLoadHandler> GetLoadHandler() override {
     return this;
   }
+  CefRefPtr<CefDialogHandler> GetDialogHandler() override;
+  CefRefPtr<CefJSDialogHandler> GetJSDialogHandler() override;
 
   bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
                                 CefProcessId source_process,
@@ -126,10 +129,9 @@ class QCefClientHandler : public CefClient,
                    const CefString& failedUrl) override;
 
  private:
-  // Execute Delegate notifications on the main thread.
-  // void NotifyFullscreen(bool fullscreen);
-
   Delegate* delegate_ = nullptr;
+
+  CefRefPtr<QCefDialogHandler> dialog_handler_ = nullptr;
 
   // Include the default reference counting implementation.
   IMPLEMENT_REFCOUNTING(QCefClientHandler);

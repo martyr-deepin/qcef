@@ -4,12 +4,14 @@
 
 #include "core/qcef_client_handler.h"
 
+#include "core/qcef_dialog_handler.h"
 #include "include/cef_app.h"
 #include "include/views/cef_browser_view.h"
 #include "include/wrapper/cef_helpers.h"
 
-QCefClientHandler::QCefClientHandler(Delegate* delegate) : delegate_(delegate) {
-
+QCefClientHandler::QCefClientHandler(Delegate* delegate)
+    : delegate_(delegate),
+      dialog_handler_(new QCefDialogHandler()) {
 }
 
 QCefClientHandler::~QCefClientHandler() {
@@ -43,7 +45,7 @@ void QCefClientHandler::OnLoadStart(
     CefRefPtr<CefBrowser> browser,
     CefRefPtr<CefFrame> frame,
     CefLoadHandler::TransitionType transition_type) {
-  (void) transition_type;
+  (void)transition_type;
   CEF_REQUIRE_UI_THREAD();
 
   if (delegate_ != nullptr) {
@@ -125,8 +127,8 @@ bool QCefClientHandler::OnProcessMessageReceived(
 void QCefClientHandler::OnAddressChange(CefRefPtr<CefBrowser> browser,
                                         CefRefPtr<CefFrame> frame,
                                         const CefString& url) {
-  (void) browser;
-  (void) frame;
+  (void)browser;
+  (void)frame;
   CEF_REQUIRE_UI_THREAD();
 
   if (delegate_ != nullptr) {
@@ -137,7 +139,7 @@ void QCefClientHandler::OnAddressChange(CefRefPtr<CefBrowser> browser,
 void QCefClientHandler::OnFaviconURLChange(
     CefRefPtr<CefBrowser> browser,
     const std::vector<CefString>& icon_urls) {
-  (void) browser;
+  (void)browser;
   CEF_REQUIRE_UI_THREAD();
 
   if (delegate_ != nullptr) {
@@ -147,7 +149,7 @@ void QCefClientHandler::OnFaviconURLChange(
 
 void QCefClientHandler::OnFullscreenModeChange(CefRefPtr<CefBrowser> browser,
                                                bool fullscreen) {
-  (void) browser;
+  (void)browser;
   CEF_REQUIRE_UI_THREAD();
 
   if (delegate_ != nullptr) {
@@ -157,7 +159,7 @@ void QCefClientHandler::OnFullscreenModeChange(CefRefPtr<CefBrowser> browser,
 
 void QCefClientHandler::OnTitleChange(CefRefPtr<CefBrowser> browser,
                                       const CefString& title) {
-  (void) browser;
+  (void)browser;
   CEF_REQUIRE_UI_THREAD();
   if (delegate_ != nullptr) {
     delegate_->OnTitleChanged(title);
@@ -176,16 +178,16 @@ bool QCefClientHandler::OnBeforePopup(
     CefRefPtr<CefClient>& client,
     CefBrowserSettings& settings,
     bool* no_javascript_access) {
-  (void) browser;
-  (void) frame;
-  (void) target_frame_name;
-  (void) target_disposition;
-  (void) user_gesture;
-  (void) popupFeatures;
-  (void) windowInfo;
-  (void) client;
-  (void) settings;
-  (void) no_javascript_access;
+  (void)browser;
+  (void)frame;
+  (void)target_frame_name;
+  (void)target_disposition;
+  (void)user_gesture;
+  (void)popupFeatures;
+  (void)windowInfo;
+  (void)client;
+  (void)settings;
+  (void)no_javascript_access;
 
   // TODO(LiuLang): Add option.
 
@@ -200,4 +202,12 @@ void QCefClientHandler::OnGotFocus(CefRefPtr<CefBrowser> browser) {
   if (delegate_ != nullptr) {
     delegate_->OnGotFocus(browser);
   }
+}
+
+CefRefPtr<CefDialogHandler> QCefClientHandler::GetDialogHandler() {
+  return dialog_handler_;
+}
+
+CefRefPtr<CefJSDialogHandler> QCefClientHandler::GetJSDialogHandler() {
+  return dialog_handler_;
 }

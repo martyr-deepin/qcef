@@ -40,6 +40,10 @@ BrowserWindow::~BrowserWindow() {
   p_ = nullptr;
 }
 
+void BrowserWindow::load(const QUrl& url) {
+  p_->web_view->load(url);
+}
+
 void BrowserWindow::printMessage(const QString& msg) {
   qDebug() << "print message:" << msg;
   this->setWindowTitle(msg);

@@ -97,6 +97,8 @@ set(CORE_FILES
     core/qcef_cookie_store.cpp
     core/qcef_cookie_store.h
     core/qcef_core_export.h
+    core/qcef_dialog_handler.cpp
+    core/qcef_dialog_handler.h
     core/qcef_global_settings.cpp
     core/qcef_global_settings.h
     core/qcef_renderer_handler.cpp

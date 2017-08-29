@@ -17,6 +17,27 @@
         <a href="http://z.cn" title="Amazon CN">Amazon China</a>
     </div>
 
+    <h2>Dialog test</h2>
+    <div>
+        <input type="button" onclick="alert('Alert!');" value="Alter dialog"/>
+        <input type="button" onclick="onConfirmButtonClicked();" value="Confirm dialog"/>
+        <input type="button" onclick="onPromptButtonClicked();" value="Prompt dialog"/>
+    </div>
+    <div>
+        <input type="file" name="fileUpload" value="fileUpload" id="fileUpload">
+    </div>
+
+    <script>
+        function onConfirmButtonClicked() {
+            var ret = confirm("Confirm?");
+            console.log("confirm result: ", ret);
+        }
+        function onPromptButtonClicked() {
+            var ret = prompt("Please input your name:");
+            console.log("prompt returns: ", ret);
+        }
+    </script>
+
     <script>
         function testCrossDomain() {
             var xhr = new XMLHttpRequest();

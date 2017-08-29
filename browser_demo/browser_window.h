@@ -16,6 +16,7 @@ class BrowserWindow : public QFrame {
   explicit BrowserWindow(QWidget* parent = nullptr);
   ~BrowserWindow() override;
 
+  void load(const QUrl& url);
 
  signals:
   void onTimeout();

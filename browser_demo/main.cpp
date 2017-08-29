@@ -10,7 +10,20 @@
 #include "browser_window.h"
 #include "sync_methods.h"
 
+namespace {
+
+const char kPlatformThemeName[] = "QT_QPA_PLATFORMTHEME";
+const char kGtk2Theme[] = "gtk2";
+
+}  // namespace
+
 int main(int argc, char* argv[]) {
+  // If platform theme name is empty, fallback to gtk2.
+  // gtk2 theme is included in libqt5libqgtk2 package.
+  if (qgetenv(kPlatformThemeName) != kGtk2Theme) {
+    qputenv(kPlatformThemeName, kGtk2Theme);
+  }
+
   QCefGlobalSettings settings;
   settings.setNoSandbox(true);
 //  settings.setPepperFlash(true);
@@ -25,6 +38,7 @@ int main(int argc, char* argv[]) {
   BrowserWindow browser_window;
   browser_window.show();
   browser_window.resize(860, 640);
+  browser_window.load(QUrl("qrc://resources/index.html"));
 
   QCefRunLoop();
   return 0;
