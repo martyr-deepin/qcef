@@ -14,13 +14,14 @@ QCefDialogHandler::QCefDialogHandler() {
 
 }
 
-bool QCefDialogHandler::OnFileDialog(CefRefPtr<CefBrowser> browser,
-                                     CefDialogHandler::FileDialogMode mode,
-                                     const CefString& title,
-                                     const CefString& default_file_path,
-                                     const std::vector<CefString>& accept_filters,
-                                     int selected_accept_filter,
-                                     CefRefPtr<CefFileDialogCallback> callback) {
+bool QCefDialogHandler::OnFileDialog(
+    CefRefPtr<CefBrowser> browser,
+    CefDialogHandler::FileDialogMode mode,
+    const CefString& title,
+    const CefString& default_file_path,
+    const std::vector<CefString>& accept_filters,
+    int selected_accept_filter,
+    CefRefPtr<CefFileDialogCallback> callback) {
   (void)browser;
 
   // Remove any modifier flags.
@@ -30,52 +31,74 @@ bool QCefDialogHandler::OnFileDialog(CefRefPtr<CefBrowser> browser,
   QString title_str;
   if (!title.empty()) {
     title_str = QString::fromStdString(title.ToString());
-  }
-
-  bool success;
-  std::vector<CefString> files;
-
-  if (mode_type == FILE_DIALOG_OPEN) {
-    const QString filename =
-        QFileDialog::getOpenFileName(nullptr, title_str,
-                                     "", "", nullptr);
-    files.push_back(filename.toStdString());
-    success = (! filename.isEmpty());
-  } else if (mode_type == FILE_DIALOG_OPEN_MULTIPLE) {
-    const QStringList filename =
-        QFileDialog::getOpenFileNames(nullptr, title_str, "", "", nullptr);
-    for (int i = 0; i < filename.size(); ++i) {
-      files.push_back(filename.at(i).toStdString());
-    }
-    success = (filename.size() != 0);
-  } else if (mode_type == FILE_DIALOG_OPEN_FOLDER) {
-    const QString dir =
-        QFileDialog::getExistingDirectory(nullptr, title_str, "");
-    if (!dir.isEmpty()) {
-      files.push_back(dir.toStdString());
-    }
-    success = (! dir.isEmpty());
-  } else if (mode_type == FILE_DIALOG_SAVE) {
-    const QString filename =
-        QFileDialog::getSaveFileName(nullptr, title_str, "", "", nullptr);
-    if (!filename.isEmpty()) {
-      files.push_back(filename.toStdString());
-    }
-    success = (! filename.isEmpty());
   } else {
-    return false;
+    switch (mode_type) {
+      case FILE_DIALOG_OPEN: {
+        title_str = QObject::tr("Select File");
+        break;
+      }
+      case FILE_DIALOG_OPEN_MULTIPLE: {
+        title_str = QObject::tr("Select Files");
+        break;
+      }
+      case FILE_DIALOG_OPEN_FOLDER: {
+        title_str = QObject::tr("Open");
+        break;
+      }
+      case FILE_DIALOG_SAVE: {
+        title_str = QObject::tr("Save");
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   }
 
-  int filter_index = selected_accept_filter;
-
-  if (success) {
-    callback->Continue(filter_index, files);
-  } else {
-    callback->Cancel();
+  QFileDialog* dialog = new QFileDialog();
+  dialog->setWindowTitle(title_str);
+  dialog->setConfirmOverwrite(mode & FILE_DIALOG_OVERWRITEPROMPT_FLAG);
+  switch (mode_type) {
+    case FILE_DIALOG_OPEN: {
+      dialog->setAcceptMode(QFileDialog::AcceptOpen);
+      dialog->setFileMode(QFileDialog::ExistingFile);
+      break;
+    }
+    case FILE_DIALOG_OPEN_FOLDER: {
+      dialog->setAcceptMode(QFileDialog::AcceptOpen);
+      dialog->setFileMode(QFileDialog::Directory);
+      break;
+    }
+    case FILE_DIALOG_OPEN_MULTIPLE: {
+      dialog->setAcceptMode(QFileDialog::AcceptOpen);
+      dialog->setFileMode(QFileDialog::ExistingFile);
+      break;
+    }
+    case FILE_DIALOG_SAVE: {
+      dialog->setAcceptMode(QFileDialog::AcceptSave);
+      dialog->setFileMode(QFileDialog::Directory);
+      break;
+    }
+    default: {
+      break;
+    }
   }
+
+  dialog->show();
+  QObject::connect(dialog, &QFileDialog::finished, [=](int ret) {
+    std::vector<CefString> selected_files;
+    for (const QString& file : dialog->selectedFiles()) {
+      selected_files.push_back(file.toStdString());
+    }
+    dialog->deleteLater();
+    if (ret == QDialog::Accepted && !selected_files.empty()) {
+      callback->Continue(selected_accept_filter, selected_files);
+    } else {
+      callback->Cancel();
+    }
+  });
 
   return true;
-
 }
 
 bool QCefDialogHandler::OnJSDialog(CefRefPtr<CefBrowser> browser,
