@@ -4,7 +4,9 @@
 
 #include "widgets/qcef_web_view.h"
 
+#include <QApplication>
 #include <QDebug>
+#include <QEvent>
 
 #include "widgets/qcef_web_page.h"
 #include "widgets/qcef_web_settings.h"
@@ -18,6 +20,9 @@ QCefWebView::QCefWebView(QWidget* parent)
       p_(new QCefWebViewPrivate()) {
   this->setAttribute(Qt::WA_NativeWindow, true);
   this->setAttribute(Qt::WA_DontCreateNativeAncestors, true);
+  this->setFocusPolicy(Qt::StrongFocus);
+
+  qApp->installEventFilter(this);
 
   p_->page = new QCefWebPage(this);
 }
@@ -49,4 +54,13 @@ void QCefWebView::resizeEvent(QResizeEvent* event) {
     // Update geometry of inner windows.
     p_->page->resizeCefBrowser(this->size());
   }
+}
+
+bool QCefWebView::eventFilter(QObject* watched, QEvent* event) {
+  if (event->type() == QEvent::Move) {
+    if (p_->page != nullptr) {
+      p_->page->updateBrowserWindowGeometry();
+    }
+  }
+  return QObject::eventFilter(watched, event);
 }

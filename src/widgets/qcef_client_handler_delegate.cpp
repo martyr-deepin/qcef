@@ -39,10 +39,6 @@ QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
     cef_browser_ = browser;
   }
 
-  // Resize browser window.
-  web_page_->resizeCefBrowser(QSize(400, 400));
-  web_page_->resizeCefBrowser();
-
   // Set Cross-Origin white list.
   const auto white_list = web_page_->settings()->crossOriginWhiteList();
   for (const QCefWebSettings::CrossOriginEntry& entry : white_list) {
@@ -71,12 +67,22 @@ void QCefClientHandlerDelegate::OnFaviconURLChange(
   }
 }
 
+void QCefClientHandlerDelegate::OnGotFocus(CefRefPtr<CefBrowser> browser) {
+  if (cef_browser_ != nullptr &&
+      browser->GetIdentifier() == cef_browser_->GetIdentifier()) {
+    web_page_->onBrowserGotFocus();
+  }
+}
+
 void QCefClientHandlerDelegate::OnLoadStarted(CefRefPtr<CefBrowser> browser,
                                               CefRefPtr<CefFrame> frame) {
-  if (browser->GetIdentifier() == cef_browser()->GetIdentifier() &&
+  if (cef_browser_ != nullptr &&
+      browser->GetIdentifier() == cef_browser_->GetIdentifier() &&
       browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
     emit web_page_->loadStarted();
   }
+
+  web_page_->updateBrowserWindowGeometry();
 }
 
 void QCefClientHandlerDelegate::OnLoadingStateChange(
@@ -84,7 +90,8 @@ void QCefClientHandlerDelegate::OnLoadingStateChange(
     bool is_loading,
     bool can_go_back,
     bool can_go_forward) {
-  if (browser->GetIdentifier() == cef_browser()->GetIdentifier()) {
+  if (cef_browser_ != nullptr &&
+      browser->GetIdentifier() == cef_browser_->GetIdentifier()) {
     emit web_page_->loadingStateChanged(is_loading,
                                         can_go_back,
                                         can_go_forward);
@@ -95,7 +102,8 @@ void QCefClientHandlerDelegate::OnLoadEnd(CefRefPtr<CefBrowser> browser,
                                           CefRefPtr<CefFrame> frame,
                                           int httpStatusCode) {
   Q_UNUSED(httpStatusCode);
-  if (browser->GetIdentifier() == cef_browser()->GetIdentifier() &&
+  if (cef_browser_ != nullptr &&
+      browser->GetIdentifier() == cef_browser_->GetIdentifier() &&
       browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
     emit web_page_->loadFinished(true);
   }
@@ -106,7 +114,8 @@ std::string QCefClientHandlerDelegate::OnLoadError(
     CefRefPtr<CefFrame> frame,
     int errorCode) {
   Q_UNUSED(errorCode);
-  if (browser->GetIdentifier() == cef_browser()->GetIdentifier() &&
+  if (cef_browser_ != nullptr &&
+      browser->GetIdentifier() == cef_browser_->GetIdentifier() &&
       browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
     emit web_page_->loadFinished(false);
   }
@@ -121,7 +130,8 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
     CefRefPtr<CefProcessMessage> message) {
   Q_UNUSED(source_process);
 
-  if (browser->GetIdentifier() != cef_browser()->GetIdentifier()) {
+  if (cef_browser_ != nullptr &&
+      browser->GetIdentifier() != cef_browser_->GetIdentifier()) {
     return false;
   }
 

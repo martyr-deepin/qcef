@@ -11,6 +11,7 @@
 
 class QCefClientHandler : public CefClient,
                           public CefDisplayHandler,
+                          public CefFocusHandler,
                           public CefLifeSpanHandler,
                           public CefLoadHandler {
  public:
@@ -23,6 +24,8 @@ class QCefClientHandler : public CefClient,
     // Called when the browser is created.
     virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) = 0;
     virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) = 0;
+
+    virtual void OnGotFocus(CefRefPtr<CefBrowser> browser) = 0;
 
     // CefLoadHandler methods
     virtual void OnLoadStarted(CefRefPtr<CefBrowser> browser,
@@ -60,6 +63,9 @@ class QCefClientHandler : public CefClient,
   CefRefPtr<CefDisplayHandler> GetDisplayHandler() override {
     return this;
   }
+  CefRefPtr<CefFocusHandler> GetFocusHandler() override {
+    return this;
+  }
   CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() override {
     return this;
   }
@@ -81,6 +87,9 @@ class QCefClientHandler : public CefClient,
                               bool fullscreen) override;
   void OnTitleChange(CefRefPtr<CefBrowser> browser,
                      const CefString& title) override;
+
+  // CefFocusHandler methods:
+  void OnGotFocus(CefRefPtr<CefBrowser> browser) override;
 
   // CefLifeSpanHandler methods:
   bool OnBeforePopup(CefRefPtr<CefBrowser> browser,

@@ -251,8 +251,14 @@ void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
                                     nullptr);
 }
 
-void QCefWebPage::resizeCefBrowser() {
+void QCefWebPage::onBrowserGotFocus() {
   QWidget* parent = qobject_cast<QWidget*>(this->parent());
+  parent->setFocus(Qt::MouseFocusReason);
+}
+
+void QCefWebPage::updateBrowserWindowGeometry() {
+  QWidget* parent = qobject_cast<QWidget*>(this->parent());
+  this->resizeCefBrowser(QSize(400, 400));
   this->resizeCefBrowser(parent->size());
 }
 

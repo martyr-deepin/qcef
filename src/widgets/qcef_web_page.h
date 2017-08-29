@@ -112,7 +112,13 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // This method can only be call once for one QCefWebView object.
   void createBrowser(QWindow* parent_window, const QSize& size);
 
-  void resizeCefBrowser();
+  void onBrowserGotFocus();
+
+  // Resize browser window on page loading.
+  // NOTE(LiuLang): This hacking tip solves tooltip and IME position issue.
+  // A better solution shall be provided, by updating XWindow property.
+  void updateBrowserWindowGeometry();
+
   void resizeCefBrowser(const QSize& size);
 
   // Handle messages received from renderer process.

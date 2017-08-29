@@ -195,3 +195,9 @@ bool QCefClientHandler::OnBeforePopup(
   }
   return true;
 }
+
+void QCefClientHandler::OnGotFocus(CefRefPtr<CefBrowser> browser) {
+  if (delegate_ != nullptr) {
+    delegate_->OnGotFocus(browser);
+  }
+}
