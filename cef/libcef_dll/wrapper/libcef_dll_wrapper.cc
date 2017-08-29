@@ -9,7 +9,7 @@
 // implementations. See the translator.README.txt file in the tools directory
 // for more information.
 //
-// $hash=b9a497935b8b0378d130ba55a92d188025df7350$
+// $hash=5adfe7f61a476b5b7dac0365f481efc213b3c579$
 //
 
 #include "include/capi/cef_app_capi.h"
@@ -26,6 +26,7 @@
 #include "include/capi/cef_trace_capi.h"
 #include "include/capi/cef_v8_capi.h"
 #include "include/capi/cef_web_plugin_capi.h"
+#include "include/capi/test/cef_test_helpers_capi.h"
 #include "include/cef_app.h"
 #include "include/cef_crash_util.h"
 #include "include/cef_file_util.h"
@@ -41,6 +42,7 @@
 #include "include/cef_v8.h"
 #include "include/cef_version.h"
 #include "include/cef_web_plugin.h"
+#include "include/test/cef_test_helpers.h"
 #include "libcef_dll/cpptoc/accessibility_handler_cpptoc.h"
 #include "libcef_dll/cpptoc/app_cpptoc.h"
 #include "libcef_dll/cpptoc/browser_process_handler_cpptoc.h"
@@ -1130,4 +1132,20 @@ CEF_GLOBAL void CefRegisterWidevineCdm(
   // Execute
   cef_register_widevine_cdm(path.GetStruct(),
                             CefRegisterCdmCallbackCppToC::Wrap(callback));
+}
+
+CEF_GLOBAL void CefExecuteJavaScriptWithUserGestureForTests(
+    CefRefPtr<CefFrame> frame,
+    const CefString& javascript) {
+  // AUTO-GENERATED CONTENT - DELETE THIS COMMENT BEFORE MODIFYING
+
+  // Verify param: frame; type: refptr_same
+  DCHECK(frame.get());
+  if (!frame.get())
+    return;
+  // Unverified params: javascript
+
+  // Execute
+  cef_execute_java_script_with_user_gesture_for_tests(
+      CefFrameCToCpp::Unwrap(frame), javascript.GetStruct());
 }

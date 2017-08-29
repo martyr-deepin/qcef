@@ -37,10 +37,6 @@ class QCEF_WIDGETS_EXPORT QCefWebSettings {
   void setJavascript(State state);
   State javascript() const;
 
-  // Controls whether JavaScript can be used for opening windows.
-  void setJavascriptOpenWindows(State state);
-  State javascriptOpenWindows() const;
-
   // Controls whether JavaScript can be used to close windows that were not
   // opened via JavaScript. JavaScript can still be used to close windows that
   // were opened via JavaScript or that have no back/forward history.

@@ -28,8 +28,6 @@ void MergeWebPageSettings(CefBrowserSettings& cef_settings,
       settings.defaultEncoding().toStdString();
   cef_settings.remote_fonts = static_cast<cef_state_t>(settings.remoteFonts());
   cef_settings.javascript = static_cast<cef_state_t>(settings.javascript());
-  cef_settings.javascript_open_windows =
-      static_cast<cef_state_t>(settings.javascriptOpenWindows());
   cef_settings.javascript_close_windows =
       static_cast<cef_state_t>(settings.javascriptCloseWindow());
   cef_settings.javascript_access_clipboard =
@@ -253,6 +251,10 @@ void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
                                     nullptr);
 }
 
+void QCefWebPage::resizeCefBrowser() {
+  QWidget* parent = qobject_cast<QWidget*>(this->parent());
+  this->resizeCefBrowser(parent->size());
+}
 
 void QCefWebPage::resizeCefBrowser(const QSize& size) {
   if (p_->browser_created) {

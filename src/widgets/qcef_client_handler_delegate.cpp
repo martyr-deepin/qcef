@@ -31,13 +31,17 @@ void QCefClientHandlerDelegate::OnBeforePopup(const CefString& target_url) {
   }
 }
 
-void QCefClientHandlerDelegate::OnBrowserCreated(
-    CefRefPtr<CefBrowser> browser) {
+void
+QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
   qDebug() << "QCefClientHandlerDelegate::OnBrowserCreated: "
            << browser << cef_browser_;
   if (cef_browser_ == nullptr) {
     cef_browser_ = browser;
   }
+
+  // Resize browser window.
+  web_page_->resizeCefBrowser(QSize(400, 400));
+  web_page_->resizeCefBrowser();
 
   // Set Cross-Origin white list.
   const auto white_list = web_page_->settings()->crossOriginWhiteList();

@@ -462,7 +462,6 @@ set(LIBCEF_INCLUDE_BASE_INTERNAL_SRCS
   )
 set(LIBCEF_INCLUDE_BASE_INTERNAL_SRCS_LINUX
   ../include/base/internal/cef_atomicops_arm_gcc.h
-  ../include/base/internal/cef_atomicops_mips_gcc.h
   ../include/base/internal/cef_atomicops_atomicword_compat.h
   ../include/base/internal/cef_atomicops_x86_gcc.h
   )
@@ -549,6 +548,7 @@ set(LIBCEF_INCLUDE_CAPI_SRCS
 source_group(include\\\\capi FILES ${LIBCEF_INCLUDE_CAPI_SRCS})
 
 set(LIBCEF_INCLUDE_CAPI_TEST_SRCS
+  ../include/capi/test/cef_test_helpers_capi.h
   ../include/capi/test/cef_translator_test_capi.h
   )
 source_group(include\\\\capi\\\\test FILES ${LIBCEF_INCLUDE_CAPI_TEST_SRCS})
@@ -609,6 +609,7 @@ LIBCEF_APPEND_PLATFORM_SOURCES(LIBCEF_INCLUDE_INTERNAL_SRCS)
 source_group(include\\\\internal FILES ${LIBCEF_INCLUDE_INTERNAL_SRCS})
 
 set(LIBCEF_INCLUDE_TEST_SRCS
+  ../include/test/cef_test_helpers.h
   ../include/test/cef_translator_test.h
   )
 source_group(include\\\\test FILES ${LIBCEF_INCLUDE_TEST_SRCS})

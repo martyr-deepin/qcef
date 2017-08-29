@@ -8,8 +8,6 @@ struct QCefWebSettingsPrivate {
   QString default_encoding;
   QCefWebSettings::State remote_fonts = QCefWebSettings::StateDefault;
   QCefWebSettings::State javascript = QCefWebSettings::StateDefault;
-  QCefWebSettings::State javascript_open_windows =
-      QCefWebSettings::StateDefault;
   QCefWebSettings::State javascript_close_windows =
       QCefWebSettings::StateDefault;
   QCefWebSettings::State javascript_access_clipboard =
@@ -63,14 +61,6 @@ void QCefWebSettings::setJavascript(State state) {
 
 QCefWebSettings::State QCefWebSettings::javascript() const {
   return p_->javascript;
-}
-
-void QCefWebSettings::setJavascriptOpenWindows(State state) {
-  p_->javascript_open_windows = state;
-}
-
-QCefWebSettings::State QCefWebSettings::javascriptOpenWindows() const {
-  return p_->javascript_open_windows;
 }
 
 void QCefWebSettings::setJavascriptCloseWindow(State state) {

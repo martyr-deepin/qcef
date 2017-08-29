@@ -176,10 +176,6 @@ if(OS_LINUX)
     list(APPEND CEF_LINKER_FLAGS
       -m32
       )
-  elseif(PROJECT_ARCH STREQUAL "mips64el")
-    list(APPEND CEF_COMPILER_FLAGS
-      -march=loongson3a
-      )
   endif()
 
   # Standard libraries.
