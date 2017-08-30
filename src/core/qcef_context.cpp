@@ -10,13 +10,16 @@
 
 #include "core/qcef_app.h"
 #include "core/qcef_util.h"
+#include "core/qcef_cookie_store.h"
 #include "include/cef_path_util.h"
 
 namespace {
 
 gboolean ProcessQtEvent(gpointer user_data) {
   Q_UNUSED(user_data);
-  qApp->processEvents();
+  if (qApp != nullptr) {
+    qApp->processEvents();
+  }
   return TRUE;
 }
 
@@ -126,7 +129,9 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 }
 
 void QCefRunLoop() {
+  // Register event dispatcher.
   g_timeout_add(10, ProcessQtEvent, nullptr);
+
   CefRunMessageLoop();
 
   // Shutdown loop internally.
@@ -134,5 +139,7 @@ void QCefRunLoop() {
 }
 
 void QCefQuitLoop() {
+  // Flash global cookie.
+  QCefFlushCookies();
   CefQuitMessageLoop();
 }

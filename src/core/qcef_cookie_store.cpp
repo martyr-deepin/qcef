@@ -87,12 +87,12 @@ bool CookieTotalVisitor::Visit(const CefCookie& cookie,
 
 }  // namespace
 
-void FlushCookies() {
+void QCefFlushCookies() {
   auto cookie_manager = CefCookieManager::GetGlobalManager(nullptr);
   cookie_manager->FlushStore(nullptr);
 }
 
-QString GetCookie(const QString& domain, const QString& name) {
+QString QCefGetCookie(const QString& domain, const QString& name) {
   CefRefPtr<CookieVisitor> cookie_visitor =
       new CookieVisitor(name.toStdString());
 
@@ -111,7 +111,7 @@ QString GetCookie(const QString& domain, const QString& name) {
   return QString::fromStdString(cookie_visitor->cookie_value);
 }
 
-QVariantMap GetCookies(const QString& domain) {
+QVariantMap QCefGetCookies(const QString& domain) {
   CefRefPtr<CookieTotalVisitor> cookie_visitor = new CookieTotalVisitor();
   auto cookie_manager = CefCookieManager::GetGlobalManager(nullptr);
   cookie_manager->VisitUrlCookies(domain.toStdString(), false,
@@ -135,16 +135,16 @@ QVariantMap GetCookies(const QString& domain) {
   return map;
 }
 
-void MoveCookie(const QString& old_domain,
-                const QString& new_domain,
-                const QString& name) {
+void QCefMoveCookie(const QString& old_domain,
+                    const QString& new_domain,
+                    const QString& name) {
   Q_UNUSED(old_domain);
   Q_UNUSED(new_domain);
   Q_UNUSED(name);
   // TODO(LiuLang):
 }
 
-bool RemoveCookie(const QString& domain, const QString& name) {
+bool QCefRemoveCookie(const QString& domain, const QString& name) {
   auto cookie_manager = CefCookieManager::GetGlobalManager(nullptr);
   cookie_manager->DeleteCookies(domain.toStdString(),
                                 name.toStdString(),
@@ -153,9 +153,9 @@ bool RemoveCookie(const QString& domain, const QString& name) {
   return true;
 }
 
-void SetCookie(const QString& domain,
-               const QString& name,
-               const QString& value) {
+void QCefSetCookie(const QString& domain,
+                   const QString& name,
+                   const QString& value) {
   auto cookie_manager = CefCookieManager::GetGlobalManager(nullptr);
   CefCookie cefCookie;
   CefString(&cefCookie.name) = name.toStdString();

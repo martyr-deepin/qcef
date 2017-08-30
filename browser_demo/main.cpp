@@ -4,7 +4,6 @@
 
 #include <sys/utsname.h>
 #include <QApplication>
-#include <QTimer>
 #include <qcef_context.h>
 #include <qcef_global_settings.h>
 
@@ -39,11 +38,15 @@ int main(int argc, char* argv[]) {
   }
 
   QCefGlobalSettings settings;
+  // Do not use sandbox.
   settings.setNoSandbox(true);
+
   // Flash plugin only works on x86 platform.
   if (IsX86Architecture()) {
-    settings.setPepperFlash(true);
+//    settings.setPepperFlash(true);
   }
+
+  // Open http://localhost:9222 in chromium browser to see dev tools.
   settings.setRemoteDebug(true);
   settings.setLogSeverity(QCefGlobalSettings::LogSeverity::Info);
 

@@ -155,7 +155,7 @@ void BrowserWindow::onFullscreenRequested(bool fullscreen) {
 }
 
 void BrowserWindow::closeEvent(QCloseEvent* event) {
-  QWidget::closeEvent(event);
+  QFrame::closeEvent(event);
 
   // Quit cef message loop on browser window closed.
   QCefQuitLoop();
