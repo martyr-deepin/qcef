@@ -309,9 +309,11 @@ void QCefWebPage::handleWebMessage(const QJsonObject& message) {
   }
 }
 
-void QCefWebPage::updateIconUrl(const QUrl& url) {
+void QCefWebPage::updateFavicon(const QUrl& url, const QIcon& icon) {
   if (url != p_->iconUrl) {
     p_->iconUrl = url;
+    p_->icon = icon;
+    emit this->iconChanged(p_->icon);
     emit this->iconUrlChanged(p_->iconUrl);
   }
 }

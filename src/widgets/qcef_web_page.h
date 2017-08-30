@@ -97,8 +97,6 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void urlChanged(const QUrl& url);
 
   // Notified when page icon is updated.
-  // This signal is emitted later than iconUrlChanged() signal. It takes
-  // time to download that icon file in worker thread.
   void iconChanged(const QIcon& icon);
 
   // Notified when page icon is changed.
@@ -126,7 +124,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void releaseTransportChannel();
   void handleWebMessage(const QJsonObject& message);
 
-  void updateIconUrl(const QUrl& url);
+  void updateFavicon(const QUrl& url, const QIcon& icon);
   void updateTitle(const QString& title);
   void updateUrl(const QUrl& url);
 

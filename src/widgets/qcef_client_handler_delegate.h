@@ -21,7 +21,8 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
   void OnBeforePopup(const CefString& target_url) override;
   void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
   void OnBeforeClose(CefRefPtr<CefBrowser> browser) override;
-  void OnFaviconURLChange(const std::vector<CefString>& urls) override;
+  void OnFaviconURLChange(const CefString& icon_url,
+                          CefRefPtr<CefImage> icon) override;
   void OnGotFocus(CefRefPtr<CefBrowser> browser) override;
   void OnLoadStarted(CefRefPtr<CefBrowser> browser,
                      CefRefPtr<CefFrame> frame) override;

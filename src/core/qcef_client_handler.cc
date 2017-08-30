@@ -9,6 +9,44 @@
 #include "include/views/cef_browser_view.h"
 #include "include/wrapper/cef_helpers.h"
 
+namespace {
+
+enum client_menu_ids {
+  CLIENT_ID_SHOW_DEVTOOLS = MENU_ID_USER_FIRST,
+  CLIENT_ID_CLOSE_DEVTOOLS,
+  CLIENT_ID_INSPECT_ELEMENT,
+  CLIENT_ID_SHOW_SSL_INFO,
+  CLIENT_ID_TESTMENU_SUBMENU,
+  CLIENT_ID_TESTMENU_CHECKITEM,
+  CLIENT_ID_TESTMENU_RADIOITEM1,
+  CLIENT_ID_TESTMENU_RADIOITEM2,
+  CLIENT_ID_TESTMENU_RADIOITEM3,
+};
+
+}  // namespace
+
+class QCefClientDownloadImageCallback : public CefDownloadImageCallback {
+ public:
+  explicit QCefClientDownloadImageCallback(
+      CefRefPtr<QCefClientHandler> client_handler)
+      : client_handler_(client_handler) { }
+
+  void OnDownloadImageFinished(const CefString& image_url,
+                               int http_status_code,
+                               CefRefPtr<CefImage> image) OVERRIDE {
+    if (image != nullptr) {
+      client_handler_->NotifyFavicon(image_url, image);
+    }
+  }
+
+ private:
+  CefRefPtr<QCefClientHandler> client_handler_;
+
+ IMPLEMENT_REFCOUNTING(QCefClientDownloadImageCallback);
+  DISALLOW_COPY_AND_ASSIGN(QCefClientDownloadImageCallback);
+};
+
+
 QCefClientHandler::QCefClientHandler(Delegate* delegate)
     : delegate_(delegate),
       dialog_handler_(new QCefDialogHandler()) {
@@ -124,14 +162,75 @@ bool QCefClientHandler::OnProcessMessageReceived(
   }
 }
 
+void QCefClientHandler::OnBeforeContextMenu(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefContextMenuParams> params,
+    CefRefPtr<CefMenuModel> model) {
+  (void)browser;
+  (void)frame;
+  CEF_REQUIRE_UI_THREAD();
+  if ((params->GetTypeFlags() & (CM_TYPEFLAG_PAGE | CM_TYPEFLAG_FRAME)) != 0) {
+    if (model->GetCount() > 0) {
+      model->AddSeparator();
+    }
+    LOG(ERROR) << "Add inspect element";
+    model->AddItem(CLIENT_ID_INSPECT_ELEMENT, "Inspect Element");
+  }
+}
+
+bool QCefClientHandler::RunContextMenu(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefContextMenuParams> params,
+    CefRefPtr<CefMenuModel> model,
+    CefRefPtr<CefRunContextMenuCallback> callback) {
+  LOG(ERROR) << __FUNCTION__;
+  return true;
+//  return CefContextMenuHandler::RunContextMenu(browser, frame, params, model,
+//                                               callback);
+}
+
+bool QCefClientHandler::OnContextMenuCommand(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefContextMenuParams> params,
+    int command_id,
+    CefContextMenuHandler::EventFlags event_flags) {
+  CEF_REQUIRE_UI_THREAD();
+//  switch (command_id) {
+//    case CLIENT_ID_INSPECT_ELEMENT: {
+//      LOG(ERROR) << "show dev tools";
+//      showDevTools(browser, CefPoint(params->GetXCoord(), params->GetYCoord()));
+//      return true;
+//    }
+//  }
+
+  return CefContextMenuHandler::OnContextMenuCommand(browser, frame, params,
+                                                     command_id, event_flags);
+}
+
+void QCefClientHandler::OnContextMenuDismissed(CefRefPtr<CefBrowser> browser,
+                                               CefRefPtr<CefFrame> frame) {
+  CefContextMenuHandler::OnContextMenuDismissed(browser, frame);
+}
+
+CefRefPtr<CefDialogHandler> QCefClientHandler::GetDialogHandler() {
+  return dialog_handler_;
+}
+
+CefRefPtr<CefJSDialogHandler> QCefClientHandler::GetJSDialogHandler() {
+  return dialog_handler_;
+}
+
 void QCefClientHandler::OnAddressChange(CefRefPtr<CefBrowser> browser,
                                         CefRefPtr<CefFrame> frame,
                                         const CefString& url) {
   (void)browser;
-  (void)frame;
   CEF_REQUIRE_UI_THREAD();
 
-  if (delegate_ != nullptr) {
+  // Only update the address for the main (top-level) frame.
+  if (frame->IsMain() && delegate_ != nullptr) {
     delegate_->OnUrlChanged(url);
   }
 }
@@ -142,8 +241,9 @@ void QCefClientHandler::OnFaviconURLChange(
   (void)browser;
   CEF_REQUIRE_UI_THREAD();
 
-  if (delegate_ != nullptr) {
-    delegate_->OnFaviconURLChange(icon_urls);
+  if (!icon_urls.empty()) {
+    browser->GetHost()->DownloadImage(icon_urls[0], true, 16, false,
+                                      new QCefClientDownloadImageCallback(this));
   }
 }
 
@@ -204,10 +304,35 @@ void QCefClientHandler::OnGotFocus(CefRefPtr<CefBrowser> browser) {
   }
 }
 
-CefRefPtr<CefDialogHandler> QCefClientHandler::GetDialogHandler() {
-  return dialog_handler_;
+void QCefClientHandler::NotifyFavicon(const CefString& icon_url,
+                                      CefRefPtr<CefImage> icon) {
+  if (delegate_ != nullptr) {
+    delegate_->OnFaviconURLChange(icon_url, icon);
+  }
 }
 
-CefRefPtr<CefJSDialogHandler> QCefClientHandler::GetJSDialogHandler() {
-  return dialog_handler_;
-}
+//void QCefClientHandler::showDevTools(CefRefPtr<CefBrowser> browser,
+//                                     const CefPoint& inspect_element_at) {
+//  if (!CefCurrentlyOn(TID_UI)) {
+//    // Execute this method on the UI thread.
+////    CefPostTask(TID_UI, base::Bind(QCefClientHandler::showDevTools, this, browser,
+////                                   inspect_element_at));
+//    return;
+//  }
+//
+//  CefWindowInfo windowInfo;
+//  CefRefPtr<CefClient> client;
+//  CefBrowserSettings settings;
+//
+//  CefRefPtr<CefBrowserHost> host = browser->GetHost();
+//
+//  // Test if the DevTools browser already exists.
+//  bool has_devtools = host->HasDevTools();
+//
+//  if (has_devtools) {
+//    // Create the DevTools browser if it doesn't already exist.
+//    // Otherwise, focus the existing DevTools browser and inspect the element
+//    // at |inspect_element_at| if non-empty.
+//    host->ShowDevTools(windowInfo, client, settings, inspect_element_at);
+//  }
+//}

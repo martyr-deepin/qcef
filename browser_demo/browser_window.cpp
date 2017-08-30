@@ -55,6 +55,8 @@ void BrowserWindow::initConnections() {
   QCefWebPage* page = p_->web_view->page();
   connect(page, &QCefWebPage::fullscreenRequested,
           this, &BrowserWindow::onFullscreenRequested);
+  connect(page, &QCefWebPage::iconChanged,
+          this, &BrowserWindow::setWindowIcon);
   connect(page, &QCefWebPage::titleChanged,
           this, &BrowserWindow::setWindowTitle);
   connect(page, &QCefWebPage::urlChanged,
@@ -83,7 +85,7 @@ void BrowserWindow::initConnections() {
     p_->stop_button->setEnabled(false);
   });
   connect(page, &QCefWebPage::iconUrlChanged, [=](const QUrl& iconUrl) {
-    qDebug() << "icon url changed:" << iconUrl;
+    qDebug() << "BrowserWindow icon url changed:" << iconUrl;
   });
 
   connect(p_->back_button, &QPushButton::clicked,

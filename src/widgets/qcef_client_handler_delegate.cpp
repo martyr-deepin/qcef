@@ -57,11 +57,27 @@ void QCefClientHandlerDelegate::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
   }
 }
 
-void QCefClientHandlerDelegate::OnFaviconURLChange(
-    const std::vector<CefString>& urls) {
-  if (!urls.empty()) {
-    const QString url = QString::fromStdString(urls[0]);
-    web_page_->updateIconUrl(QUrl(url));
+void QCefClientHandlerDelegate::OnFaviconURLChange(const CefString& icon_url,
+                                                   CefRefPtr<CefImage> icon) {
+  QPixmap pixmap;
+  int pixel_width = 0;
+  int pixel_height = 0;
+  const int scale_factor = 1;
+  CefRefPtr<CefBinaryValue> binary = icon->GetAsPNG(scale_factor, true,
+                                                    pixel_width, pixel_height);
+  if (binary != nullptr) {
+    const size_t image_size = binary->GetSize();
+    unsigned char* data = (unsigned char *) malloc(image_size);
+    const size_t read = binary.get()->GetData(data, image_size, 0);
+    pixmap.loadFromData(data, static_cast<uint>(read));
+    free(data);
+  }
+  const QUrl url(QString::fromStdString(icon_url));
+  if (!pixmap.isNull()) {
+    QIcon qicon(pixmap);
+    web_page_->updateFavicon(url, qicon);
+  } else {
+    web_page_->updateFavicon(url, QIcon());
   }
 }
 
