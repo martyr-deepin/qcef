@@ -5,10 +5,9 @@
 #ifndef QCEF_CORE_QCEF_SCHEME_HANDLER_FACTORY_H
 #define QCEF_CORE_QCEF_SCHEME_HANDLER_FACTORY_H
 
+#include "core/qcef_scheme_handler.h"
 #include "include/cef_scheme.h"
 #include "include/wrapper/cef_stream_resource_handler.h"
-
-#include "core/qcef_scheme_handler.h"
 
 // Handle custom scheme requests.
 class QCefSchemeHandlerFactory : public CefSchemeHandlerFactory {
