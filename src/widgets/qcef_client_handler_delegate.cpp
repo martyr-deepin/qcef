@@ -33,8 +33,6 @@ void QCefClientHandlerDelegate::OnBeforePopup(const CefString& target_url) {
 
 void
 QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
-  qDebug() << "QCefClientHandlerDelegate::OnBrowserCreated: "
-           << browser << cef_browser_;
   if (cef_browser_ == nullptr) {
     cef_browser_ = browser;
   }
