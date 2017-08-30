@@ -33,9 +33,10 @@ void QCefApp::OnContextInitialized() {
 void QCefApp::OnBeforeCommandLineProcessing(
     const CefString& process_type,
     CefRefPtr<CefCommandLine> command_line) {
-  (void) process_type;
-  for (const std::pair<std::string, std::string>& argument : appended_args_) {
-    command_line->AppendSwitchWithValue(argument.first, argument.second);
+  (void)process_type;
+  for (const QPair<QString, QString>& argument : appended_args_) {
+    command_line->AppendSwitchWithValue(argument.first.toStdString(),
+                                        argument.second.toStdString());
   }
 }
 

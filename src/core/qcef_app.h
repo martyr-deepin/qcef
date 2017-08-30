@@ -5,10 +5,11 @@
 #ifndef QCEF_CORE_QCEF_APP_H
 #define QCEF_CORE_QCEF_APP_H
 
-#include "include/cef_app.h"
+#include <QVector>
 
 #include "core/qcef_scheme_handler.h"
 #include "core/qcef_sync_method.h"
+#include "include/cef_app.h"
 
 // Implement application-level callbacks for the browser process.
 class QCefApp : public CefApp,
@@ -33,7 +34,7 @@ class QCefApp : public CefApp,
       CefRawPtr<CefSchemeRegistrar> registrar) override;
 
   // Open API used to customize cef app.
-  typedef std::vector<std::pair<std::string, std::string>> AppendedArguments;
+  typedef QVector<QPair<QString, QString>> AppendedArguments;
   // Append |args| to command line.
   void appendCommandLineSwitches(const AppendedArguments& args);
 

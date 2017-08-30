@@ -41,9 +41,9 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   if (settings.pepperFlash()) {
     QCefApp::AppendedArguments arguments;
     arguments.push_back({"ppapi-flash-path",
-                         settings.getPepperFlashPath().toStdString()});
+                         settings.getPepperFlashPath()});
     arguments.push_back({"ppapi-flash-version",
-                         settings.getPepperFlashVersion().toStdString()});
+                         settings.getPepperFlashVersion()});
     client_app->appendCommandLineSwitches(arguments);
   }
 
