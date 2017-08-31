@@ -141,5 +141,11 @@ void QCefRunLoop() {
 void QCefQuitLoop() {
   // Flash global cookie.
   QCefFlushCookies();
-  CefQuitMessageLoop();
+
+  // Close cef context within 300ms.
+  g_timeout_add(300, [](gpointer user_data) -> gboolean {
+    Q_UNUSED(user_data);
+    CefQuitMessageLoop();
+    return FALSE;
+  }, nullptr);
 }
