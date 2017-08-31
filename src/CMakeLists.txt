@@ -114,6 +114,8 @@ set(CORE_FILES
     core/qcef_util.cpp
     core/qcef_util.h
     core/qcef_web_channel_consts.h
+    core/qcef_x11_util.cpp
+    core/qcef_x11_util.h
     )
 
 set(CORE_EXPORT_FILES
@@ -123,6 +125,7 @@ set(CORE_EXPORT_FILES
     core/qcef_global_settings.h
     core/qcef_scheme_handler.h
     core/qcef_sync_method.h
+    core/qcef_util.h
     )
 
 set(WIDGETS_FILES

@@ -2,10 +2,9 @@
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
-#include <sys/utsname.h>
 #include <QApplication>
 #include <qcef_context.h>
-#include <qcef_global_settings.h>
+#include <qcef_util.h>
 
 #include "browser_window.h"
 #include "sync_methods.h"
@@ -14,19 +13,6 @@ namespace {
 
 const char kPlatformThemeName[] = "QT_QPA_PLATFORMTHEME";
 const char kGtk2Theme[] = "gtk2";
-
-bool IsX86Architecture() {
-  struct utsname info;
-  if (uname(&info) == 0) {
-    const QString machine(info.machine);
-    if (machine == "i386" || machine == "i468" || machine == "i586" ||
-        machine == "i686" || machine == "x86" ||
-        machine == "amd64" || machine == "x86_64") {
-      return true;
-    }
-  }
-  return false;
-}
 
 }  // namespace
 

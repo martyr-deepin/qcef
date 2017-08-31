@@ -5,18 +5,9 @@
 #ifndef QCEF_CORE_QCEF_UTIL_H
 #define QCEF_CORE_QCEF_UTIL_H
 
-#include "include/cef_command_line.h"
-#include "include/internal/cef_ptr.h"
+#include "qcef_core_export.h"
 
-enum class ProcessType {
-  BrowserProcess,
-  RendererProcess,
-  ZygoteProcess,
-  OtherProcess,
-};
-
-ProcessType GetProcessType(CefRefPtr<CefCommandLine> command_line);
-
-void SetXErrorHandler();
+// Returns true if current cpu type is x86 or x86_64.
+QCEF_CORE_EXPORT bool IsX86Architecture();
 
 #endif  // QCEF_CORE_QCEF_UTIL_H
