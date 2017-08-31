@@ -15,8 +15,6 @@ set(CMAKE_AUTORCC ON)
 pkg_search_module(LIBQCEF REQUIRED libqcef)
 include_directories(AFTER ${LIBQCEF_INCLUDE_DIRS})
 
-message("CMAKE FLAGS : ${CMAKE_CXX_FLAGS}")
-
 set(LINK_LIBS
     Qt5::Gui
     Qt5::WebChannel

@@ -6,14 +6,12 @@
 
 #include <QDebug>
 #include <QJsonObject>
-#include <QSize>
 #include <QWebChannel>
 #include <QWidget>
 #include <QWindow>
 
 #include "include/cef_app.h"
 #include "core/qcef_client_handler.h"
-#include "core/qcef_util.h"
 #include "core/qcef_browser_transport.h"
 #include "widgets/qcef_client_handler_delegate.h"
 #include "widgets/qcef_web_settings.h"
@@ -83,14 +81,12 @@ QCefWebPage::QCefWebPage(QObject* parent)
 }
 
 QCefWebPage::~QCefWebPage() {
-  qDebug() << __FUNCTION__;
   if (p_->delegate != nullptr) {
     delete p_->delegate;
     p_->delegate = nullptr;
   }
 
   if (p_->client_handler != nullptr) {
-    p_->client_handler->Release();
     p_->client_handler = nullptr;
   }
 
@@ -278,7 +274,6 @@ void QCefWebPage::resizeCefBrowser(const QSize& size) {
 }
 
 void QCefWebPage::createTransportChannel() {
-  qDebug() << __FUNCTION__;
   Q_ASSERT(p_->transport == nullptr);
   if (p_->transport != nullptr) {
     delete p_->transport;
@@ -290,7 +285,6 @@ void QCefWebPage::createTransportChannel() {
 }
 
 void QCefWebPage::releaseTransportChannel() {
-  qDebug() << __FUNCTION__;
   Q_ASSERT(p_->transport != nullptr);
   if (p_->transport != nullptr) {
     p_->channel_connected = false;
@@ -301,7 +295,6 @@ void QCefWebPage::releaseTransportChannel() {
 }
 
 void QCefWebPage::handleWebMessage(const QJsonObject& message) {
-  qDebug() << __FUNCTION__ << "msg:" << message;
   if (p_->transport != nullptr && p_->channel_connected) {
     emit p_->transport->messageReceived(message, p_->transport);
   } else {
