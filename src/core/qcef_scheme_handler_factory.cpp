@@ -1,4 +1,4 @@
-// Copyright (c) 2017 LiuLang. All rights reserved.
+// Copyright (c) 2017 Deepin Ltd. All rights reserved.
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
@@ -22,7 +22,7 @@ CefStreamResourceHandler* CreateQFileStreamResourceHandler(
     qWarning() << __FUNCTION__ << "Failed to open file: " << path;
     return nullptr;
   }
-  // TODO(LiuLang): Cache mime database object.
+  // TODO(Deepin Ltd.): Cache mime database object.
   QMimeDatabase mime_database;
   const QString mime_type = mime_database.mimeTypeForData(&file).name();
   const auto content = file.readAll();

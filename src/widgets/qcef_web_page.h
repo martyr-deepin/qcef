@@ -1,4 +1,4 @@
-// Copyright (c) 2017 LiuLang. All rights reserved.
+// Copyright (c) 2017 Deepin Ltd. All rights reserved.
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
@@ -113,7 +113,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void onBrowserGotFocus();
 
   // Resize browser window on page loading.
-  // NOTE(LiuLang): This hacking tip solves tooltip and IME position issue.
+  // NOTE(Deepin Ltd.): This hacking tip solves tooltip and IME position issue.
   // A better solution shall be provided, by updating XWindow property.
   void updateBrowserWindowGeometry();
 

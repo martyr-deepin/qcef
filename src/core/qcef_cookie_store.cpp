@@ -1,4 +1,4 @@
-// Copyright (c) 2017 LiuLang. All rights reserved.
+// Copyright (c) 2017 Deepin Ltd. All rights reserved.
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
@@ -141,7 +141,7 @@ void QCefMoveCookie(const QString& old_domain,
   Q_UNUSED(old_domain);
   Q_UNUSED(new_domain);
   Q_UNUSED(name);
-  // TODO(LiuLang):
+  // TODO(Deepin Ltd.):
 }
 
 bool QCefRemoveCookie(const QString& domain, const QString& name) {

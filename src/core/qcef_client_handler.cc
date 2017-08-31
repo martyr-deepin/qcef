@@ -289,7 +289,7 @@ bool QCefClientHandler::OnBeforePopup(
   (void)settings;
   (void)no_javascript_access;
 
-  // TODO(LiuLang): Add option.
+  // TODO(Deepin Ltd.): Add option.
 
   // Do not pop up any window, instead only notify delegate.
   if (delegate_ != nullptr) {

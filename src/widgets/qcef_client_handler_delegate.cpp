@@ -1,4 +1,4 @@
-// Copyright (c) 2017 LiuLang. All rights reserved.
+// Copyright (c) 2017 Deepin Ltd. All rights reserved.
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
@@ -25,7 +25,7 @@ QCefClientHandlerDelegate::~QCefClientHandlerDelegate() {
 }
 
 void QCefClientHandlerDelegate::OnBeforePopup(const CefString& target_url) {
-  // TODO(LiuLang): Add option.
+  // TODO(Deepin Ltd.): Add option.
   if (cef_browser_ != nullptr) {
     cef_browser_->GetMainFrame()->LoadURL(target_url);
   }
@@ -53,7 +53,7 @@ void QCefClientHandlerDelegate::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
            << cef_browser_;
   if (cef_browser_->GetIdentifier() == browser->GetIdentifier()) {
     cef_browser_ = nullptr;
-    // TODO(LiuLang): Emit close signal.
+    // TODO(Deepin Ltd.): Emit close signal.
   }
 }
 
@@ -134,7 +134,7 @@ std::string QCefClientHandlerDelegate::OnLoadError(
     emit web_page_->loadFinished(false);
   }
 
-  // TODO(LiuLang): Pass |errorCode|.
+  // TODO(Deepin Ltd.): Pass |errorCode|.
   return web_page_->pageErrorContent().toStdString();
 }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2017 LiuLang. All rights reserved.
+// Copyright (c) 2017 Deepin Ltd. All rights reserved.
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
@@ -48,7 +48,7 @@ struct QCefGlobalSettingsPrivate {
 
 QCefGlobalSettings::QCefGlobalSettings()
     : p_(new QCefGlobalSettingsPrivate()) {
-  // TODO(LiuLang): Initialize default values.
+  // TODO(Deepin Ltd.): Initialize default values.
 }
 
 QCefGlobalSettings::~QCefGlobalSettings() {

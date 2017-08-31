@@ -1,4 +1,4 @@
-// Copyright (c) 2017 LiuLang. All rights reserved.
+// Copyright (c) 2017 Deepin Ltd. All rights reserved.
 // Use of this source is governed by General Public License that can be found
 // in the LICENSE file.
 
@@ -128,7 +128,7 @@ void QCefWebPage::setUrl(const QUrl& url) {
   if (p_->browser_created) {
     const std::string url_str = url.toString().toStdString();
     if (p_->delegate->cef_browser() != nullptr) {
-      // TODO(LiuLang): Support delayed loading.
+      // TODO(Deepin Ltd.): Support delayed loading.
       p_->delegate->cef_browser()->GetMainFrame()->LoadURL(url_str);
     }
   } else {
