@@ -37,6 +37,7 @@ class QCefClientDownloadImageCallback : public CefDownloadImageCallback {
     if (image != nullptr) {
       client_handler_->NotifyFavicon(image_url, image);
     }
+    LOG(ERROR) << "favicon image:" << image;
   }
 
  private:

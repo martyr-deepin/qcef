@@ -49,8 +49,6 @@ QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
 }
 
 void QCefClientHandlerDelegate::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
-  qDebug() << "QCefClientHandlerDelegate::OnBeforeClose" << browser
-           << cef_browser_;
   if (cef_browser_->GetIdentifier() == browser->GetIdentifier()) {
     cef_browser_ = nullptr;
     // TODO(Deepin Ltd.): Emit close signal.
@@ -59,6 +57,7 @@ void QCefClientHandlerDelegate::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
 
 void QCefClientHandlerDelegate::OnFaviconURLChange(const CefString& icon_url,
                                                    CefRefPtr<CefImage> icon) {
+  qDebug() << __FUNCTION__ << icon_url.ToString().c_str() << icon;
   QPixmap pixmap;
   int pixel_width = 0;
   int pixel_height = 0;
