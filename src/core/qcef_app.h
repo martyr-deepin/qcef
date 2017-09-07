@@ -47,6 +47,7 @@ class QCefApp : public CefApp,
  private:
   // Include the default reference counting implementation.
   IMPLEMENT_REFCOUNTING(QCefApp);
+  DISALLOW_COPY_AND_ASSIGN(QCefApp);
 
   AppendedArguments appended_args_;
   QList<QUrl> custom_scheme_list_;

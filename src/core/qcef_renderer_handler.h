@@ -5,9 +5,8 @@
 #ifndef QCEF_CORE_QCEF_RENDERER_HANDLER_H
 #define QCEF_CORE_QCEF_RENDERER_HANDLER_H
 
-#include "include/cef_render_process_handler.h"
-
 #include "core/qcef_sync_method.h"
+#include "include/cef_render_process_handler.h"
 
 // Handle messages in renderer processes.
 class QCefRendererHandler : public CefRenderProcessHandler {
@@ -30,6 +29,7 @@ class QCefRendererHandler : public CefRenderProcessHandler {
 
  private:
   IMPLEMENT_REFCOUNTING(QCefRendererHandler);
+  DISALLOW_COPY_AND_ASSIGN(QCefRendererHandler);
 
   QCefSyncMethodMap sync_methods_;
 };

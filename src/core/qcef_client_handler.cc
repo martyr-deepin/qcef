@@ -65,6 +65,7 @@ void QCefClientHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
 }
 
 bool QCefClientHandler::DoClose(CefRefPtr<CefBrowser> browser) {
+  (void)browser;
   CEF_REQUIRE_UI_THREAD();
 
   // Allow the close. For windowed browsers this will result in the OS close
@@ -168,28 +169,13 @@ void QCefClientHandler::OnBeforeContextMenu(
     CefRefPtr<CefFrame> frame,
     CefRefPtr<CefContextMenuParams> params,
     CefRefPtr<CefMenuModel> model) {
+  LOG(ERROR) << __FUNCTION__;
+
   (void)browser;
   (void)frame;
   CEF_REQUIRE_UI_THREAD();
-  if ((params->GetTypeFlags() & (CM_TYPEFLAG_PAGE | CM_TYPEFLAG_FRAME)) != 0) {
-    if (model->GetCount() > 0) {
-      model->AddSeparator();
-    }
-    LOG(ERROR) << "Add inspect element";
-    model->AddItem(CLIENT_ID_INSPECT_ELEMENT, "Inspect Element");
-  }
-}
-
-bool QCefClientHandler::RunContextMenu(
-    CefRefPtr<CefBrowser> browser,
-    CefRefPtr<CefFrame> frame,
-    CefRefPtr<CefContextMenuParams> params,
-    CefRefPtr<CefMenuModel> model,
-    CefRefPtr<CefRunContextMenuCallback> callback) {
-  LOG(ERROR) << __FUNCTION__;
-  return true;
-//  return CefContextMenuHandler::RunContextMenu(browser, frame, params, model,
-//                                               callback);
+  model->AddSeparator();
+  model->AddItem(MENU_ID_CUSTOM_FIRST, "Fuck");
 }
 
 bool QCefClientHandler::OnContextMenuCommand(
@@ -198,22 +184,10 @@ bool QCefClientHandler::OnContextMenuCommand(
     CefRefPtr<CefContextMenuParams> params,
     int command_id,
     CefContextMenuHandler::EventFlags event_flags) {
+  LOG(ERROR) << __FUNCTION__;
   CEF_REQUIRE_UI_THREAD();
-//  switch (command_id) {
-//    case CLIENT_ID_INSPECT_ELEMENT: {
-//      LOG(ERROR) << "show dev tools";
-//      showDevTools(browser, CefPoint(params->GetXCoord(), params->GetYCoord()));
-//      return true;
-//    }
-//  }
 
-  return CefContextMenuHandler::OnContextMenuCommand(browser, frame, params,
-                                                     command_id, event_flags);
-}
-
-void QCefClientHandler::OnContextMenuDismissed(CefRefPtr<CefBrowser> browser,
-                                               CefRefPtr<CefFrame> frame) {
-  CefContextMenuHandler::OnContextMenuDismissed(browser, frame);
+  return false;
 }
 
 CefRefPtr<CefDialogHandler> QCefClientHandler::GetDialogHandler() {

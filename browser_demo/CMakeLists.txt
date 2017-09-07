@@ -19,7 +19,8 @@ set(LINK_LIBS
     Qt5::Gui
     Qt5::WebChannel
     Qt5::Widgets
-    ${LIBQCEF_LIBRARIES})
+    ${LIBQCEF_LIBRARIES}
+    )
 
 set(BROWSER_DEMO_FILES
     main.cpp

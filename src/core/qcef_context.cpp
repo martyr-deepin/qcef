@@ -130,7 +130,7 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 
 void QCefRunLoop() {
   // Register event dispatcher.
-  g_timeout_add(10, ProcessQtEvent, nullptr);
+  g_timeout_add(50, ProcessQtEvent, nullptr);
 
   CefRunMessageLoop();
 

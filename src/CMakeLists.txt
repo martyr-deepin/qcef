@@ -31,7 +31,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
   # -fsanitize=address, Enable memory address sanitizer.
   #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
   # -fsanitize=leak, Enable memory leak sanitizer.
-  # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak")
   # -fsanitize=memory, Enable detecting uninitited memory sanitizer.
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=memory "
   #    "-fsanitize-memory-track-origins -fPIC -pie -fno-omit-frame-pointer")
