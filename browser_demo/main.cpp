@@ -29,6 +29,7 @@ int main(int argc, char* argv[]) {
 
   // Flash plugin only works on x86 platform.
   if (IsX86Architecture()) {
+    // Pepper flash plugin crashes on chromium 60
 //    settings.setPepperFlash(true);
   }
 
@@ -45,6 +46,7 @@ int main(int argc, char* argv[]) {
   browser_window.show();
   browser_window.resize(860, 640);
   browser_window.load(QUrl("qrc://resources/index.html"));
+//  browser_window.loadHtml();
 
   QCefRunLoop();
   return 0;

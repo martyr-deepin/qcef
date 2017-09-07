@@ -49,6 +49,12 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void load(const QUrl& url);
   void setUrl(const QUrl& url);
 
+  // Load the contents of |html| with the specified dummy |url|.
+  // |url| should have a standard scheme (for example, http scheme)
+  // or behaviors like link clicks and web security restrictions
+  // may not behave as expected.
+  void setHtml(const QString& html, const QUrl& url = QUrl());
+
   QIcon icon() const;
   QUrl iconUrl() const;
   QString title() const;
@@ -110,6 +116,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // This method can only be call once for one QCefWebView object.
   void createBrowser(QWindow* parent_window, const QSize& size);
 
+  void onBrowserCreated();
   void onBrowserGotFocus();
 
   // Resize browser window on page loading.

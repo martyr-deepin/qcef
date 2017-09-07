@@ -17,6 +17,7 @@ class BrowserWindow : public QFrame {
   ~BrowserWindow() override;
 
   void load(const QUrl& url);
+  void loadHtml();
 
  signals:
   void onTimeout();

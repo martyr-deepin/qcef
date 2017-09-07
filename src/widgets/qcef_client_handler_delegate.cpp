@@ -46,6 +46,8 @@ QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
                                     entry.target.host().toStdString(),
                                     true);
   }
+
+  web_page_->onBrowserCreated();
 }
 
 void QCefClientHandlerDelegate::OnBeforeClose(CefRefPtr<CefBrowser> browser) {

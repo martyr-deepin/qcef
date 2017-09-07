@@ -57,6 +57,7 @@ void MergeWebPageSettings(CefBrowserSettings& cef_settings,
 struct QCefWebPagePrivate {
   bool browser_created = false;
   QUrl url;
+  QString html;
   QUrl iconUrl;
   QIcon icon;
   QString title;
@@ -125,11 +126,35 @@ void QCefWebPage::load(const QUrl& url) {
 
 void QCefWebPage::setUrl(const QUrl& url) {
   p_->url = url;
+
+  // Reset html content.
+  p_->html.clear();
+
   if (p_->browser_created) {
-    const std::string url_str = url.toString().toStdString();
-    if (p_->delegate->cef_browser() != nullptr) {
-      // TODO(Deepin Ltd.): Support delayed loading.
-      p_->delegate->cef_browser()->GetMainFrame()->LoadURL(url_str);
+    auto browser = p_->delegate->cef_browser();
+    if (browser != nullptr) {
+      browser->GetMainFrame()->LoadURL(url.toString().toStdString());
+    }
+  } else {
+    QWidget* parent = qobject_cast<QWidget*>(this->parent());
+    this->createBrowser(parent->windowHandle(), parent->size());
+  }
+}
+
+void QCefWebPage::setHtml(const QString& html, const QUrl& url){
+  p_->html = html;
+  if (url.isEmpty()) {
+    p_->url = kBlankUrl;
+  } else {
+    p_->url = url;
+  }
+  if (p_->browser_created) {
+    if (p_->delegate != nullptr) {
+      auto browser = p_->delegate->cef_browser();
+      if (browser != nullptr) {
+        browser->GetMainFrame()->LoadString(html.toStdString(),
+                                            url.toString().toStdString());
+      }
     }
   } else {
     QWidget* parent = qobject_cast<QWidget*>(this->parent());
@@ -245,6 +270,12 @@ void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
                                     CefString(url),
                                     cef_settings,
                                     nullptr);
+}
+
+void QCefWebPage::onBrowserCreated() {
+  if (!p_->html.isEmpty()) {
+    this->setHtml(p_->html, p_->url);
+  }
 }
 
 void QCefWebPage::onBrowserGotFocus() {

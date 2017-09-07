@@ -48,12 +48,13 @@
         function bootstrap() {
             document.getElementById("send").onclick = function () {
                 var msg = document.getElementById("msg").value;
+                console.log("msg:", msg, ", dialog:", dialog);
                 dialog && dialog.printMessage(msg);
             };
 
-            dialog.onTimeout.connect(function () {
-                console.log("dialog onTimeout");
-            })
+//            dialog.onTimeout.connect(function () {
+//                console.log("dialog onTimeout");
+//            })
 
             testCrossDomain();
         }

@@ -6,6 +6,7 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QFile>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QTimer>
@@ -44,8 +45,19 @@ void BrowserWindow::load(const QUrl& url) {
   p_->web_view->load(url);
 }
 
+void BrowserWindow::loadHtml() {
+  const char kIndexFile[] = ":/resources/index.html";
+  QFile file(kIndexFile);
+  if (!file.open(QIODevice::ReadOnly)) {
+    qCritical() << "File not found:" << kIndexFile;
+    return;
+  }
+  const QString html(file.readAll());
+  p_->web_view->page()->setHtml(html, QUrl("qrc://resources/index.html"));
+}
+
 void BrowserWindow::printMessage(const QString& msg) {
-  qDebug() << "print message:" << msg;
+  qDebug() << "BrowserWindow::printMessage() :" << msg;
   this->setWindowTitle(msg);
 }
 
@@ -107,6 +119,7 @@ void BrowserWindow::initUI() {
   p_->address_edit = new QLineEdit(this);
 
   p_->web_view = new QCefWebView(this);
+  p_->web_view->page()->webChannel()->registerObject("dialog", this);
   QCefWebSettings* settings = p_->web_view->page()->settings();
   settings->addCrossOriginWhiteEntry(QUrl("http://music.163.com"),
                                      QUrl("http://126.com"),
