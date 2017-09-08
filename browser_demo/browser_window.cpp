@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QTabWidget>
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QWebChannel>
@@ -18,6 +19,8 @@
 #include <qcef_web_settings.h>
 #include <qcef_web_view.h>
 
+#include "browser_tab_widget.h"
+
 struct BrowserWindowPrivate {
   QFrame* address_bar = nullptr;
   QPushButton* back_button = nullptr;
@@ -25,7 +28,7 @@ struct BrowserWindowPrivate {
   QPushButton* refresh_button = nullptr;
   QPushButton* stop_button = nullptr;
   QLineEdit* address_edit = nullptr;
-  QCefWebView* web_view = nullptr;
+  BrowserTabWidget* tab_widget = nullptr;
 };
 
 BrowserWindow::BrowserWindow(QWidget* parent)
@@ -41,30 +44,13 @@ BrowserWindow::~BrowserWindow() {
   p_ = nullptr;
 }
 
-void BrowserWindow::load(const QUrl& url) {
-  p_->web_view->load(url);
-}
-
-void BrowserWindow::loadHtml() {
-  const char kIndexFile[] = ":/resources/index.html";
-  QFile file(kIndexFile);
-  if (!file.open(QIODevice::ReadOnly)) {
-    qCritical() << "File not found:" << kIndexFile;
-    return;
-  }
-  const QString html(file.readAll());
-  p_->web_view->page()->setHtml(html, QUrl("qrc://resources/index.html"));
-}
-
 void BrowserWindow::printMessage(const QString& msg) {
   qDebug() << "BrowserWindow::printMessage() :" << msg;
   this->setWindowTitle(msg);
 }
 
-void BrowserWindow::initConnections() {
-  connect(p_->address_edit, &QLineEdit::returnPressed,
-          this, &BrowserWindow::onAddressEditActivated);
-  QCefWebPage* page = p_->web_view->page();
+void BrowserWindow::connectSignals(QCefWebView* web_view) {
+  QCefWebPage* page = web_view->page();
   connect(page, &QCefWebPage::fullscreenRequested,
           this, &BrowserWindow::onFullscreenRequested);
   connect(page, &QCefWebPage::iconChanged,
@@ -73,41 +59,46 @@ void BrowserWindow::initConnections() {
           this, &BrowserWindow::setWindowTitle);
   connect(page, &QCefWebPage::urlChanged,
           this, &BrowserWindow::onUrlChanged);
-  connect(page, &QCefWebPage::loadStarted, [=]() {
-    page->runJavaScript("console.log('loadStarted');");
-  });
-  connect(page, &QCefWebPage::loadingStateChanged, [=](bool is_loading,
-                                                       bool can_go_back,
-                                                       bool can_go_forward) {
-    const QString script =
-        QString("console.log('loadingStateChanged, %1 %2 %3');")
-            .arg(static_cast<int>(is_loading))
-            .arg(static_cast<int>(can_go_back))
-            .arg(static_cast<int>(can_go_forward));
-    page->runJavaScript(script);
-    p_->refresh_button->setEnabled(!is_loading);
-    p_->stop_button->setEnabled(is_loading);
-    p_->back_button->setEnabled(can_go_back);
-    p_->forward_button->setEnabled(can_go_forward);
-    qDebug() << "state changed:" << is_loading << can_go_back << can_go_forward;
-  });
-  connect(page, &QCefWebPage::loadFinished, [=]() {
-    page->runJavaScript("console.log('loadFinished');");
-    p_->refresh_button->setEnabled(true);
-    p_->stop_button->setEnabled(false);
-  });
-  connect(page, &QCefWebPage::iconUrlChanged, [=](const QUrl& iconUrl) {
-    qDebug() << "BrowserWindow icon url changed:" << iconUrl;
-  });
+//  connect(page, &QCefWebPage::loadStarted, [=]() {
+//    page->runJavaScript("console.log('loadStarted');");
+//  });
+//  connect(page, &QCefWebPage::loadingStateChanged, [=](bool is_loading,
+//                                                       bool can_go_back,
+//                                                       bool can_go_forward) {
+//    const QString script =
+//        QString("console.log('loadingStateChanged, %1 %2 %3');")
+//            .arg(static_cast<int>(is_loading))
+//            .arg(static_cast<int>(can_go_back))
+//            .arg(static_cast<int>(can_go_forward));
+//    page->runJavaScript(script);
+//    p_->refresh_button->setEnabled(!is_loading);
+//    p_->stop_button->setEnabled(is_loading);
+//    p_->back_button->setEnabled(can_go_back);
+//    p_->forward_button->setEnabled(can_go_forward);
+//    qDebug() << "state changed:" << is_loading << can_go_back << can_go_forward;
+//  });
+//  connect(page, &QCefWebPage::loadFinished, [=]() {
+////    page->runJavaScript("console.log('loadFinished');");
+//    p_->refresh_button->setEnabled(true);
+//    p_->stop_button->setEnabled(false);
+//  });
+//  connect(page, &QCefWebPage::iconUrlChanged, [=](const QUrl& iconUrl) {
+//    qDebug() << "BrowserWindow icon url changed:" << iconUrl;
+//  });
+}
+
+void BrowserWindow::initConnections() {
+  connect(p_->address_edit, &QLineEdit::returnPressed,
+          this, &BrowserWindow::onAddressEditActivated);
 
   connect(p_->back_button, &QPushButton::clicked,
-          page, &QCefWebPage::back);
+          this, &BrowserWindow::onBackButtonClicked);
   connect(p_->forward_button, &QPushButton::clicked,
-          page, &QCefWebPage::forward);
+          this, &BrowserWindow::onForwardButtonClicked);
   connect(p_->refresh_button, &QPushButton::clicked,
-          page, &QCefWebPage::reload);
+          this, &BrowserWindow::onRefreshButtonClicked);
   connect(p_->stop_button, &QPushButton::clicked,
-          page, &QCefWebPage::stop);
+          this, &BrowserWindow::onStopButtonClicked);
 }
 
 void BrowserWindow::initUI() {
@@ -118,12 +109,16 @@ void BrowserWindow::initUI() {
   p_->stop_button = new QPushButton("Stop", this);
   p_->address_edit = new QLineEdit(this);
 
-  p_->web_view = new QCefWebView(this);
-  p_->web_view->page()->webChannel()->registerObject("dialog", this);
-  QCefWebSettings* settings = p_->web_view->page()->settings();
-  settings->addCrossOriginWhiteEntry(QUrl("http://music.163.com"),
-                                     QUrl("http://126.com"),
-                                     true);
+//  p_->web_view = new QCefWebView(this);
+//  p_->web_view->page()->webChannel()->registerObject("dialog", this);
+//  QCefWebSettings* settings = p_->web_view->page()->settings();
+//  settings->addCrossOriginWhiteEntry(QUrl("http://music.163.com"),
+//                                     QUrl("http://126.com"),
+//                                     true);
+
+  p_->tab_widget = new BrowserTabWidget();
+//  this->connectSignals(web_view);
+  p_->tab_widget->createNewBrowser(false);
 
   QHBoxLayout* toolbar_layout = new QHBoxLayout();
   toolbar_layout->setContentsMargins(0, 0, 0, 0);
@@ -144,16 +139,35 @@ void BrowserWindow::initUI() {
   layout->setContentsMargins(0, 0, 0, 0);
   layout->setSpacing(5);
   layout->addWidget(p_->address_bar, 0);
-  layout->addWidget(p_->web_view, 1);
+  layout->addWidget(p_->tab_widget, 100);
   this->setLayout(layout);
   this->setContentsMargins(0, 0, 0, 0);
 }
 
+void BrowserWindow::onBackButtonClicked() {
+
+}
+
+void BrowserWindow::onForwardButtonClicked() {
+
+}
+
+void BrowserWindow::onRefreshButtonClicked() {
+
+}
+
+void BrowserWindow::onStopButtonClicked() {
+
+}
+
+
 void BrowserWindow::onAddressEditActivated() {
   const QString text = p_->address_edit->text();
   if (!text.isEmpty()) {
-    p_->web_view->setUrl(QUrl(text));
-    p_->web_view->page()->webChannel()->registerObject("dialog", this);
+    QCefWebView* web_view = qobject_cast<QCefWebView*>(
+        p_->tab_widget->currentWidget());
+    web_view->setUrl(QUrl(text));
+//    web_view->page()->webChannel()->registerObject("dialog", this);
   }
 }
 

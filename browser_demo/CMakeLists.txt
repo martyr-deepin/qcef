@@ -24,6 +24,10 @@ set(LINK_LIBS
 
 set(BROWSER_DEMO_FILES
     main.cpp
+    browser_tab_bar.cpp
+    browser_tab_bar.h
+    browser_tab_widget.cpp
+    browser_tab_widget.h
     browser_window.cpp
     browser_window.h
     sync_methods.cpp

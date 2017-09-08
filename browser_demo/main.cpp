@@ -43,10 +43,8 @@ int main(int argc, char* argv[]) {
 
   QApplication app(argc, argv);
   BrowserWindow browser_window;
-  browser_window.show();
   browser_window.resize(860, 640);
-  browser_window.load(QUrl("qrc://resources/index.html"));
-//  browser_window.loadHtml();
+  browser_window.show();
 
   QCefRunLoop();
   return 0;

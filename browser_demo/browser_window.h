@@ -7,6 +7,7 @@
 
 #include <QFrame>
 
+class QCefWebView;
 struct BrowserWindowPrivate;
 
 class BrowserWindow : public QFrame {
@@ -15,9 +16,6 @@ class BrowserWindow : public QFrame {
  public:
   explicit BrowserWindow(QWidget* parent = nullptr);
   ~BrowserWindow() override;
-
-  void load(const QUrl& url);
-  void loadHtml();
 
  signals:
   void onTimeout();
@@ -29,12 +27,17 @@ class BrowserWindow : public QFrame {
   void closeEvent(QCloseEvent* event) override;
 
  private:
+  void connectSignals(QCefWebView* web_view);
   void initConnections();
   void initUI();
 
   BrowserWindowPrivate* p_ = nullptr;
 
  private slots:
+  void onBackButtonClicked();
+  void onForwardButtonClicked();
+  void onRefreshButtonClicked();
+  void onStopButtonClicked();
   void onAddressEditActivated();
   void onFullscreenRequested(bool fullscreen);
   void onUrlChanged(const QUrl& url);
