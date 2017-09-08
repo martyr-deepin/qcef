@@ -57,7 +57,7 @@ void MergeWebPageSettings(CefBrowserSettings& cef_settings,
 
 struct QCefWebPagePrivate {
   bool browser_created = false;
-  QUrl url{kBlankUrl};
+  QUrl url;
   QString html;
   QUrl iconUrl;
   QIcon icon;
@@ -237,35 +237,62 @@ void QCefWebPage::runJavaScript(const QString& script_source,
 }
 
 bool QCefWebPage::canGoBack() const {
-  return p_->delegate->cef_browser()->CanGoBack();
+  auto browser = p_->delegate->cef_browser();
+  if (browser != nullptr) {
+    return p_->delegate->cef_browser()->CanGoBack();
+  }
+  return false;
 }
 
 bool QCefWebPage::canGoForward() const {
-  return p_->delegate->cef_browser()->CanGoForward();
+  auto browser = p_->delegate->cef_browser();
+  if (browser != nullptr) {
+    return p_->delegate->cef_browser()->CanGoForward();
+  }
+  return false;
 }
 
 void QCefWebPage::back() {
-  p_->delegate->cef_browser()->GoBack();
+  auto browser = p_->delegate->cef_browser();
+  if (browser != nullptr) {
+    p_->delegate->cef_browser()->GoBack();
+  }
 }
 
 void QCefWebPage::forward() {
-  p_->delegate->cef_browser()->GoForward();
+  auto browser = p_->delegate->cef_browser();
+  if (browser != nullptr) {
+    p_->delegate->cef_browser()->GoForward();
+  }
 }
 
 void QCefWebPage::reload() {
-  p_->delegate->cef_browser()->Reload();
+  auto browser = p_->delegate->cef_browser();
+  if (browser != nullptr) {
+    p_->delegate->cef_browser()->Reload();
+  }
 }
 
 void QCefWebPage::reloadIgnoreCache() {
-  p_->delegate->cef_browser()->ReloadIgnoreCache();
+  auto browser = p_->delegate->cef_browser();
+  if (browser != nullptr) {
+    p_->delegate->cef_browser()->ReloadIgnoreCache();
+  }
 }
 
 bool QCefWebPage::isLoading() const {
-  return p_->delegate->cef_browser()->IsLoading();
+  auto browser = p_->delegate->cef_browser();
+  if (browser != nullptr) {
+    return p_->delegate->cef_browser()->IsLoading();
+  }
+  return false;
 }
 
 void QCefWebPage::stop() {
-  p_->delegate->cef_browser()->StopLoad();
+  auto browser = p_->delegate->cef_browser();
+  if (browser != nullptr) {
+    p_->delegate->cef_browser()->StopLoad();
+  }
 }
 
 void QCefWebPage::toHtml(void (*callback)(const QString& html)) const {

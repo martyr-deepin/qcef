@@ -12,20 +12,26 @@
 #include "browser_tab_bar.h"
 
 struct BrowserTabWidgetPrivate {
+  BrowserTabBar* tab_bar = nullptr;
   QCefWebView* current_web = nullptr;
 };
 
 BrowserTabWidget::BrowserTabWidget(QWidget* parent)
     : QTabWidget(parent),
       p_(new BrowserTabWidgetPrivate()) {
-  BrowserTabBar* tab_bar = new BrowserTabBar(this);
-  this->setTabBar(tab_bar);
+  p_->tab_bar = new BrowserTabBar(this);
+  this->setTabBar(p_->tab_bar);
 
   this->setTabsClosable(true);
   this->setMovable(true);
+  this->setContentsMargins(0, 0, 0, 0);
 
+  connect(this, &BrowserTabWidget::currentChanged,
+          this, &BrowserTabWidget::onCurrentChanged);
   connect(this, &BrowserTabWidget::tabCloseRequested,
           this, &BrowserTabWidget::onTabCloseRequested);
+  connect(this, &BrowserTabWidget::fullscreenRequested,
+          this, &BrowserTabWidget::onFullscreenRequested);
 }
 
 BrowserTabWidget::~BrowserTabWidget() {
@@ -43,9 +49,43 @@ void BrowserTabWidget::createNewBrowser(bool in_background,
   if (!in_background) {
     this->setCurrentWidget(web_view);
   }
+  auto page = web_view->page();
+  connect(page, &QCefWebPage::iconChanged,
+          [this, web_view](const QIcon& icon) {
+            const int index = this->indexOf(web_view);
+            this->setTabIcon(index, icon);
+          });
+  connect(page, &QCefWebPage::titleChanged,
+          [this, web_view](const QString& title) {
+            const int index = this->indexOf(web_view);
+            this->setTabText(index, title);
+            this->setTabToolTip(index, title);
+          });
+  connect(page, &QCefWebPage::fullscreenRequested,
+          this, &BrowserTabWidget::fullscreenRequested);
   if (url.isValid()) {
     web_view->load(url);
   }
+}
+
+void BrowserTabWidget::back() {
+  p_->current_web->page()->back();
+}
+
+void BrowserTabWidget::forward() {
+  p_->current_web->page()->forward();
+}
+
+void BrowserTabWidget::reload() {
+  p_->current_web->page()->reload();
+}
+
+void BrowserTabWidget::stop() {
+  p_->current_web->page()->stop();
+}
+
+void BrowserTabWidget::load(const QUrl& url) {
+  p_->current_web->load(url);
 }
 
 void BrowserTabWidget::mouseDoubleClickEvent(QMouseEvent* event) {
@@ -57,12 +97,40 @@ void BrowserTabWidget::mouseDoubleClickEvent(QMouseEvent* event) {
   }
 }
 
+void BrowserTabWidget::onCurrentChanged(int index) {
+  qDebug() << "on current changed:" << index;
+  QCefWebView* web_view = qobject_cast<QCefWebView*>(this->widget(index));
+  if (p_->current_web != nullptr) {
+    // Disconnect signals of old web view.
+    p_->current_web->disconnect(this);
+    auto old_page = p_->current_web->page();
+    old_page->disconnect(this, SIGNAL(urlChanged()));
+    old_page->disconnect(this, SIGNAL(loadingStateChanged()));
+  }
+  p_->current_web = web_view;
+  // Connect signals.
+  auto page = web_view->page();
+  connect(page, &QCefWebPage::urlChanged,
+          this, &BrowserTabWidget::urlChanged);
+  connect(page, &QCefWebPage::loadingStateChanged,
+          this, &BrowserTabWidget::loadingStateChanged);
+
+  emit this->loadingStateChanged(page->isLoading(),
+                                 page->canGoBack(),
+                                 page->canGoForward());
+  emit this->urlChanged(page->url());
+}
+
+void BrowserTabWidget::onFullscreenRequested(bool fullscreen) {
+  p_->tab_bar->setVisible(!fullscreen);
+}
+
 void BrowserTabWidget::onTabCloseRequested(int index) {
   if (this->count() == 1) {
     // If only one web view is displayed, do nothing.
     return;
   }
   auto web_view = qobject_cast<QCefWebView*>(this->widget(index));
-  web_view->deleteLater();
+  delete web_view;
   this->removeTab(index);
 }

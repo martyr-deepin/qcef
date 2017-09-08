@@ -17,29 +17,21 @@ class BrowserWindow : public QFrame {
   explicit BrowserWindow(QWidget* parent = nullptr);
   ~BrowserWindow() override;
 
- signals:
-  void onTimeout();
-
- public slots:
-   void printMessage(const QString& msg);
-
  protected:
   void closeEvent(QCloseEvent* event) override;
 
  private:
-  void connectSignals(QCefWebView* web_view);
   void initConnections();
   void initUI();
 
   BrowserWindowPrivate* p_ = nullptr;
 
  private slots:
-  void onBackButtonClicked();
-  void onForwardButtonClicked();
-  void onRefreshButtonClicked();
-  void onStopButtonClicked();
   void onAddressEditActivated();
   void onFullscreenRequested(bool fullscreen);
+  void onLoadingStateChanged(bool is_loading,
+                             bool can_go_back,
+                             bool can_go_forward);
   void onUrlChanged(const QUrl& url);
 };
 
