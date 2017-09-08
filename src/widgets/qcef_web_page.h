@@ -42,6 +42,11 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
              READ pageErrorContent
              WRITE setPageErrorContent)
 
+  // This property holds the zoom factor for the page content.
+  // Valid values are within the range from 0.25 to 5.0.
+  // The default factor is 1.0.
+  Q_PROPERTY(qreal zoomFactor READ zoomFactor WRITE setZoomFactor)
+
  public:
   explicit QCefWebPage(QObject* parent = nullptr);
   ~QCefWebPage() override;
@@ -55,10 +60,13 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // may not behave as expected.
   void setHtml(const QString& html, const QUrl& url = QUrl());
 
+  void setZoomFactor(qreal factor);
+
   QIcon icon() const;
   QUrl iconUrl() const;
   QString title() const;
   QUrl url() const;
+  qreal zoomFactor() const;
 
   void setPageErrorContent(const QString& page_error_content);
   const QString& pageErrorContent() const;

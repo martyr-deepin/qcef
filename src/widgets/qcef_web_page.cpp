@@ -56,7 +56,7 @@ void MergeWebPageSettings(CefBrowserSettings& cef_settings,
 
 struct QCefWebPagePrivate {
   bool browser_created = false;
-  QUrl url;
+  QUrl url{kBlankUrl};
   QString html;
   QUrl iconUrl;
   QIcon icon;
@@ -159,6 +159,33 @@ void QCefWebPage::setHtml(const QString& html, const QUrl& url){
   } else {
     QWidget* parent = qobject_cast<QWidget*>(this->parent());
     this->createBrowser(parent->windowHandle(), parent->size());
+  }
+}
+
+void QCefWebPage::setZoomFactor(qreal factor) {
+  auto browser = p_->delegate->cef_browser();
+  if (browser != nullptr) {
+    if (factor == 1.0) {
+      // The default zoom value is 0.0 in CEF.
+      factor = 0.0;
+    }
+    browser->GetHost()->SetZoomLevel(factor);
+  }
+}
+
+qreal QCefWebPage::zoomFactor() const {
+  auto browser = p_->delegate->cef_browser();
+  if (browser != nullptr) {
+    const double factor = browser->GetHost()->GetZoomLevel();
+    if (factor == 0.0) {
+      // The default zoom value is 0.0 in CEF, so convert to 1.0
+      return 1.0;
+    } else {
+      return factor;
+    }
+  } else {
+    // Returns default zoom factory.
+    return 1.0;
   }
 }
 
