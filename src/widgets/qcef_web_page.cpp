@@ -11,8 +11,9 @@
 #include <QWindow>
 
 #include "include/cef_app.h"
-#include "core/qcef_client_handler.h"
 #include "core/qcef_browser_transport.h"
+#include "core/qcef_client_handler.h"
+#include "core/qcef_string_visitor.h"
 #include "widgets/qcef_client_handler_delegate.h"
 #include "widgets/qcef_web_settings.h"
 
@@ -177,6 +178,7 @@ qreal QCefWebPage::zoomFactor() const {
   auto browser = p_->delegate->cef_browser();
   if (browser != nullptr) {
     const double factor = browser->GetHost()->GetZoomLevel();
+    browser->GetMainFrame();
     if (factor == 0.0) {
       // The default zoom value is 0.0 in CEF, so convert to 1.0
       return 1.0;
@@ -264,6 +266,20 @@ bool QCefWebPage::isLoading() const {
 
 void QCefWebPage::stop() {
   p_->delegate->cef_browser()->StopLoad();
+}
+
+void QCefWebPage::toHtml(void (*callback)(const QString& html)) const {
+  auto frame = p_->delegate->cef_browser()->GetMainFrame();
+  if (frame != nullptr) {
+    frame->GetSource(new StringVisitor(callback));
+  }
+}
+
+void QCefWebPage::toPlainText(void (*callback)(const QString& text)) const {
+  auto frame = p_->delegate->cef_browser()->GetMainFrame();
+  if (frame != nullptr) {
+    frame->GetText(new StringVisitor(callback));
+  }
 }
 
 void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {

@@ -27,7 +27,8 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
   # -fno-rtti, Disable real-time type information
   # -fno-exceptions Disable exceptions
   # -fsanitize=address Enable memory sanitize plugin
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Werror -Wextra -Wno-unused-parameter -fno-rtti -fno-exceptions")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Werror -Wextra")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -fno-rtti -fno-exceptions")
   # -fsanitize=address, Enable memory address sanitizer.
   #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
   # -fsanitize=leak, Enable memory leak sanitizer.
@@ -108,6 +109,8 @@ set(CORE_FILES
     core/qcef_scheme_handler.h
     core/qcef_scheme_handler_factory.cpp
     core/qcef_scheme_handler_factory.h
+    core/qcef_string_visitor.cpp
+    core/qcef_string_visitor.h
     core/qcef_sync_method.h
     core/qcef_sync_method_handler.cpp
     core/qcef_sync_method_handler.h
