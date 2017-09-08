@@ -59,7 +59,6 @@ void QCefClientHandlerDelegate::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
 
 void QCefClientHandlerDelegate::OnFaviconURLChange(const CefString& icon_url,
                                                    CefRefPtr<CefImage> icon) {
-  qDebug() << __FUNCTION__ << icon_url.ToString().c_str() << icon;
   QPixmap pixmap;
   int pixel_width = 0;
   int pixel_height = 0;

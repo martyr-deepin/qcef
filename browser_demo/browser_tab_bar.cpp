@@ -4,14 +4,15 @@
 
 #include "browser_tab_bar.h"
 
+#include <QApplication>
 #include <QDebug>
 
 BrowserTabBar::BrowserTabBar(QWidget* parent) : QTabBar(parent) {
-
+  this->setStyleSheet("QTabBar::tab { max-width: 200px; }");
+  this->setUsesScrollButtons(false);
 }
 
 void BrowserTabBar::contextMenuEvent(QContextMenuEvent* event) {
   QWidget::contextMenuEvent(event);
-  qDebug() << "context menu";
   // TODO(LiuLang): show context menu.
 }

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/images">
+        <file>document-new-symbolic.svg</file>
         <file>document-print-symbolic.svg</file>
         <file>go-next-symbolic.svg</file>
         <file>go-previous-symbolic.svg</file>

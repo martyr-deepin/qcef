@@ -14,6 +14,7 @@
 struct BrowserTabWidgetPrivate {
   BrowserTabBar* tab_bar = nullptr;
   QCefWebView* current_web = nullptr;
+  QIcon blank_icon{":/images/document-new-symbolic.svg"};
 };
 
 BrowserTabWidget::BrowserTabWidget(QWidget* parent)
@@ -58,6 +59,12 @@ void BrowserTabWidget::createNewBrowser(bool in_background,
           [this, web_view](const QIcon& icon) {
             const int index = this->indexOf(web_view);
             this->setTabIcon(index, icon);
+          });
+  connect(page, &QCefWebPage::loadStarted,
+          [this, web_view]() {
+            const int index = this->indexOf(web_view);
+            // Set loading animation icon.
+            this->setTabIcon(index, p_->blank_icon);
           });
   connect(page, &QCefWebPage::titleChanged,
           [this, web_view](const QString& title) {

@@ -142,7 +142,7 @@ void QCefWebPage::setUrl(const QUrl& url) {
   }
 }
 
-void QCefWebPage::setHtml(const QString& html, const QUrl& url){
+void QCefWebPage::setHtml(const QString& html, const QUrl& url) {
   p_->html = html;
   if (url.isEmpty()) {
     p_->url = kBlankUrl;
@@ -295,14 +295,14 @@ void QCefWebPage::stop() {
   }
 }
 
-void QCefWebPage::toHtml(void (*callback)(const QString& html)) const {
+void QCefWebPage::toHtml(void (* callback)(const QString& html)) const {
   auto frame = p_->delegate->cef_browser()->GetMainFrame();
   if (frame != nullptr) {
     frame->GetSource(new StringVisitor(callback));
   }
 }
 
-void QCefWebPage::toPlainText(void (*callback)(const QString& text)) const {
+void QCefWebPage::toPlainText(void (* callback)(const QString& text)) const {
   auto frame = p_->delegate->cef_browser()->GetMainFrame();
   if (frame != nullptr) {
     frame->GetText(new StringVisitor(callback));
@@ -404,12 +404,10 @@ void QCefWebPage::handleWebMessage(const QJsonObject& message) {
 }
 
 void QCefWebPage::updateFavicon(const QUrl& url, const QIcon& icon) {
-  if (url != p_->iconUrl) {
-    p_->iconUrl = url;
-    p_->icon = icon;
-    emit this->iconChanged(p_->icon);
-    emit this->iconUrlChanged(p_->iconUrl);
-  }
+  p_->iconUrl = url;
+  p_->icon = icon;
+  emit this->iconChanged(p_->icon);
+  emit this->iconUrlChanged(p_->iconUrl);
 }
 
 void QCefWebPage::updateTitle(const QString& title) {

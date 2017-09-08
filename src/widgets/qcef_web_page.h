@@ -99,13 +99,13 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // Asynchronous method to retrieve the page's content as HTML,
   // enclosed in HTML and BODY tags. Upon successful completion,
   // resultCallback is called with the page's content.
-  void toHtml(void (*callback)(const QString& html)) const;
+  void toHtml(void (* callback)(const QString& html)) const;
 
   // Asynchronous method to retrieve the page's content converted
   // to plain text, completely stripped of all HTML formatting.
   // Upon successful completion, resultCallback is called
   // with the page's content.
-  void toPlainText(void (*callback)(const QString& text)) const;
+  void toPlainText(void (* callback)(const QString& text)) const;
 
  signals:
   void renderContextCreated();
