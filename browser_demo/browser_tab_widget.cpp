@@ -41,6 +41,10 @@ BrowserTabWidget::~BrowserTabWidget() {
   }
 }
 
+bool BrowserTabWidget::isLoading() const {
+  p_->current_web->page()->isLoading();
+}
+
 void BrowserTabWidget::createNewBrowser(bool in_background,
                                         const QUrl& url) {
   qDebug() << "create new browser";

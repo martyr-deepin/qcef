@@ -17,6 +17,9 @@ class BrowserTabWidget : public QTabWidget {
   explicit BrowserTabWidget(QWidget* parent = nullptr);
   ~BrowserTabWidget() override;
 
+  // Get loading state of current web view.
+  bool isLoading() const;
+
  signals:
   void fullscreenRequested(bool fullscreen);
   void urlChanged(const QUrl& url);

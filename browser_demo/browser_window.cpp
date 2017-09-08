@@ -20,15 +20,42 @@
 
 #include "browser_tab_widget.h"
 
+namespace {
+
+const char kBackIcon[] = ":/images/go-previous-symbolic.svg";
+const char kForwardIcon[] = ":/images/go-next-symbolic.svg";
+const char kReloadIcon[] = ":/images/view-refresh-symbolic.svg";
+const char kStopIcon[] = ":/images/window-close-symbolic.svg";
+
+const char kBackTip[] = "Click to go back";
+const char kForwardTip[] = "Click to go forward";
+const char kReloadTip[] = "Reload this page";
+const char kStopTip[] = "Stop loading this page";
+
+}  // namespace
+
 struct BrowserWindowPrivate {
   QFrame* address_bar = nullptr;
   QPushButton* back_button = nullptr;
   QPushButton* forward_button = nullptr;
   QPushButton* reload_button = nullptr;
-  QPushButton* stop_button = nullptr;
   QLineEdit* address_edit = nullptr;
   BrowserTabWidget* tab_widget = nullptr;
+  QIcon reload_icon;
+  QIcon stop_icon;
+
+  void updateReloadButtonState(bool is_loading);
 };
+
+void BrowserWindowPrivate::updateReloadButtonState(bool is_loading) {
+  if (is_loading) {
+    reload_button->setIcon(stop_icon);
+    reload_button->setToolTip(kStopTip);
+  } else {
+    reload_button->setIcon(reload_icon);
+    reload_button->setToolTip(kReloadTip);
+  }
+}
 
 BrowserWindow::BrowserWindow(QWidget* parent)
     : QFrame(parent),
@@ -43,12 +70,6 @@ BrowserWindow::~BrowserWindow() {
   p_ = nullptr;
 }
 
-//  connect(page, &QCefWebPage::loadFinished, [=]() {
-////    page->runJavaScript("console.log('loadFinished');");
-//    p_->refresh_button->setEnabled(true);
-//    p_->stop_button->setEnabled(false);
-//  });
-
 void BrowserWindow::initConnections() {
   connect(p_->address_edit, &QLineEdit::returnPressed,
           this, &BrowserWindow::onAddressEditActivated);
@@ -58,9 +79,7 @@ void BrowserWindow::initConnections() {
   connect(p_->forward_button, &QPushButton::clicked,
           p_->tab_widget, &BrowserTabWidget::forward);
   connect(p_->reload_button, &QPushButton::clicked,
-          p_->tab_widget, &BrowserTabWidget::reload);
-  connect(p_->stop_button, &QPushButton::clicked,
-          p_->tab_widget, &BrowserTabWidget::stop);
+          this, &BrowserWindow::onReloadButtonClicked);
 
   connect(p_->tab_widget, &BrowserTabWidget::fullscreenRequested,
           this, &BrowserWindow::onFullscreenRequested);
@@ -72,18 +91,22 @@ void BrowserWindow::initConnections() {
 
 void BrowserWindow::initUI() {
   p_->address_bar = new QFrame(this);
-  p_->back_button = new QPushButton("Back", this);
-  p_->forward_button = new QPushButton("Forward", this);
-  p_->reload_button = new QPushButton("Refresh", this);
-  p_->stop_button = new QPushButton("Stop", this);
+  p_->back_button = new QPushButton(QIcon(kBackIcon), "", this);
+  p_->back_button->setFlat(true);
+  const QSize button_size(32, 32);
+  p_->back_button->setFixedSize(button_size);
+  p_->back_button->setToolTip(kBackTip);
+  p_->forward_button = new QPushButton(QIcon(kForwardIcon), "", this);
+  p_->forward_button->setToolTip(kForwardTip);
+  p_->forward_button->setFlat(true);
+  p_->forward_button->setFixedSize(button_size);
+  p_->reload_icon = QIcon(kReloadIcon);
+  p_->stop_icon = QIcon(kStopIcon);
+  p_->reload_button = new QPushButton(p_->reload_icon, "", this);
+  p_->reload_button->setToolTip(kReloadTip);
+  p_->reload_button->setFlat(true);
+  p_->reload_button->setFixedSize(button_size);
   p_->address_edit = new QLineEdit(this);
-
-//  p_->web_view = new QCefWebView(this);
-//  p_->web_view->page()->webChannel()->registerObject("dialog", this);
-//  QCefWebSettings* settings = p_->web_view->page()->settings();
-//  settings->addCrossOriginWhiteEntry(QUrl("http://music.163.com"),
-//                                     QUrl("http://126.com"),
-//                                     true);
 
   p_->tab_widget = new BrowserTabWidget();
   // Create the first web view.
@@ -95,14 +118,12 @@ void BrowserWindow::initUI() {
   toolbar_layout->addWidget(p_->back_button);
   toolbar_layout->addWidget(p_->forward_button);
   toolbar_layout->addWidget(p_->reload_button);
-  toolbar_layout->addWidget(p_->stop_button);
   toolbar_layout->addSpacing(5);
   toolbar_layout->addWidget(p_->address_edit);
   p_->address_bar->setLayout(toolbar_layout);
   p_->back_button->setEnabled(false);
   p_->forward_button->setEnabled(false);
-  p_->reload_button->setEnabled(false);
-  p_->stop_button->setEnabled(false);
+  p_->reload_button->setEnabled(true);
 
   QVBoxLayout* layout = new QVBoxLayout();
   layout->setContentsMargins(0, 0, 0, 0);
@@ -140,13 +161,22 @@ void BrowserWindow::closeEvent(QCloseEvent* event) {
   QCefQuitLoop();
 }
 
+void BrowserWindow::onReloadButtonClicked() {
+  const bool is_loading = p_->tab_widget->isLoading();
+  p_->updateReloadButtonState(is_loading);
+  if (is_loading) {
+    p_->tab_widget->stop();
+  } else {
+    p_->tab_widget->reload();
+  }
+}
+
 void BrowserWindow::onLoadingStateChanged(bool is_loading,
                                           bool can_go_back,
                                           bool can_go_forward) {
   p_->back_button->setEnabled(can_go_back);
   p_->forward_button->setEnabled(can_go_forward);
-  p_->reload_button->setEnabled(!is_loading);
-  p_->stop_button->setEnabled(is_loading);
+  p_->updateReloadButtonState(is_loading);
 }
 
 void BrowserWindow::onUrlChanged(const QUrl& url) {

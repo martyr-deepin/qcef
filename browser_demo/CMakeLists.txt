@@ -33,6 +33,7 @@ set(BROWSER_DEMO_FILES
     sync_methods.cpp
     sync_methods.h
 
+    images/images.qrc
     resources/resources.qrc
     )
 

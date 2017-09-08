@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>document-print-symbolic.svg</file>
+        <file>go-next-symbolic.svg</file>
+        <file>go-previous-symbolic.svg</file>
+        <file>user-home-symbolic.svg</file>
+        <file>view-more-symbolic.svg</file>
+        <file>view-refresh-symbolic.svg</file>
+        <file>window-close-symbolic.svg</file>
+        <file>zoom-in-symbolic.svg</file>
+        <file>zoom-original-symbolic.svg</file>
+        <file>zoom-out-symbolic.svg</file>
+    </qresource>
+</RCC>

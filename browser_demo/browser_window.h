@@ -28,6 +28,8 @@ class BrowserWindow : public QFrame {
 
  private slots:
   void onAddressEditActivated();
+  void onReloadButtonClicked();
+
   void onFullscreenRequested(bool fullscreen);
   void onLoadingStateChanged(bool is_loading,
                              bool can_go_back,
