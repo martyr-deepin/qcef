@@ -42,10 +42,11 @@ int main(int argc, char* argv[]) {
   QCefInit(argc, argv, settings);
 
   QApplication app(argc, argv);
+  QCefBindApp(&app);
+
   BrowserWindow browser_window;
   browser_window.resize(860, 640);
   browser_window.show();
 
-  QCefRunLoop();
-  return 0;
+  return app.exec();
 }

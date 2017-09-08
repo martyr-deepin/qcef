@@ -4,26 +4,14 @@
 
 #include "core/qcef_context.h"
 
-#include <glib.h>
 #include <QCoreApplication>
 #include <QDebug>
+#include <QTimer>
 
 #include "core/qcef_app.h"
 #include "core/qcef_x11_util.h"
 #include "core/qcef_cookie_store.h"
 #include "include/cef_path_util.h"
-
-namespace {
-
-gboolean ProcessQtEvent(gpointer user_data) {
-  Q_UNUSED(user_data);
-  if (qApp != nullptr) {
-    qApp->processEvents();
-  }
-  return TRUE;
-}
-
-}  // namespace
 
 int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   SetXErrorHandler();
@@ -128,24 +116,17 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   return 0;
 }
 
-void QCefRunLoop() {
-  // Register event dispatcher.
-  g_timeout_add(50, ProcessQtEvent, nullptr);
-
-  CefRunMessageLoop();
-
-  // Shutdown loop internally.
-  CefShutdown();
-}
-
-void QCefQuitLoop() {
-  // Flash global cookie.
-  QCefFlushCookies();
-
-  // Close cef context within 300ms.
-  g_timeout_add(300, [](gpointer user_data) -> gboolean {
-    Q_UNUSED(user_data);
-    CefQuitMessageLoop();
-    return FALSE;
-  }, nullptr);
+void QCefBindApp(QCoreApplication* app) {
+  auto timer = new QTimer();
+  QObject::connect(app, &QCoreApplication::aboutToQuit, [timer]() {
+    QCefFlushCookies();
+    CefShutdown();
+    timer->stop();
+    timer->deleteLater();
+  });
+  QObject::connect(timer, &QTimer::timeout, []() {
+    CefDoMessageLoopWork();
+  });
+  timer->setInterval(1);
+  timer->start();
 }

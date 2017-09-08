@@ -4,10 +4,12 @@
 
 #include "browser_window.h"
 
+#include <QAction>
 #include <QApplication>
 #include <QDebug>
 #include <QFile>
 #include <QLineEdit>
+#include <QMenu>
 #include <QPushButton>
 #include <QTabWidget>
 #include <QVBoxLayout>
@@ -26,11 +28,13 @@ const char kBackIcon[] = ":/images/go-previous-symbolic.svg";
 const char kForwardIcon[] = ":/images/go-next-symbolic.svg";
 const char kReloadIcon[] = ":/images/view-refresh-symbolic.svg";
 const char kStopIcon[] = ":/images/window-close-symbolic.svg";
+const char kSettingsIcon[] = ":/images/view-more-symbolic.svg";
 
 const char kBackTip[] = "Click to go back";
 const char kForwardTip[] = "Click to go forward";
 const char kReloadTip[] = "Reload this page";
 const char kStopTip[] = "Stop loading this page";
+const char kSettingsTip[] = "Customized and control browser";
 
 }  // namespace
 
@@ -39,10 +43,14 @@ struct BrowserWindowPrivate {
   QPushButton* back_button = nullptr;
   QPushButton* forward_button = nullptr;
   QPushButton* reload_button = nullptr;
+  QPushButton* settings_button = nullptr;
   QLineEdit* address_edit = nullptr;
   BrowserTabWidget* tab_widget = nullptr;
   QIcon reload_icon;
   QIcon stop_icon;
+  QMenu* settings_menu = nullptr;
+  QAction* new_tab = nullptr;
+  QAction* print = nullptr;
 
   void updateReloadButtonState(bool is_loading);
 };
@@ -107,6 +115,16 @@ void BrowserWindow::initUI() {
   p_->reload_button->setFlat(true);
   p_->reload_button->setFixedSize(button_size);
   p_->address_edit = new QLineEdit(this);
+  p_->settings_button = new QPushButton(QIcon(kSettingsIcon), "", this);
+  p_->settings_button->setFlat(true);
+  p_->settings_button->setFixedSize(button_size);
+  p_->settings_button->setToolTip(kSettingsTip);
+  p_->settings_menu = new QMenu();
+  p_->new_tab = new QAction("New tab", nullptr);
+  p_->print = new QAction("Print..", nullptr);
+  p_->settings_menu->addAction(p_->new_tab);
+  p_->settings_menu->addAction(p_->print);
+  p_->settings_button->setMenu(p_->settings_menu);
 
   p_->tab_widget = new BrowserTabWidget();
   // Create the first web view.
@@ -120,6 +138,8 @@ void BrowserWindow::initUI() {
   toolbar_layout->addWidget(p_->reload_button);
   toolbar_layout->addSpacing(5);
   toolbar_layout->addWidget(p_->address_edit);
+  toolbar_layout->addSpacing(5);
+  toolbar_layout->addWidget(p_->settings_button);
   p_->address_bar->setLayout(toolbar_layout);
   p_->back_button->setEnabled(false);
   p_->forward_button->setEnabled(false);
@@ -152,13 +172,6 @@ void BrowserWindow::onFullscreenRequested(bool fullscreen) {
     p_->address_bar->show();
     this->showNormal();
   }
-}
-
-void BrowserWindow::closeEvent(QCloseEvent* event) {
-  QFrame::closeEvent(event);
-
-  // Quit cef message loop on browser window closed.
-  QCefQuitLoop();
 }
 
 void BrowserWindow::onReloadButtonClicked() {

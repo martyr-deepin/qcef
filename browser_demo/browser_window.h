@@ -17,9 +17,6 @@ class BrowserWindow : public QFrame {
   explicit BrowserWindow(QWidget* parent = nullptr);
   ~BrowserWindow() override;
 
- protected:
-  void closeEvent(QCloseEvent* event) override;
-
  private:
   void initConnections();
   void initUI();

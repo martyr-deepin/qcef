@@ -55,9 +55,6 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5X11Extras REQUIRED)
 find_package(Qt5LinguistTools)
 
-pkg_search_module(GLIB2 REQUIRED glib-2.0)
-include_directories(AFTER ${GLIB2_INCLUDE_DIRS})
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -72,7 +69,6 @@ set(QT_LIBS
 
 set(LINK_LIBS
     ${QT_LIBS}
-    ${GLIB2_LIBRARIES}
 
     -lX11
     )
