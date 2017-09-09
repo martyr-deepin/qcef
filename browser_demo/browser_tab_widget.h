@@ -43,6 +43,10 @@ class BrowserTabWidget : public QTabWidget {
   // Load |url| in current web view.
   void load(const QUrl& url);
 
+  void zoomIn();
+  void zoomOut();
+  void zoomReset();
+
  protected:
   void mouseDoubleClickEvent(QMouseEvent* event) override;
 

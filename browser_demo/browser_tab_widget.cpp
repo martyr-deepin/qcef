@@ -103,6 +103,18 @@ void BrowserTabWidget::load(const QUrl& url) {
   p_->current_web->load(url);
 }
 
+void BrowserTabWidget::zoomIn() {
+  p_->current_web->page()->zoomIn();
+}
+
+void BrowserTabWidget::zoomOut() {
+  p_->current_web->page()->zoomOut();
+}
+
+void BrowserTabWidget::zoomReset() {
+  p_->current_web->page()->resetZoomFactor();
+}
+
 void BrowserTabWidget::mouseDoubleClickEvent(QMouseEvent* event) {
   QWidget::mouseDoubleClickEvent(event);
 

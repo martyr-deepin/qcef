@@ -4,7 +4,7 @@
 
 #include "browser_window.h"
 
-#include <QAction>
+#include <QtWidgets/QAction>
 #include <QApplication>
 #include <QDebug>
 #include <QFile>
@@ -51,6 +51,9 @@ struct BrowserWindowPrivate {
   QIcon stop_icon;
   QMenu* settings_menu = nullptr;
   QAction* new_tab = nullptr;
+  QAction* zoom_in = nullptr;
+  QAction* zoom_reset = nullptr;
+  QAction* zoom_out = nullptr;
   QAction* print = nullptr;
 
   void updateReloadButtonState(bool is_loading);
@@ -96,6 +99,16 @@ void BrowserWindow::initConnections() {
           this, &BrowserWindow::onUrlChanged);
   connect(p_->tab_widget, &BrowserTabWidget::loadingStateChanged,
           this, &BrowserWindow::onLoadingStateChanged);
+
+  connect(p_->new_tab, &QAction::triggered, [=]() {
+    p_->tab_widget->createNewBrowser(false);
+  });
+  connect(p_->zoom_in, &QAction::triggered,
+          p_->tab_widget, &BrowserTabWidget::zoomIn);
+  connect(p_->zoom_out, &QAction::triggered,
+          p_->tab_widget, &BrowserTabWidget::zoomOut);
+  connect(p_->zoom_reset, &QAction::triggered,
+          p_->tab_widget, &BrowserTabWidget::zoomReset);
 }
 
 void BrowserWindow::initUI() {
@@ -120,10 +133,16 @@ void BrowserWindow::initUI() {
   p_->settings_button->setFlat(true);
   p_->settings_button->setFixedSize(button_size);
   p_->settings_button->setToolTip(kSettingsTip);
-  p_->settings_menu = new QMenu();
-  p_->new_tab = new QAction("New tab", nullptr);
-  p_->print = new QAction("Print..", nullptr);
+  p_->settings_menu = new QMenu(this);
+  p_->new_tab = new QAction("New tab", this);
+  p_->zoom_in = new QAction("Zoom in", this);
+  p_->zoom_reset = new QAction("Reset zoom", this);
+  p_->zoom_out = new QAction("Zoom out", this);
+  p_->print = new QAction("Print..", this);
   p_->settings_menu->addAction(p_->new_tab);
+  p_->settings_menu->addAction(p_->zoom_in);
+  p_->settings_menu->addAction(p_->zoom_reset);
+  p_->settings_menu->addAction(p_->zoom_out);
   p_->settings_menu->addAction(p_->print);
   p_->settings_button->setMenu(p_->settings_menu);
 

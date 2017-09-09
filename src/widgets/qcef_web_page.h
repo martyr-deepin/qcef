@@ -45,8 +45,6 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
              WRITE setPageErrorContent)
 
   // This property holds the zoom factor for the page content.
-  // Valid values are within the range from 0.25 to 5.0.
-  // The default factor is 1.0.
   Q_PROPERTY(qreal zoomFactor READ zoomFactor WRITE setZoomFactor)
 
  public:
@@ -61,8 +59,6 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // or behaviors like link clicks and web security restrictions
   // may not behave as expected.
   void setHtml(const QString& html, const QUrl& url = QUrl());
-
-  void setZoomFactor(qreal factor);
 
   QIcon icon() const;
   QUrl iconUrl() const;
@@ -93,13 +89,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
 
   bool canGoBack() const;
   bool canGoForward() const;
-  void back();
-  void forward();
-
-  void reload();
-  void reloadIgnoreCache();
   bool isLoading() const;
-  void stop();
 
   // Asynchronous method to retrieve the page's content as HTML,
   // enclosed in HTML and BODY tags. Upon successful completion,
@@ -111,6 +101,15 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // Upon successful completion, resultCallback is called
   // with the page's content.
   void toPlainText(void (* callback)(const QString& text)) const;
+
+  // Change the zoom level to the specified value. Specify 0.0 to reset the
+  // zoom level. If called on the UI thread the change will be applied
+  // immediately. Otherwise, the change will be applied asynchronously on the
+  // UI thread.
+  void setZoomFactor(qreal factor);
+  void resetZoomFactor();
+  void zoomIn();
+  void zoomOut();
 
   // Returns ssl status of current page.
   QCefSSLStatus getSSLStatus() const;
@@ -138,6 +137,13 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
 
   // Notified when page icon is changed.
   void iconUrlChanged(const QUrl& icon_url);
+
+ public slots:
+  void back();
+  void forward();
+  void reload();
+  void reloadIgnoreCache();
+  void stop();
 
  private:
   friend class QCefWebView;

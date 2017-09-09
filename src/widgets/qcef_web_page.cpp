@@ -187,10 +187,22 @@ void QCefWebPage::setHtml(const QString& html, const QUrl& url) {
 }
 
 void QCefWebPage::setZoomFactor(qreal factor) {
-  if (factor == 1.0) {
-    // The default zoom value is 0.0 in CEF.
-    factor = 0.0;
-  }
+  p_->browser()->GetHost()->SetZoomLevel(factor);
+}
+
+void QCefWebPage::resetZoomFactor() {
+  p_->browser()->GetHost()->SetZoomLevel(0.0);
+}
+
+void QCefWebPage::zoomIn() {
+  auto host = p_->browser()->GetHost();
+  const qreal factor = host->GetZoomLevel() + 0.25;
+  p_->browser()->GetHost()->SetZoomLevel(factor);
+}
+
+void QCefWebPage::zoomOut() {
+  auto host = p_->browser()->GetHost();
+  const qreal factor = host->GetZoomLevel() - 0.25;
   p_->browser()->GetHost()->SetZoomLevel(factor);
 }
 
