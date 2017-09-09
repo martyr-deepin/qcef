@@ -42,8 +42,6 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
   void OnTitleChanged(const CefString& title) override;
   void OnUrlChanged(const CefString& url) override;
 
-  CefRefPtr<CefBrowser> cef_browser() const { return cef_browser_; }
-
  private:
   CefRefPtr<CefBrowser> cef_browser_ = nullptr;
   QCefWebPage* web_page_ = nullptr;

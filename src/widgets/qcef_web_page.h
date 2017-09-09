@@ -79,6 +79,9 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // Might be null pointer if it has not been initialized.
   QWebChannel* webChannel() const;
 
+  // Returns the view widget that is associated with the web page.
+  QWidget* view() const;
+
   // Runs the JavaScript code contained in |script_source|.
   void runJavaScript(const QString& script_source);
   // Runs the JavaScript code contained in |script_source|.
@@ -131,19 +134,10 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   friend class QCefWebView;
   friend class QCefClientHandlerDelegate;
 
-  // Create a new CEF browser instance, with initial |size|.
-  // This method can only be call once for one QCefWebView object.
-  void createBrowser(QWindow* parent_window, const QSize& size);
-
   void onBrowserCreated();
   void onBrowserGotFocus();
 
-  // Resize browser window on page loading.
-  // NOTE(Deepin Ltd.): This hacking tip solves tooltip and IME position issue.
-  // A better solution shall be provided, by updating XWindow property.
-  void updateBrowserWindowGeometry();
-
-  void resizeCefBrowser(const QSize& size);
+  void repaintBrowser();
 
   // Handle messages received from renderer process.
   void createTransportChannel();

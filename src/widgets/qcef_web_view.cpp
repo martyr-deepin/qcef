@@ -7,6 +7,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QEvent>
+#include <QStackedLayout>
 
 #include "widgets/qcef_web_page.h"
 #include "widgets/qcef_web_settings.h"
@@ -18,11 +19,13 @@ struct QCefWebViewPrivate {
 QCefWebView::QCefWebView(QWidget* parent)
     : QWidget(parent),
       p_(new QCefWebViewPrivate()) {
-  this->setAttribute(Qt::WA_NativeWindow, true);
-  this->setAttribute(Qt::WA_DontCreateNativeAncestors, true);
-  this->setFocusPolicy(Qt::StrongFocus);
 
-  qApp->installEventFilter(this);
+  // Child window will fill this widget.
+  auto layout = new QStackedLayout();
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
+  this->setLayout(layout);
+  this->setContentsMargins(0, 0, 0, 0);
 
   p_->page = new QCefWebPage(this);
 }
@@ -33,34 +36,27 @@ QCefWebView::~QCefWebView() {
 }
 
 void QCefWebView::load(const QUrl& url) {
-  p_->page->load(url);
+  this->page()->load(url);
 }
 
 void QCefWebView::setUrl(const QUrl& url) {
-  p_->page->setUrl(url);
+  this->page()->setUrl(url);
 }
 
 QUrl QCefWebView::url() const {
-  return p_->page->url();
+  return this->page()->url();
 }
 
 QCefWebPage* QCefWebView::page() const {
+  if (p_->page == nullptr) {
+    QCefWebView* that = const_cast<QCefWebView*>(this);
+    that->p_->page = new QCefWebPage(that);
+  }
   return p_->page;
 }
 
-void QCefWebView::resizeEvent(QResizeEvent* event) {
-  QWidget::resizeEvent(event);
-  if (p_->page != nullptr) {
-    // Update geometry of inner windows.
-    p_->page->resizeCefBrowser(this->size());
-  }
-}
-
-bool QCefWebView::eventFilter(QObject* watched, QEvent* event) {
-  if (event->type() == QEvent::Move) {
-    if (p_->page != nullptr) {
-      p_->page->updateBrowserWindowGeometry();
-    }
-  }
-  return QObject::eventFilter(watched, event);
+void QCefWebView::showEvent(QShowEvent* event) {
+  qDebug() << "show event:" << event;
+  QWidget::showEvent(event);
+  p_->page->repaintBrowser();
 }

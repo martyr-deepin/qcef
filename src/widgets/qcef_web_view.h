@@ -37,10 +37,7 @@ class QCEF_WIDGETS_EXPORT QCefWebView : public QWidget {
   QCefWebPage* page() const;
 
  protected:
-  bool eventFilter(QObject* watched, QEvent* event) override;
-
-  // Resize cef window.
-  void resizeEvent(QResizeEvent* event) override;
+  void showEvent(QShowEvent* event) override;
 
  private:
   QCefWebViewPrivate* p_ = nullptr;

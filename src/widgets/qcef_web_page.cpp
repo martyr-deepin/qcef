@@ -6,14 +6,16 @@
 
 #include <QDebug>
 #include <QJsonObject>
+#include <QLayout>
 #include <QWebChannel>
 #include <QWidget>
 #include <QWindow>
 
-#include "include/cef_app.h"
 #include "core/qcef_browser_transport.h"
 #include "core/qcef_client_handler.h"
 #include "core/qcef_string_visitor.h"
+#include "core/qcef_x11_util.h"
+#include "include/cef_app.h"
 #include "widgets/qcef_client_handler_delegate.h"
 #include "widgets/qcef_web_settings.h"
 
@@ -56,7 +58,11 @@ void MergeWebPageSettings(CefBrowserSettings& cef_settings,
 }  // namespace
 
 struct QCefWebPagePrivate {
-  bool browser_created = false;
+  ~QCefWebPagePrivate();
+
+  QWidget* view = nullptr;
+  QWidget* browser_widget = nullptr;
+  QWindow* browser_window = nullptr;
   QUrl url;
   QString html;
   QUrl iconUrl;
@@ -65,60 +71,91 @@ struct QCefWebPagePrivate {
   QString page_error_content;
   QCefClientHandlerDelegate* delegate = nullptr;
   CefRefPtr<QCefClientHandler> client_handler = nullptr;
-  QWindow* browser_window_wrapper = nullptr;
-  QWindow* browser_window = nullptr;
   QCefWebSettings* settings = nullptr;
   QWebChannel* channel = nullptr;
   QCefBrowserTransport* transport = nullptr;
   bool channel_connected = false;
+
+  CefRefPtr<CefBrowser> browser();
+
+ private:
+  CefRefPtr<CefBrowser> browser_ = nullptr;
+
+  void createBrowserWidget();
 };
+
+QCefWebPagePrivate::~QCefWebPagePrivate() {
+  browser_ = nullptr;
+}
+
+CefRefPtr<CefBrowser> QCefWebPagePrivate::browser() {
+  if (browser_ == nullptr) {
+    this->createBrowserWidget();
+  }
+  return browser_;
+}
+
+void QCefWebPagePrivate::createBrowserWidget() {
+  qDebug() << "createBrowserWidget()";
+
+  CefWindowInfo window_info;
+  CefBrowserSettings cef_settings;
+  MergeWebPageSettings(cef_settings, *settings);
+
+  browser_ = CefBrowserHost::CreateBrowserSync(window_info,
+                                               client_handler.get(),
+                                               CefString(""),
+                                               cef_settings,
+                                               nullptr);
+  const WId wid = browser_->GetHost()->GetWindowHandle();
+  browser_window = QWindow::fromWinId(wid);
+  browser_widget = QWidget::createWindowContainer(browser_window);
+  view->setFocusProxy(browser_widget);
+  view->layout()->addWidget(browser_widget);
+  SetXWindowVisible(wid, true);
+}
 
 QCefWebPage::QCefWebPage(QObject* parent)
     : QObject(parent),
       p_(new QCefWebPagePrivate()) {
+  p_->view = qobject_cast<QWidget*>(parent);
   p_->delegate = new QCefClientHandlerDelegate(this);
   p_->client_handler = new QCefClientHandler(p_->delegate);
   p_->settings = new QCefWebSettings();
   p_->channel = new QWebChannel();
+  p_->browser();
 }
 
 QCefWebPage::~QCefWebPage() {
-  if (p_->delegate != nullptr) {
-    delete p_->delegate;
-    p_->delegate = nullptr;
-  }
+  if (p_ != nullptr) {
 
-  if (p_->client_handler != nullptr) {
-    p_->client_handler = nullptr;
-  }
+    if (p_->delegate != nullptr) {
+      delete p_->delegate;
+      p_->delegate = nullptr;
+    }
 
-  if (p_->browser_window_wrapper != nullptr) {
-    delete p_->browser_window_wrapper;
-    p_->browser_window_wrapper = nullptr;
-  }
+    if (p_->client_handler != nullptr) {
+      p_->client_handler = nullptr;
+    }
 
-  if (p_->browser_window != nullptr) {
-    delete p_->browser_window;
-    p_->browser_window = nullptr;
-  }
+    if (p_->settings != nullptr) {
+      delete p_->settings;
+      p_->settings = nullptr;
+    }
 
-  if (p_->settings != nullptr) {
-    delete p_->settings;
-    p_->settings = nullptr;
-  }
+    if (p_->transport != nullptr) {
+      delete p_->transport;
+      p_->transport = nullptr;
+    }
 
-  if (p_->transport != nullptr) {
-    delete p_->transport;
-    p_->transport = nullptr;
-  }
+    if (p_->channel != nullptr) {
+      delete p_->channel;
+      p_->channel = nullptr;
+    }
 
-  if (p_->channel != nullptr) {
-    delete p_->channel;
-    p_->channel = nullptr;
+    delete p_;
+    p_ = nullptr;
   }
-
-  delete p_;
-  p_ = nullptr;
 }
 
 void QCefWebPage::load(const QUrl& url) {
@@ -131,15 +168,7 @@ void QCefWebPage::setUrl(const QUrl& url) {
   // Reset html content.
   p_->html.clear();
 
-  if (p_->browser_created) {
-    auto browser = p_->delegate->cef_browser();
-    if (browser != nullptr) {
-      browser->GetMainFrame()->LoadURL(url.toString().toStdString());
-    }
-  } else {
-    QWidget* parent = qobject_cast<QWidget*>(this->parent());
-    this->createBrowser(parent->windowHandle(), parent->size());
-  }
+  p_->browser()->GetMainFrame()->LoadURL(url.toString().toStdString());
 }
 
 void QCefWebPage::setHtml(const QString& html, const QUrl& url) {
@@ -149,46 +178,26 @@ void QCefWebPage::setHtml(const QString& html, const QUrl& url) {
   } else {
     p_->url = url;
   }
-  if (p_->browser_created) {
-    if (p_->delegate != nullptr) {
-      auto browser = p_->delegate->cef_browser();
-      if (browser != nullptr) {
-        browser->GetMainFrame()->LoadString(html.toStdString(),
+
+  p_->browser()->GetMainFrame()->LoadString(html.toStdString(),
                                             url.toString().toStdString());
-      }
-    }
-  } else {
-    QWidget* parent = qobject_cast<QWidget*>(this->parent());
-    this->createBrowser(parent->windowHandle(), parent->size());
-  }
 }
 
 void QCefWebPage::setZoomFactor(qreal factor) {
-  auto browser = p_->delegate->cef_browser();
-  if (browser != nullptr) {
-    if (factor == 1.0) {
-      // The default zoom value is 0.0 in CEF.
-      factor = 0.0;
-    }
-    browser->GetHost()->SetZoomLevel(factor);
+  if (factor == 1.0) {
+    // The default zoom value is 0.0 in CEF.
+    factor = 0.0;
   }
+  p_->browser()->GetHost()->SetZoomLevel(factor);
 }
 
 qreal QCefWebPage::zoomFactor() const {
-  auto browser = p_->delegate->cef_browser();
-  if (browser != nullptr) {
-    const double factor = browser->GetHost()->GetZoomLevel();
-    browser->GetMainFrame();
-    if (factor == 0.0) {
-      // The default zoom value is 0.0 in CEF, so convert to 1.0
-      return 1.0;
-    } else {
-      return factor;
-    }
-  } else {
-    // Returns default zoom factory.
+  const double factor = p_->browser()->GetHost()->GetZoomLevel();
+  if (factor == 0.0) {
+    // The default zoom value is 0.0 in CEF, so convert to 1.0
     return 1.0;
   }
+  return factor;
 }
 
 QIcon QCefWebPage::icon() const {
@@ -223,123 +232,60 @@ QWebChannel* QCefWebPage::webChannel() const {
   return p_->channel;
 }
 
+QWidget* QCefWebPage::view() const {
+  return p_->view;
+}
+
 void QCefWebPage::runJavaScript(const QString& script_source) {
-  CefRefPtr<CefFrame> frame = p_->delegate->cef_browser()->GetMainFrame();
-  frame->ExecuteJavaScript(script_source.toStdString(), "", 0);
+  p_->browser()->GetMainFrame()->ExecuteJavaScript(script_source.toStdString(),
+                                                   "", 0);
 }
 
 void QCefWebPage::runJavaScript(const QString& script_source,
                                 const QString& script_url) {
-  CefRefPtr<CefFrame> frame = p_->delegate->cef_browser()->GetMainFrame();
-  frame->ExecuteJavaScript(script_source.toStdString(),
-                           script_url.toStdString(),
-                           0);
+  p_->browser()->GetMainFrame()->ExecuteJavaScript(script_source.toStdString(),
+                                                   script_url.toStdString(),
+                                                   0);
 }
 
 bool QCefWebPage::canGoBack() const {
-  auto browser = p_->delegate->cef_browser();
-  if (browser != nullptr) {
-    return p_->delegate->cef_browser()->CanGoBack();
-  }
-  return false;
+  return p_->browser()->CanGoBack();
 }
 
 bool QCefWebPage::canGoForward() const {
-  auto browser = p_->delegate->cef_browser();
-  if (browser != nullptr) {
-    return p_->delegate->cef_browser()->CanGoForward();
-  }
-  return false;
+  return p_->browser()->CanGoForward();
 }
 
 void QCefWebPage::back() {
-  auto browser = p_->delegate->cef_browser();
-  if (browser != nullptr) {
-    p_->delegate->cef_browser()->GoBack();
-  }
+  p_->browser()->GoBack();
 }
 
 void QCefWebPage::forward() {
-  auto browser = p_->delegate->cef_browser();
-  if (browser != nullptr) {
-    p_->delegate->cef_browser()->GoForward();
-  }
+  p_->browser()->GoForward();
 }
 
 void QCefWebPage::reload() {
-  auto browser = p_->delegate->cef_browser();
-  if (browser != nullptr) {
-    p_->delegate->cef_browser()->Reload();
-  }
+  p_->browser()->Reload();
 }
 
 void QCefWebPage::reloadIgnoreCache() {
-  auto browser = p_->delegate->cef_browser();
-  if (browser != nullptr) {
-    p_->delegate->cef_browser()->ReloadIgnoreCache();
-  }
+  p_->browser()->ReloadIgnoreCache();
 }
 
 bool QCefWebPage::isLoading() const {
-  auto browser = p_->delegate->cef_browser();
-  if (browser != nullptr) {
-    return p_->delegate->cef_browser()->IsLoading();
-  }
-  return false;
+  return p_->browser()->IsLoading();
 }
 
 void QCefWebPage::stop() {
-  auto browser = p_->delegate->cef_browser();
-  if (browser != nullptr) {
-    p_->delegate->cef_browser()->StopLoad();
-  }
+  p_->browser()->StopLoad();
 }
 
 void QCefWebPage::toHtml(void (* callback)(const QString& html)) const {
-  auto frame = p_->delegate->cef_browser()->GetMainFrame();
-  if (frame != nullptr) {
-    frame->GetSource(new StringVisitor(callback));
-  }
+  p_->browser()->GetMainFrame()->GetSource(new StringVisitor(callback));
 }
 
 void QCefWebPage::toPlainText(void (* callback)(const QString& text)) const {
-  auto frame = p_->delegate->cef_browser()->GetMainFrame();
-  if (frame != nullptr) {
-    frame->GetText(new StringVisitor(callback));
-  }
-}
-
-void QCefWebPage::createBrowser(QWindow* parent_window, const QSize& size) {
-  if (p_->browser_created) {
-    return;
-  }
-
-  p_->browser_created = true;
-
-  CefRect rect;
-  rect.x = 0;
-  rect.y = 0;
-  rect.width = size.width();
-  rect.height = size.height();
-
-  CefWindowInfo window_info;
-  CefBrowserSettings cef_settings;
-  MergeWebPageSettings(cef_settings, *p_->settings);
-
-  p_->browser_window_wrapper = new QWindow();
-  p_->browser_window_wrapper->create();
-  p_->browser_window_wrapper->setParent(parent_window);
-  p_->browser_window_wrapper->setVisible(true);
-  p_->browser_window_wrapper->resize(parent_window->size());
-
-  window_info.SetAsChild(p_->browser_window_wrapper->winId(), rect);
-
-  const std::string url = p_->url.url().toStdString();
-  CefBrowserHost::CreateBrowserSync(window_info,
-                                    p_->client_handler.get(),
-                                    CefString(url),
-                                    cef_settings,
-                                    nullptr);
+  p_->browser()->GetMainFrame()->GetText(new StringVisitor(callback));
 }
 
 void QCefWebPage::onBrowserCreated() {
@@ -349,28 +295,14 @@ void QCefWebPage::onBrowserCreated() {
 }
 
 void QCefWebPage::onBrowserGotFocus() {
-  QWidget* parent = qobject_cast<QWidget*>(this->parent());
-  parent->setFocus(Qt::MouseFocusReason);
+  p_->view->setFocus(Qt::MouseFocusReason);
 }
 
-void QCefWebPage::updateBrowserWindowGeometry() {
-  QWidget* parent = qobject_cast<QWidget*>(this->parent());
-  this->resizeCefBrowser(QSize(400, 400));
-  this->resizeCefBrowser(parent->size());
-}
-
-void QCefWebPage::resizeCefBrowser(const QSize& size) {
-  if (p_->browser_created) {
-    p_->browser_window_wrapper->resize(size);
-
-    auto browser = p_->delegate->cef_browser();
-    if (browser != nullptr) {
-      if (p_->browser_window == nullptr) {
-        p_->browser_window =
-            QWindow::fromWinId(browser->GetHost()->GetWindowHandle());
-      }
-      p_->browser_window->resize(size);
-    }
+void QCefWebPage::repaintBrowser() {
+  if (p_->browser_widget != nullptr) {
+    qDebug() << "web page browser widget:" << p_->browser_window->isVisible();
+//    p_->browser_widget->setParent(p_->view);
+//    SetXWindowVisible(p_->browser_window->winId(), true);
   }
 }
 
@@ -380,7 +312,7 @@ void QCefWebPage::createTransportChannel() {
     delete p_->transport;
     p_->transport = nullptr;
   }
-  p_->transport = new QCefBrowserTransport(p_->delegate->cef_browser());
+  p_->transport = new QCefBrowserTransport(p_->browser());
   p_->channel->connectTo(p_->transport);
   p_->channel_connected = true;
 }
