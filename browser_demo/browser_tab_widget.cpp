@@ -115,8 +115,8 @@ void BrowserTabWidget::onCurrentChanged(int index) {
     // Disconnect signals of old web view.
     p_->current_web->disconnect(this);
     auto old_page = p_->current_web->page();
-    old_page->disconnect(this, SIGNAL(urlChanged()));
-    old_page->disconnect(this, SIGNAL(loadingStateChanged()));
+    old_page->disconnect(this, SIGNAL(urlChanged(QUrl)));
+    old_page->disconnect(this, SIGNAL(loadingStateChanged(bool, bool, bool)));
   }
   p_->current_web = web_view;
   // Connect signals.
