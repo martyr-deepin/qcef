@@ -5,6 +5,7 @@
 #ifndef QCEF_CORE_QCEF_CLIENT_HANDLER_H
 #define QCEF_CORE_QCEF_CLIENT_HANDLER_H
 
+#include <QKeyEvent>
 #include <QString>
 
 #include "include/cef_client.h"
@@ -24,7 +25,8 @@ class QCefClientHandler : public CefClient,
    public:
     // CefLifeSpanHandler methods
     // Request to popup new browser window to access |target_url|.
-    virtual void OnBeforePopup(const CefString& target_url) = 0;
+    virtual bool OnBeforePopup(const CefString& target_url,
+                               WindowOpenDisposition target_disposition) = 0;
 
     // Called when the browser is created.
     virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) = 0;
@@ -65,7 +67,7 @@ class QCefClientHandler : public CefClient,
 
     virtual void OnTitleChanged(const CefString& title) = 0;
 
-    virtual bool OnPreKeyEvent(XEvent* event) = 0;
+    virtual bool OnPreKeyEvent(const QKeyEvent& event) = 0;
 
    protected:
     virtual ~Delegate() {}

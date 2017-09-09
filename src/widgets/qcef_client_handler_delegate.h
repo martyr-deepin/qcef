@@ -8,6 +8,7 @@
 #include "core/qcef_client_handler.h"
 
 #include "include/cef_app.h"
+#include "include/cef_life_span_handler.h"
 #include "widgets/qcef_web_page.h"
 
 // Implements delegate of QCefClientHandler, to let QCefWebPage be notified
@@ -18,7 +19,9 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
 
   ~QCefClientHandlerDelegate() override;
 
-  void OnBeforePopup(const CefString& target_url) override;
+  bool OnBeforePopup(
+      const CefString& target_url,
+      CefLifeSpanHandler::WindowOpenDisposition target_disposition) override;
 
   void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
 
@@ -55,7 +58,7 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
 
   void OnUrlChanged(const CefString& url) override;
 
-  bool OnPreKeyEvent(XEvent* event) override;
+  bool OnPreKeyEvent(const QKeyEvent& event) override;
 
  private:
   CefRefPtr<CefBrowser> cef_browser_ = nullptr;

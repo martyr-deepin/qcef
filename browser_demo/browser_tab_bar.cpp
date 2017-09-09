@@ -9,7 +9,7 @@
 
 BrowserTabBar::BrowserTabBar(QWidget* parent) : QTabBar(parent) {
   this->setStyleSheet("QTabBar::tab { max-width: 200px; }");
-  this->setUsesScrollButtons(false);
+  this->setUsesScrollButtons(true);
 }
 
 void BrowserTabBar::contextMenuEvent(QContextMenuEvent* event) {

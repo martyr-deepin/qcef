@@ -310,7 +310,7 @@ QCefSSLStatus QCefWebPage::getSSLStatus() const {
   if (navigation.get() != nullptr) {
     CefRefPtr<CefSSLStatus> cef_ssl_status = navigation->GetSSLStatus();
     ssl_status.is_secure_connection = cef_ssl_status->IsSecureConnection();
-    ssl_status.content_status = static_cast<SSLContentStatus>(
+    ssl_status.content_status = static_cast<QCefSSLContentStatus>(
         cef_ssl_status->GetContentStatus());
   }
   return ssl_status;

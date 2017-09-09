@@ -9,9 +9,11 @@
 #include <qcef_web_page.h>
 #include <qcef_web_view.h>
 
+#include "browser_event_delegate.h"
 #include "browser_tab_bar.h"
 
 struct BrowserTabWidgetPrivate {
+  BrowserEventDelegate* event_delegate = nullptr;
   BrowserTabBar* tab_bar = nullptr;
   QCefWebView* current_web = nullptr;
   QIcon blank_icon{":/images/document-new-symbolic.svg"};
@@ -20,6 +22,8 @@ struct BrowserTabWidgetPrivate {
 BrowserTabWidget::BrowserTabWidget(QWidget* parent)
     : QTabWidget(parent),
       p_(new BrowserTabWidgetPrivate()) {
+  p_->event_delegate = new BrowserEventDelegate(this);
+
   p_->tab_bar = new BrowserTabBar(this);
   this->setTabBar(p_->tab_bar);
 
@@ -33,6 +37,25 @@ BrowserTabWidget::BrowserTabWidget(QWidget* parent)
           this, &BrowserTabWidget::onTabCloseRequested);
   connect(this, &BrowserTabWidget::fullscreenRequested,
           this, &BrowserTabWidget::onFullscreenRequested);
+
+  connect(p_->event_delegate, &BrowserEventDelegate::popupRequested,
+          [=](const QUrl& url, QCefWindowOpenDisposition disposition) {
+    switch (disposition) {
+      case QCefWindowOpenDisposition::NEW_BACKGROUND_TAB: {
+        this->createNewBrowser(false, url);
+        break;
+      }
+      case QCefWindowOpenDisposition::NEW_FOREGROUND_TAB:  // fall through
+      case QCefWindowOpenDisposition::NEW_WINDOW:  // fall through
+      case QCefWindowOpenDisposition::NEW_POPUP: {
+        this->createNewBrowser(true, url);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  });
 }
 
 BrowserTabWidget::~BrowserTabWidget() {
@@ -54,6 +77,8 @@ void BrowserTabWidget::createNewBrowser(bool in_background,
                                         const QUrl& url) {
   qDebug() << "create new browser";
   auto web_view = new QCefWebView();
+  web_view->page()->setEventDelegate(p_->event_delegate);
+
   this->addTab(web_view, "New Tab");
   if (!in_background) {
     this->setCurrentWidget(web_view);

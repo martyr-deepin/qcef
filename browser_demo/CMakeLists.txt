@@ -26,6 +26,8 @@ set(BROWSER_DEMO_FILES
     main.cpp
     browser_address_edit.cpp
     browser_address_edit.h
+    browser_event_delegate.cpp
+    browser_event_delegate.h
     browser_tab_bar.cpp
     browser_tab_bar.h
     browser_tab_widget.cpp

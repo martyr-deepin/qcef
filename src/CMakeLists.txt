@@ -143,6 +143,7 @@ set(WIDGETS_FILES
     )
 
 set(WIDGETS_EXPORT_FILES
+    widgets/qcef_browser_event_delegate.h
     widgets/qcef_web_page.h
     widgets/qcef_web_settings.h
     widgets/qcef_web_view.h

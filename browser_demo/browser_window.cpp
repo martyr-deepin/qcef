@@ -130,6 +130,7 @@ void BrowserWindow::initUI() {
   p_->reload_button->setFixedSize(button_size);
   p_->address_edit = new BrowserAddressEdit(this);
   p_->settings_button = new QPushButton(QIcon(kSettingsIcon), "", this);
+  // TODO(LiuLang): Remove drop-down arrow.
   p_->settings_button->setFlat(true);
   p_->settings_button->setFixedSize(button_size);
   p_->settings_button->setToolTip(kSettingsTip);
@@ -212,7 +213,7 @@ void BrowserWindow::onLoadingStateChanged(bool is_loading,
   p_->updateReloadButtonState(is_loading);
   const QCefSSLStatus ssl_status = p_->tab_widget->getSSlStatus();
   const bool secure = ssl_status.is_secure_connection &&
-      (ssl_status.content_status == SSLContentStatus::NORMAL_CONTENT);
+      (ssl_status.content_status == QCefSSLContentStatus::NORMAL_CONTENT);
   p_->address_edit->updateCertificatesInfo(secure);
 }
 

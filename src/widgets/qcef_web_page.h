@@ -115,6 +115,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   QCefSSLStatus getSSLStatus() const;
 
   // Get current event delegate, default is nullptr.
+  // Note that QCefWebPage does not take ownership of event delegate.
   QCefBrowserEventDelegate* getEventDelegate() const;
   void setEventDelegate(QCefBrowserEventDelegate* delegate);
 

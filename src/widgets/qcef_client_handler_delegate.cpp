@@ -25,10 +25,16 @@ QCefClientHandlerDelegate::~QCefClientHandlerDelegate() {
   }
 }
 
-void QCefClientHandlerDelegate::OnBeforePopup(const CefString& target_url) {
-  // TODO(LiuLang): Add option.
+bool QCefClientHandlerDelegate::OnBeforePopup(
+    const CefString& target_url,
+    CefLifeSpanHandler::WindowOpenDisposition target_dispositio) {
   if (cef_browser_ != nullptr) {
-    cef_browser_->GetMainFrame()->LoadURL(target_url);
+    const QUrl url(target_url.ToString().c_str());
+    QCefWindowOpenDisposition disposition =
+        static_cast<QCefWindowOpenDisposition>(target_dispositio);
+    return web_page_->getEventDelegate()->onBeforePopup(url, disposition);
+  } else {
+    return true;
   }
 }
 
@@ -191,7 +197,7 @@ void QCefClientHandlerDelegate::OnUrlChanged(const CefString& url) {
   web_page_->updateUrl(QUrl(QString::fromStdString(url)));
 }
 
-bool QCefClientHandlerDelegate::OnPreKeyEvent(XEvent* event) {
+bool QCefClientHandlerDelegate::OnPreKeyEvent(const QKeyEvent& event) {
   auto event_delegate = web_page_->getEventDelegate();
   if (event_delegate != nullptr) {
     return event_delegate->onPreKeyEvent(event);

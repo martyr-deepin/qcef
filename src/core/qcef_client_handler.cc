@@ -4,6 +4,7 @@
 
 #include "core/qcef_client_handler.h"
 
+#include <QKeyEvent>
 #include <QTextStream>
 
 #include "include/cef_app.h"
@@ -257,7 +258,6 @@ bool QCefClientHandler::OnBeforePopup(
   (void)browser;
   (void)frame;
   (void)target_frame_name;
-  (void)target_disposition;
   (void)user_gesture;
   (void)popupFeatures;
   (void)windowInfo;
@@ -265,13 +265,12 @@ bool QCefClientHandler::OnBeforePopup(
   (void)settings;
   (void)no_javascript_access;
 
-  // TODO(LiuLang): Add option.
-
-  // Do not pop up any window, instead only notify delegate.
   if (delegate_ != nullptr) {
-    delegate_->OnBeforePopup(target_url);
+    // Do not pop up any window, instead only notify delegate.
+    return delegate_->OnBeforePopup(target_url, target_disposition);
+  } else {
+    return true;
   }
-  return true;
 }
 
 void QCefClientHandler::OnGotFocus(CefRefPtr<CefBrowser> browser) {
@@ -293,11 +292,19 @@ bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
                                       bool* is_keyboard_shortcut) {
   if (delegate_ != nullptr) {
     // TODO(LiuLang): Filters shortcuts in QApplication.
-    return delegate_->OnPreKeyEvent(os_event);
-  } else {
-    return CefKeyboardHandler::OnPreKeyEvent(browser, event, os_event,
-                                             is_keyboard_shortcut);
+    if (event.type == KEYEVENT_KEYDOWN) {
+      // FIXME(LiuLang): keyboard modifier is invalid.
+      QKeyEvent qevent (QEvent::KeyPress, event.native_key_code,
+                         static_cast<Qt::KeyboardModifier>(event.modifiers));
+      return delegate_->OnPreKeyEvent(qevent);
+    } else if (event.type == KEYEVENT_KEYUP) {
+      QKeyEvent qevent (QEvent::KeyRelease, event.native_key_code,
+                        static_cast<Qt::KeyboardModifier>(event.modifiers));
+      return delegate_->OnPreKeyEvent(qevent);
+    }
   }
+  return CefKeyboardHandler::OnPreKeyEvent(browser, event, os_event,
+                                           is_keyboard_shortcut);
 }
 
 //void QCefClientHandler::showDevTools(CefRefPtr<CefBrowser> browser,
