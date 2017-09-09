@@ -24,6 +24,8 @@ set(LINK_LIBS
 
 set(BROWSER_DEMO_FILES
     main.cpp
+    browser_address_edit.cpp
+    browser_address_edit.h
     browser_tab_bar.cpp
     browser_tab_bar.h
     browser_tab_widget.cpp

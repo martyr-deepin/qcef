@@ -110,14 +110,14 @@
 # Global setup.
 #
 
-cmake_minimum_required(VERSION 2.8.12.1)
+cmake_minimum_required(VERSION 3.2)
 
 # Only generate Debug and Release configuration types.
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 
 # Project name.
 # TODO: Change this line to match your project name when you copy this file.
-project(cef)
+project(qcef)
 
 # Use folders in the resulting project files.
 set_property(GLOBAL PROPERTY OS_FOLDERS ON)

@@ -8,7 +8,6 @@
 #include <QApplication>
 #include <QDebug>
 #include <QFile>
-#include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
 #include <QTabWidget>
@@ -20,7 +19,9 @@
 #include <qcef_web_settings.h>
 #include <qcef_web_view.h>
 
+#include "browser_tab_bar.h"
 #include "browser_tab_widget.h"
+#include "browser_address_edit.h"
 
 namespace {
 
@@ -44,7 +45,7 @@ struct BrowserWindowPrivate {
   QPushButton* forward_button = nullptr;
   QPushButton* reload_button = nullptr;
   QPushButton* settings_button = nullptr;
-  QLineEdit* address_edit = nullptr;
+  BrowserAddressEdit* address_edit = nullptr;
   BrowserTabWidget* tab_widget = nullptr;
   QIcon reload_icon;
   QIcon stop_icon;
@@ -114,7 +115,7 @@ void BrowserWindow::initUI() {
   p_->reload_button->setToolTip(kReloadTip);
   p_->reload_button->setFlat(true);
   p_->reload_button->setFixedSize(button_size);
-  p_->address_edit = new QLineEdit(this);
+  p_->address_edit = new BrowserAddressEdit(this);
   p_->settings_button = new QPushButton(QIcon(kSettingsIcon), "", this);
   p_->settings_button->setFlat(true);
   p_->settings_button->setFixedSize(button_size);
@@ -190,6 +191,10 @@ void BrowserWindow::onLoadingStateChanged(bool is_loading,
   p_->back_button->setEnabled(can_go_back);
   p_->forward_button->setEnabled(can_go_forward);
   p_->updateReloadButtonState(is_loading);
+  const QCefSSLStatus ssl_status = p_->tab_widget->getSSlStatus();
+  const bool secure = ssl_status.is_secure_connection &&
+      (ssl_status.content_status == SSLContentStatus::NORMAL_CONTENT);
+  p_->address_edit->updateCertificatesInfo(secure);
 }
 
 void BrowserWindow::onUrlChanged(const QUrl& url) {

@@ -9,6 +9,7 @@
 #include <QIcon>
 #include <QUrl>
 
+#include "qcef_ssl_status.h"
 #include "qcef_widgets_export.h"
 
 class QWindow;
@@ -109,6 +110,9 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // Upon successful completion, resultCallback is called
   // with the page's content.
   void toPlainText(void (* callback)(const QString& text)) const;
+
+  // Returns ssl status of current page.
+  QCefSSLStatus getSSLStatus() const;
 
  signals:
   void renderContextCreated();

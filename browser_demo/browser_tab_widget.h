@@ -7,6 +7,7 @@
 
 #include <QTabWidget>
 #include <QUrl>
+#include <qcef_ssl_status.h>
 
 struct BrowserTabWidgetPrivate;
 
@@ -19,6 +20,8 @@ class BrowserTabWidget : public QTabWidget {
 
   // Get loading state of current web view.
   bool isLoading() const;
+
+  QCefSSLStatus getSSlStatus() const;
 
  signals:
   void fullscreenRequested(bool fullscreen);

@@ -16,6 +16,7 @@
 #include "core/qcef_string_visitor.h"
 #include "core/qcef_x11_util.h"
 #include "include/cef_app.h"
+#include "include/cef_ssl_status.h"
 #include "widgets/qcef_client_handler_delegate.h"
 #include "widgets/qcef_web_settings.h"
 
@@ -287,6 +288,19 @@ void QCefWebPage::toHtml(void (* callback)(const QString& html)) const {
 
 void QCefWebPage::toPlainText(void (* callback)(const QString& text)) const {
   p_->browser()->GetMainFrame()->GetText(new StringVisitor(callback));
+}
+
+QCefSSLStatus QCefWebPage::getSSLStatus() const {
+  QCefSSLStatus ssl_status;
+  // Returns a nullptr if navigation entry list is empty.
+  auto navigation = p_->browser()->GetHost()->GetVisibleNavigationEntry();
+  if (navigation.get() != nullptr) {
+    CefRefPtr<CefSSLStatus> cef_ssl_status = navigation->GetSSLStatus();
+    ssl_status.is_secure_connection = cef_ssl_status->IsSecureConnection();
+    ssl_status.content_status = static_cast<SSLContentStatus>(
+        cef_ssl_status->GetContentStatus());
+  }
+  return ssl_status;
 }
 
 void QCefWebPage::onBrowserCreated() {

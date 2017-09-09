@@ -46,6 +46,10 @@ bool BrowserTabWidget::isLoading() const {
   p_->current_web->page()->isLoading();
 }
 
+QCefSSLStatus BrowserTabWidget::getSSlStatus() const {
+  return p_->current_web->page()->getSSLStatus();
+}
+
 void BrowserTabWidget::createNewBrowser(bool in_background,
                                         const QUrl& url) {
   qDebug() << "create new browser";

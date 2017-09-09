@@ -131,6 +131,7 @@ set(WIDGETS_FILES
 
     widgets/qcef_client_handler_delegate.cpp
     widgets/qcef_client_handler_delegate.h
+    widgets/qcef_ssl_status.h
     widgets/qcef_web_page.cpp
     widgets/qcef_web_page.h
     widgets/qcef_web_settings.cpp
