@@ -14,6 +14,7 @@
 struct QCefWebSettingsPrivate;
 
 // Settings used for each web page.
+// TODO(LiuLang): Remove member functions.
 class QCEF_WIDGETS_EXPORT QCefWebSettings {
  public:
   QCefWebSettings();
@@ -115,6 +116,28 @@ class QCEF_WIDGETS_EXPORT QCefWebSettings {
   };
   typedef QVector<CrossOriginEntry> CrossOriginList;
   const CrossOriginList& crossOriginWhiteList() const;
+
+  // Font settings.
+  QString standardFontFamily() const;
+  void setStandardFontFamily(const QString& font);
+  QString fixedFontFamily() const;
+  void setFixedFontFamily(const QString& font);
+  QString serifFontFamily() const;
+  void setSerifFontFamily(const QString& font);
+  QString sansSerifFontFamily() const;
+  void setSansSerifFontFamily(const QString& font);
+  QString cursiveFontFamily() const;
+  void setCursiveFontFamily(const QString& font) const;
+  QString fantasyFontFamily() const;
+  void setFantasyFontFamily(const QString& font) const;
+  int defaultFontSize() const;
+  void setDefaultFontSize(int size);
+  int defaultFixedFontSize() const;
+  void setDefaultFixedFontSize(int size);
+  int minimumFontSize() const;
+  void setMinimumFontSize(int size);
+  int minimumLogicalFontSize() const;
+  void setMinimumLogicalFontSize(int size);
 
  private:
   QCefWebSettingsPrivate* p_ = nullptr;

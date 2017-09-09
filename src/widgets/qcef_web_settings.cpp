@@ -4,7 +4,22 @@
 
 #include "widgets/qcef_web_settings.h"
 
+#include <QFontDatabase>
+
 struct QCefWebSettingsPrivate {
+  QString standard_font_family =
+      QFontDatabase::systemFont(QFontDatabase::GeneralFont).family();
+  QString fixed_font_family =
+      QFontDatabase::systemFont(QFontDatabase::FixedFont).family();
+  QString serif_font_family = "serif";
+  QString sans_serif_font_family = "sans";
+  QString cursive_font_family;
+  QString fantasy_font_family;
+  int default_font_size;
+  int default_fixed_font_size;
+  int minimum_font_size;
+  int minimum_logical_font_size;
+
   QString default_encoding;
   QCefWebSettings::State remote_fonts = QCefWebSettings::StateDefault;
   QCefWebSettings::State javascript = QCefWebSettings::StateDefault;
@@ -185,3 +200,84 @@ const QCefWebSettings::CrossOriginList&
 QCefWebSettings::crossOriginWhiteList() const {
   return p_->cross_origin_list;
 }
+
+QString QCefWebSettings::standardFontFamily() const {
+  return p_->standard_font_family;
+}
+
+void QCefWebSettings::setStandardFontFamily(const QString& font) {
+  p_->standard_font_family = font;
+}
+
+QString QCefWebSettings::fixedFontFamily() const {
+  return p_->fixed_font_family;
+}
+
+void QCefWebSettings::setFixedFontFamily(const QString& font) {
+  p_->fixed_font_family = font;
+}
+
+QString QCefWebSettings::serifFontFamily() const {
+  return p_->serif_font_family;
+}
+
+void QCefWebSettings::setSerifFontFamily(const QString& font) {
+  p_->serif_font_family = font;
+}
+
+QString QCefWebSettings::sansSerifFontFamily() const {
+  return p_->sans_serif_font_family;
+}
+
+void QCefWebSettings::setSansSerifFontFamily(const QString& font) {
+  p_->sans_serif_font_family = font;
+}
+
+QString QCefWebSettings::cursiveFontFamily() const {
+  return p_->cursive_font_family;
+}
+
+void QCefWebSettings::setCursiveFontFamily(const QString& font) const {
+  p_->cursive_font_family = font;
+}
+
+QString QCefWebSettings::fantasyFontFamily() const {
+  return p_->fantasy_font_family;
+}
+
+void QCefWebSettings::setFantasyFontFamily(const QString& font) const {
+  p_->fantasy_font_family = font;
+}
+
+int QCefWebSettings::defaultFontSize() const {
+  return p_->default_font_size;
+}
+
+void QCefWebSettings::setDefaultFontSize(int size) {
+  p_->default_font_size = size;
+}
+
+int QCefWebSettings::defaultFixedFontSize() const {
+  return p_->default_fixed_font_size;
+}
+
+void QCefWebSettings::setDefaultFixedFontSize(int size) {
+  p_->default_fixed_font_size = size;
+}
+
+int QCefWebSettings::minimumFontSize() const {
+  return p_->minimum_font_size;
+}
+
+void QCefWebSettings::setMinimumFontSize(int size) {
+  p_->minimum_font_size = size;
+}
+
+int QCefWebSettings::minimumLogicalFontSize() const {
+  return p_->minimum_logical_font_size;
+}
+
+void QCefWebSettings::setMinimumLogicalFontSize(int size) {
+  p_->minimum_logical_font_size = size;
+}
+

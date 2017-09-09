@@ -26,6 +26,23 @@ const char kBlankUrl[] = "about:blank";
 
 void MergeWebPageSettings(CefBrowserSettings& cef_settings,
                           const QCefWebSettings& settings) {
+  CefString(&cef_settings.standard_font_family) =
+      settings.standardFontFamily().toStdString();
+  CefString(&cef_settings.fixed_font_family) =
+      settings.fixedFontFamily().toStdString();
+  CefString(&cef_settings.serif_font_family) =
+      settings.serifFontFamily().toStdString();
+  CefString(&cef_settings.sans_serif_font_family) =
+      settings.sansSerifFontFamily().toStdString();
+  CefString(&cef_settings.cursive_font_family) =
+      settings.cursiveFontFamily().toStdString();
+  CefString(&cef_settings.fantasy_font_family) =
+      settings.fantasyFontFamily().toStdString();
+  cef_settings.default_font_size = settings.defaultFontSize();
+  cef_settings.default_fixed_font_size = settings.defaultFixedFontSize();
+  cef_settings.minimum_font_size = settings.minimumFontSize();
+  cef_settings.minimum_logical_font_size = settings.minimumLogicalFontSize();
+
   CefString(&cef_settings.default_encoding) =
       settings.defaultEncoding().toStdString();
   cef_settings.remote_fonts = static_cast<cef_state_t>(settings.remoteFonts());
