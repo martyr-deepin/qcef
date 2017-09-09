@@ -4,6 +4,7 @@
 
 #include "core/qcef_dialog_handler.h"
 
+#include <QDebug>
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
@@ -58,14 +59,19 @@ bool QCefDialogHandler::OnFileDialog(
   QFileDialog* dialog = new QFileDialog();
   dialog->setWindowTitle(title_str);
   dialog->setConfirmOverwrite(mode & FILE_DIALOG_OVERWRITEPROMPT_FLAG);
+  const QString path = default_file_path.ToString().c_str();
+  qDebug() << "default path:" << path;
+  QFileInfo info(path);
   switch (mode_type) {
     case FILE_DIALOG_OPEN: {
       dialog->setAcceptMode(QFileDialog::AcceptOpen);
+      dialog->setDirectory(info.absolutePath());
       dialog->setFileMode(QFileDialog::ExistingFile);
       break;
     }
     case FILE_DIALOG_OPEN_FOLDER: {
       dialog->setAcceptMode(QFileDialog::AcceptOpen);
+      dialog->setDirectory(info.absolutePath());
       dialog->setFileMode(QFileDialog::Directory);
       break;
     }
@@ -76,7 +82,9 @@ bool QCefDialogHandler::OnFileDialog(
     }
     case FILE_DIALOG_SAVE: {
       dialog->setAcceptMode(QFileDialog::AcceptSave);
-      dialog->setFileMode(QFileDialog::Directory);
+      dialog->setFileMode(QFileDialog::AnyFile);
+      dialog->setDirectory(info.absolutePath());
+      dialog->selectFile(info.fileName());
       break;
     }
     default: {

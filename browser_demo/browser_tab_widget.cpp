@@ -51,6 +51,10 @@ BrowserTabWidget::BrowserTabWidget(QWidget* parent)
         this->createNewBrowser(true, url);
         break;
       }
+      case QCefWindowOpenDisposition::SAVE_TO_DISK: {
+        qDebug() << "save file to disk:" << url;
+        break;
+      }
       default: {
         break;
       }

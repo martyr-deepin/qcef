@@ -4,6 +4,8 @@
 
 #include "core/qcef_client_handler.h"
 
+#include <QDebug>
+#include <QDir>
 #include <QKeyEvent>
 #include <QTextStream>
 
@@ -294,41 +296,41 @@ bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
     // TODO(LiuLang): Filters shortcuts in QApplication.
     if (event.type == KEYEVENT_KEYDOWN) {
       // FIXME(LiuLang): keyboard modifier is invalid.
-      QKeyEvent qevent (QEvent::KeyPress, event.native_key_code,
-                         static_cast<Qt::KeyboardModifier>(event.modifiers));
-      return delegate_->OnPreKeyEvent(qevent);
+      QKeyEvent key_event(QEvent::KeyPress, event.native_key_code,
+                          static_cast<Qt::KeyboardModifier>(event.modifiers));
+      return delegate_->OnPreKeyEvent(key_event);
     } else if (event.type == KEYEVENT_KEYUP) {
-      QKeyEvent qevent (QEvent::KeyRelease, event.native_key_code,
-                        static_cast<Qt::KeyboardModifier>(event.modifiers));
-      return delegate_->OnPreKeyEvent(qevent);
+      QKeyEvent key_event(QEvent::KeyRelease, event.native_key_code,
+                          static_cast<Qt::KeyboardModifier>(event.modifiers));
+      return delegate_->OnPreKeyEvent(key_event);
     }
   }
   return CefKeyboardHandler::OnPreKeyEvent(browser, event, os_event,
                                            is_keyboard_shortcut);
 }
 
-//void QCefClientHandler::showDevTools(CefRefPtr<CefBrowser> browser,
-//                                     const CefPoint& inspect_element_at) {
-//  if (!CefCurrentlyOn(TID_UI)) {
-//    // Execute this method on the UI thread.
-////    CefPostTask(TID_UI, base::Bind(QCefClientHandler::showDevTools, this, browser,
-////                                   inspect_element_at));
-//    return;
-//  }
-//
-//  CefWindowInfo windowInfo;
-//  CefRefPtr<CefClient> client;
-//  CefBrowserSettings settings;
-//
-//  CefRefPtr<CefBrowserHost> host = browser->GetHost();
-//
-//  // Test if the DevTools browser already exists.
-//  bool has_devtools = host->HasDevTools();
-//
-//  if (has_devtools) {
-//    // Create the DevTools browser if it doesn't already exist.
-//    // Otherwise, focus the existing DevTools browser and inspect the element
-//    // at |inspect_element_at| if non-empty.
-//    host->ShowDevTools(windowInfo, client, settings, inspect_element_at);
-//  }
-//}
+void QCefClientHandler::OnBeforeDownload(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefDownloadItem> download_item,
+    const CefString& suggested_name,
+    CefRefPtr<CefBeforeDownloadCallback> callback) {
+  (void) browser;
+  (void) download_item;
+  // Set default folder to $HOME, default is /tmp.
+  const QString path = QDir::home().filePath(suggested_name.ToString().c_str());
+  callback->Continue(path.toStdString(),  true);
+}
+
+void QCefClientHandler::OnDownloadUpdated(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefDownloadItem> download_item,
+    CefRefPtr<CefDownloadItemCallback> callback) {
+  qDebug()
+      << "process:" << download_item->IsInProgress()
+      << ", completed:" << download_item->IsComplete()
+      << ", speed;" << download_item->GetCurrentSpeed()
+      << ", percent:" << download_item->GetPercentComplete()
+      << ", total:" << download_item->GetTotalBytes()
+      << ", path:" << download_item->GetFullPath().ToString().c_str();
+  CefDownloadHandler::OnDownloadUpdated(browser, download_item, callback);
+}

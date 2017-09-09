@@ -16,6 +16,7 @@ class QCefClientDownloadImageCallback;
 class QCefClientHandler : public CefClient,
                           public CefContextMenuHandler,
                           public CefDisplayHandler,
+                          public CefDownloadHandler,
                           public CefFocusHandler,
                           public CefKeyboardHandler,
                           public CefLifeSpanHandler,
@@ -86,6 +87,10 @@ class QCefClientHandler : public CefClient,
     return this;
   }
 
+  CefRefPtr<CefDownloadHandler> GetDownloadHandler() override {
+    return this;
+  }
+
   CefRefPtr<CefFocusHandler> GetFocusHandler() override {
     return this;
   }
@@ -136,6 +141,16 @@ class QCefClientHandler : public CefClient,
 
   void OnTitleChange(CefRefPtr<CefBrowser> browser,
                      const CefString& title) override;
+
+  // CefDownloadHandler methods:
+  void OnBeforeDownload(CefRefPtr<CefBrowser> browser,
+                        CefRefPtr<CefDownloadItem> download_item,
+                        const CefString& suggested_name,
+                        CefRefPtr<CefBeforeDownloadCallback> callback) override;
+
+  void OnDownloadUpdated(CefRefPtr<CefBrowser> browser,
+                         CefRefPtr<CefDownloadItem> download_item,
+                         CefRefPtr<CefDownloadItemCallback> callback) override;
 
   // CefFocusHandler methods:
   void OnGotFocus(CefRefPtr<CefBrowser> browser) override;
