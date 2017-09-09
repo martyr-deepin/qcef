@@ -4,6 +4,7 @@
 
 #include "core/qcef_renderer_transport_handler.h"
 
+#include <string>
 #include <QDebug>
 
 #include "core/qcef_web_channel_consts.h"

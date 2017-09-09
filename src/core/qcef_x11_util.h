@@ -9,14 +9,14 @@
 
 void SetXErrorHandler();
 
-unsigned long InitCefBrowserWindow(int width, int height);
-
-void SetXWindowBounds(CefWindowHandle xwindow,
-                      int x, int y,
-                      int width, int height);
-
-void SetXWindowTitle(CefWindowHandle window, const std::string& title);
-
-void SetXWindowVisible(CefWindowHandle xwindow, bool visible);
+//unsigned long InitCefBrowserWindow(int width, int height);
+//
+//void SetXWindowBounds(CefWindowHandle xwindow,
+//                      int x, int y,
+//                      int width, int height);
+//
+//void SetXWindowTitle(CefWindowHandle window, const std::string& title);
+//
+//void SetXWindowVisible(CefWindowHandle xwindow, bool visible);
 
 #endif  // QCEF_CORE_QCEF_X11_UTIL_H

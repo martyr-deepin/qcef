@@ -15,31 +15,44 @@
 class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
  public:
   explicit QCefClientHandlerDelegate(QCefWebPage* web_page);
+
   ~QCefClientHandlerDelegate() override;
 
   void OnBeforePopup(const CefString& target_url) override;
+
   void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
+
   void OnBeforeClose(CefRefPtr<CefBrowser> browser) override;
+
   void OnFaviconURLChange(const CefString& icon_url,
                           CefRefPtr<CefImage> icon) override;
+
   void OnGotFocus(CefRefPtr<CefBrowser> browser) override;
+
   void OnLoadStarted(CefRefPtr<CefBrowser> browser,
                      CefRefPtr<CefFrame> frame) override;
+
   void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
                             bool is_loading,
                             bool can_go_back,
                             bool can_go_forward) override;
+
   void OnLoadEnd(CefRefPtr<CefBrowser> browser,
                  CefRefPtr<CefFrame> frame,
                  int httpStatusCode) override;
-  std::string OnLoadError(CefRefPtr<CefBrowser> browser,
-                          CefRefPtr<CefFrame> frame,
-                          int errorCode) override;
+
+  QString OnLoadError(CefRefPtr<CefBrowser> browser,
+                      CefRefPtr<CefFrame> frame,
+                      int errorCode) override;
+
   bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
                                 CefProcessId source_process,
                                 CefRefPtr<CefProcessMessage> message) override;
+
   void OnSetFullscreen(bool fullscreen) override;
+
   void OnTitleChanged(const CefString& title) override;
+
   void OnUrlChanged(const CefString& url) override;
 
  private:

@@ -4,6 +4,9 @@
 
 #include "core/qcef_client_handler.h"
 
+#include <QString>
+#include <QTextStream>
+
 #include "core/qcef_dialog_handler.h"
 #include "include/cef_app.h"
 #include "include/views/cef_browser_view.h"
@@ -29,7 +32,7 @@ class QCefClientDownloadImageCallback : public CefDownloadImageCallback {
  public:
   explicit QCefClientDownloadImageCallback(
       CefRefPtr<QCefClientHandler> client_handler)
-      : client_handler_(client_handler) { }
+      : client_handler_(client_handler) {}
 
   void OnDownloadImageFinished(const CefString& image_url,
                                int http_status_code,
@@ -105,21 +108,21 @@ void QCefClientHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
   }
 
   // Display a load error message.
-  std::stringstream ss;
-  std::string msg;
+  QString string;
   if (delegate_ != nullptr) {
-    msg = delegate_->OnLoadError(browser, frame, errorCode);
+    string = delegate_->OnLoadError(browser, frame, errorCode);
   }
-  if (!msg.empty()) {
-    ss << msg;
-  } else {
-    ss << "<html><body bgcolor=\"white\">"
-        "<h2>Failed to load URL "
-       << std::string(failedUrl) << " with error " << std::string(errorText)
-       << " (" << errorCode << ").</h2></body></html>";
+  if (string.isEmpty()) {
+    QTextStream stream;
+    stream << "<html><body bgcolor=\"white\">"
+           << "<h2>Failed to load URL "
+           << failedUrl.ToString().c_str() << " with error "
+           << errorText.ToString().c_str()
+           << " (" << errorCode << ").</h2></body></html>";
+    string = stream.readAll();
   }
 
-  frame->LoadString(ss.str(), failedUrl);
+  frame->LoadString(string.toStdString(), failedUrl);
 }
 
 
@@ -217,7 +220,8 @@ void QCefClientHandler::OnFaviconURLChange(
 
   if (!icon_urls.empty()) {
     browser->GetHost()->DownloadImage(icon_urls[0], true, 16, false,
-                                      new QCefClientDownloadImageCallback(this));
+                                      new QCefClientDownloadImageCallback(
+                                          this));
   }
 }
 

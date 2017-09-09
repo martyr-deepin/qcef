@@ -26,8 +26,6 @@ QCefWebView::QCefWebView(QWidget* parent)
   layout->setSpacing(0);
   this->setLayout(layout);
   this->setContentsMargins(0, 0, 0, 0);
-
-  p_->page = new QCefWebPage(this);
 }
 
 QCefWebView::~QCefWebView() {
@@ -58,5 +56,4 @@ QCefWebPage* QCefWebView::page() const {
 void QCefWebView::showEvent(QShowEvent* event) {
   qDebug() << "show event:" << event;
   QWidget::showEvent(event);
-  p_->page->repaintBrowser();
 }

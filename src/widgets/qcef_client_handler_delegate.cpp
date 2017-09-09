@@ -121,7 +121,7 @@ void QCefClientHandlerDelegate::OnLoadEnd(CefRefPtr<CefBrowser> browser,
   }
 }
 
-std::string QCefClientHandlerDelegate::OnLoadError(
+QString QCefClientHandlerDelegate::OnLoadError(
     CefRefPtr<CefBrowser> browser,
     CefRefPtr<CefFrame> frame,
     int errorCode) {
@@ -133,7 +133,7 @@ std::string QCefClientHandlerDelegate::OnLoadError(
   }
 
   // TODO(Deepin Ltd.): Pass |errorCode|.
-  return web_page_->pageErrorContent().toStdString();
+  return web_page_->pageErrorContent();
 }
 
 bool QCefClientHandlerDelegate::OnProcessMessageReceived(
@@ -147,7 +147,7 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
     return false;
   }
 
-  const std::string name(message->GetName());
+  const QString name(message->GetName().ToString().c_str());
   if (name == kQCefRenderContextCreated) {
     web_page_->createTransportChannel();
     emit web_page_->renderContextCreated();

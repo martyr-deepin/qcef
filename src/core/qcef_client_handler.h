@@ -5,10 +5,13 @@
 #ifndef QCEF_CORE_QCEF_CLIENT_HANDLER_H
 #define QCEF_CORE_QCEF_CLIENT_HANDLER_H
 
+#include <QString>
+
 #include "include/cef_client.h"
 #include "qcef_dialog_handler.h"
 
 class QCefDialogHandler;
+
 class QCefClientDownloadImageCallback;
 
 class QCefClientHandler : public CefClient,
@@ -44,9 +47,9 @@ class QCefClientHandler : public CefClient,
                            CefRefPtr<CefFrame> frame,
                            int httpStatusCode) = 0;
 
-    virtual std::string OnLoadError(CefRefPtr<CefBrowser> browser,
-                                    CefRefPtr<CefFrame> frame,
-                                    int errorCode) = 0;
+    virtual QString OnLoadError(CefRefPtr<CefBrowser> browser,
+                                CefRefPtr<CefFrame> frame,
+                                int errorCode) = 0;
 
     virtual bool OnProcessMessageReceived(
         CefRefPtr<CefBrowser> browser,
@@ -179,7 +182,7 @@ class QCefClientHandler : public CefClient,
   CefRefPtr<QCefDialogHandler> dialog_handler_ = nullptr;
 
   // Include the default reference counting implementation.
-  IMPLEMENT_REFCOUNTING(QCefClientHandler);
+ IMPLEMENT_REFCOUNTING(QCefClientHandler);
   DISALLOW_COPY_AND_ASSIGN(QCefClientHandler);
 };
 

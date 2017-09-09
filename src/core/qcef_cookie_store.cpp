@@ -6,6 +6,7 @@
 
 #include <unistd.h>
 
+#include <string>
 #include <QSemaphore>
 #include <QUrl>
 

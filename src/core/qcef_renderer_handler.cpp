@@ -4,6 +4,7 @@
 
 #include "core/qcef_renderer_handler.h"
 
+#include <string>
 #include <QDebug>
 
 #include "base/file_util.h"

@@ -99,6 +99,8 @@ void QCefWebPagePrivate::createBrowserWidget() {
   qDebug() << "createBrowserWidget()";
 
   CefWindowInfo window_info;
+  CefRect rect{0, 0, 10, 10};
+  window_info.SetAsChild(0, rect);
   CefBrowserSettings cef_settings;
   MergeWebPageSettings(cef_settings, *settings);
 
@@ -112,7 +114,6 @@ void QCefWebPagePrivate::createBrowserWidget() {
   browser_widget = QWidget::createWindowContainer(browser_window);
   view->setFocusProxy(browser_widget);
   view->layout()->addWidget(browser_widget);
-  SetXWindowVisible(wid, true);
 }
 
 QCefWebPage::QCefWebPage(QObject* parent)
@@ -296,14 +297,6 @@ void QCefWebPage::onBrowserCreated() {
 
 void QCefWebPage::onBrowserGotFocus() {
   p_->view->setFocus(Qt::MouseFocusReason);
-}
-
-void QCefWebPage::repaintBrowser() {
-  if (p_->browser_widget != nullptr) {
-    qDebug() << "web page browser widget:" << p_->browser_window->isVisible();
-//    p_->browser_widget->setParent(p_->view);
-//    SetXWindowVisible(p_->browser_window->winId(), true);
-  }
 }
 
 void QCefWebPage::createTransportChannel() {

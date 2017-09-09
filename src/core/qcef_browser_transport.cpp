@@ -4,6 +4,7 @@
 
 #include "core/qcef_browser_transport.h"
 
+#include <string>
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>

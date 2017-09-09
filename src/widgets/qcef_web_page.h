@@ -137,8 +137,6 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void onBrowserCreated();
   void onBrowserGotFocus();
 
-  void repaintBrowser();
-
   // Handle messages received from renderer process.
   void createTransportChannel();
   void releaseTransportChannel();
