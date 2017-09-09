@@ -76,6 +76,7 @@ struct QCefWebPagePrivate {
   QWebChannel* channel = nullptr;
   QCefBrowserTransport* transport = nullptr;
   bool channel_connected = false;
+  QCefBrowserEventDelegate* event_delegate = nullptr;
 
   CefRefPtr<CefBrowser> browser();
 
@@ -301,6 +302,14 @@ QCefSSLStatus QCefWebPage::getSSLStatus() const {
         cef_ssl_status->GetContentStatus());
   }
   return ssl_status;
+}
+
+QCefBrowserEventDelegate* QCefWebPage::getEventDelegate() const {
+  return p_->event_delegate;
+}
+
+void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
+  p_->event_delegate = delegate;
 }
 
 void QCefWebPage::onBrowserCreated() {

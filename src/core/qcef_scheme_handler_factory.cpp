@@ -22,7 +22,7 @@ CefStreamResourceHandler* CreateQFileStreamResourceHandler(
     qWarning() << __FUNCTION__ << "Failed to open file: " << path;
     return nullptr;
   }
-  // TODO(Deepin Ltd.): Cache mime database object.
+  // TODO(LiuLang): Cache mime database object.
   QMimeDatabase mime_database;
   const QString mime_type = mime_database.mimeTypeForData(&file).name();
   const auto content = file.readAll();

@@ -142,7 +142,7 @@ void QCefMoveCookie(const QString& old_domain,
   Q_UNUSED(old_domain);
   Q_UNUSED(new_domain);
   Q_UNUSED(name);
-  // TODO(Deepin Ltd.):
+  // TODO(LiuLang):
 }
 
 bool QCefRemoveCookie(const QString& domain, const QString& name) {

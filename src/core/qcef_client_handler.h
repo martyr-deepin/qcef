@@ -10,14 +10,13 @@
 #include "include/cef_client.h"
 #include "qcef_dialog_handler.h"
 
-class QCefDialogHandler;
-
 class QCefClientDownloadImageCallback;
 
 class QCefClientHandler : public CefClient,
                           public CefContextMenuHandler,
                           public CefDisplayHandler,
                           public CefFocusHandler,
+                          public CefKeyboardHandler,
                           public CefLifeSpanHandler,
                           public CefLoadHandler {
  public:
@@ -66,6 +65,8 @@ class QCefClientHandler : public CefClient,
 
     virtual void OnTitleChanged(const CefString& title) = 0;
 
+    virtual bool OnPreKeyEvent(XEvent* event) = 0;
+
    protected:
     virtual ~Delegate() {}
   };
@@ -84,6 +85,10 @@ class QCefClientHandler : public CefClient,
   }
 
   CefRefPtr<CefFocusHandler> GetFocusHandler() override {
+    return this;
+  }
+
+  CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() override {
     return this;
   }
 
@@ -132,6 +137,12 @@ class QCefClientHandler : public CefClient,
 
   // CefFocusHandler methods:
   void OnGotFocus(CefRefPtr<CefBrowser> browser) override;
+
+  // CefKeyboardHandler methods:
+  bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
+                     const CefKeyEvent& event,
+                     XEvent* os_event,
+                     bool* is_keyboard_shortcut) override;
 
   // CefLifeSpanHandler methods:
   bool OnBeforePopup(CefRefPtr<CefBrowser> browser,

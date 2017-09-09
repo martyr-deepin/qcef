@@ -4,10 +4,8 @@
 
 #include "core/qcef_client_handler.h"
 
-#include <QString>
 #include <QTextStream>
 
-#include "core/qcef_dialog_handler.h"
 #include "include/cef_app.h"
 #include "include/views/cef_browser_view.h"
 #include "include/wrapper/cef_helpers.h"
@@ -267,7 +265,7 @@ bool QCefClientHandler::OnBeforePopup(
   (void)settings;
   (void)no_javascript_access;
 
-  // TODO(Deepin Ltd.): Add option.
+  // TODO(LiuLang): Add option.
 
   // Do not pop up any window, instead only notify delegate.
   if (delegate_ != nullptr) {
@@ -286,6 +284,19 @@ void QCefClientHandler::NotifyFavicon(const CefString& icon_url,
                                       CefRefPtr<CefImage> icon) {
   if (delegate_ != nullptr) {
     delegate_->OnFaviconURLChange(icon_url, icon);
+  }
+}
+
+bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
+                                      const CefKeyEvent& event,
+                                      XEvent* os_event,
+                                      bool* is_keyboard_shortcut) {
+  if (delegate_ != nullptr) {
+    // TODO(LiuLang): Filters shortcuts in QApplication.
+    return delegate_->OnPreKeyEvent(os_event);
+  } else {
+    return CefKeyboardHandler::OnPreKeyEvent(browser, event, os_event,
+                                             is_keyboard_shortcut);
   }
 }
 

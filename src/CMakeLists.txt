@@ -129,6 +129,7 @@ set(CORE_EXPORT_FILES
 
 set(WIDGETS_FILES
 
+    widgets/qcef_browser_event_delegate.h
     widgets/qcef_client_handler_delegate.cpp
     widgets/qcef_client_handler_delegate.h
     widgets/qcef_ssl_status.h

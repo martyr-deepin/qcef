@@ -16,6 +16,7 @@ class QWindow;
 class QWebChannel;
 struct QCefWebPagePrivate;
 class QCefWebSettings;
+class QCefBrowserEventDelegate;
 
 // A QCefWebPage object holds web document, history, actions, and provides
 // access to cef browser internal states.
@@ -113,6 +114,10 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
 
   // Returns ssl status of current page.
   QCefSSLStatus getSSLStatus() const;
+
+  // Get current event delegate, default is nullptr.
+  QCefBrowserEventDelegate* getEventDelegate() const;
+  void setEventDelegate(QCefBrowserEventDelegate* delegate);
 
  signals:
   void renderContextCreated();

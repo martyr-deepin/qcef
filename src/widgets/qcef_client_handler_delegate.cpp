@@ -10,6 +10,7 @@
 
 #include "core/qcef_web_channel_consts.h"
 #include "include/cef_origin_whitelist.h"
+#include "qcef_browser_event_delegate.h"
 #include "widgets/qcef_web_settings.h"
 
 QCefClientHandlerDelegate::QCefClientHandlerDelegate(QCefWebPage* web_page)
@@ -25,7 +26,7 @@ QCefClientHandlerDelegate::~QCefClientHandlerDelegate() {
 }
 
 void QCefClientHandlerDelegate::OnBeforePopup(const CefString& target_url) {
-  // TODO(Deepin Ltd.): Add option.
+  // TODO(LiuLang): Add option.
   if (cef_browser_ != nullptr) {
     cef_browser_->GetMainFrame()->LoadURL(target_url);
   }
@@ -53,7 +54,7 @@ QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
 void QCefClientHandlerDelegate::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
   if (cef_browser_->GetIdentifier() == browser->GetIdentifier()) {
     cef_browser_ = nullptr;
-    // TODO(Deepin Ltd.): Emit close signal.
+    // TODO(LiuLang): Emit close signal.
   }
 }
 
@@ -132,7 +133,7 @@ QString QCefClientHandlerDelegate::OnLoadError(
     emit web_page_->loadFinished(false);
   }
 
-  // TODO(Deepin Ltd.): Pass |errorCode|.
+  // TODO(LiuLang): Pass |errorCode|.
   return web_page_->pageErrorContent();
 }
 
@@ -188,4 +189,13 @@ void QCefClientHandlerDelegate::OnTitleChanged(const CefString& title) {
 
 void QCefClientHandlerDelegate::OnUrlChanged(const CefString& url) {
   web_page_->updateUrl(QUrl(QString::fromStdString(url)));
+}
+
+bool QCefClientHandlerDelegate::OnPreKeyEvent(XEvent* event) {
+  auto event_delegate = web_page_->getEventDelegate();
+  if (event_delegate != nullptr) {
+    return event_delegate->onPreKeyEvent(event);
+  } else {
+    return false;
+  }
 }

@@ -48,7 +48,7 @@ struct QCefGlobalSettingsPrivate {
 
 QCefGlobalSettings::QCefGlobalSettings()
     : p_(new QCefGlobalSettingsPrivate()) {
-  // TODO(Deepin Ltd.): Initialize default values.
+  // TODO(LiuLang): Initialize default values.
 }
 
 QCefGlobalSettings::~QCefGlobalSettings() {
