@@ -33,6 +33,9 @@ int main(int argc, char* argv[]) {
 //    settings.setPepperFlash(true);
   }
 
+  // Use socks5 proxy.
+//  settings.setProxyServer("socks5://127.0.0.1:1080");
+
   // Open http://localhost:9222 in chromium browser to see dev tools.
   settings.setRemoteDebug(true);
   settings.setLogSeverity(QCefGlobalSettings::LogSeverity::Info);
@@ -42,6 +45,7 @@ int main(int argc, char* argv[]) {
   QCefInit(argc, argv, settings);
 
   QApplication app(argc, argv);
+
   QCefBindApp(&app);
 
   BrowserWindow browser_window;

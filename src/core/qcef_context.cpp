@@ -26,14 +26,36 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   CefRefPtr<QCefApp> client_app(new QCefApp());
 
   // Add flash plugin parameters.
+  QCefApp::AppendedArguments arguments;
   if (settings.pepperFlash()) {
-    QCefApp::AppendedArguments arguments;
     arguments.push_back({"ppapi-flash-path",
                          settings.getPepperFlashPath()});
     arguments.push_back({"ppapi-flash-version",
                          settings.getPepperFlashVersion()});
-    client_app->appendCommandLineSwitches(arguments);
   }
+  switch (settings.proxyType()) {
+    case QCefGlobalSettings::ProxyType::NoProxy: {
+      arguments.push_back({"--no-proxy-server", ""});
+      break;
+    }
+    case QCefGlobalSettings::ProxyType::PacUrl: {
+      arguments.push_back({"--proxy-pac-url", settings.proxyInfo()});
+      break;
+    }
+    case QCefGlobalSettings::ProxyType::ProxyServer: {
+      arguments.push_back({"--proxy-server", settings.proxyInfo()});
+      break;
+    }
+    case QCefGlobalSettings::ProxyType::AutoDetect: {
+      arguments.push_back({"--proxy-auto-detect", ""});
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+
+  client_app->appendCommandLineSwitches(arguments);
 
   client_app->addCustomSchemes(settings.customSchemes());
 

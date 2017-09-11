@@ -117,6 +117,30 @@ class QCEF_CORE_EXPORT QCefGlobalSettings {
   void registerSyncMethod(const QString& name, QCefSyncMethod handler);
   const QCefSyncMethodMap& getSyncMethods() const;
 
+  // Disable proxy.
+  void setNoProxy();
+  // Use |url| as PAC proxy.
+  void setProxyPacUrl(const QUrl& url);
+  // Autodetect proxy configuration.
+  void setAutoDetectProxy();
+  // Specify the HTTP/SOCKS4/SOCKS5 proxy server to use for requests.
+  // An individual proxy server is specified using the format:
+  // [<proxy-scheme>://]<proxy-host>[:<proxy-port>]
+  // Where <proxy-scheme> is the protocol of the proxy server, and is one of:
+  //    "http", "socks", "socks4", "socks5".
+  // If the <proxy-scheme> is omitted, it defaults to "http".
+  // Also note that "socks" is equivalent to "socks5".
+  void setProxyServer(const QString& server);
+  enum class ProxyType {
+    Default,
+    NoProxy,
+    AutoDetect,
+    PacUrl,
+    ProxyServer,
+  };
+  ProxyType proxyType() const;
+  const QString& proxyInfo() const;
+
  private:
   QCefGlobalSettingsPrivate* p_ = nullptr;
 };

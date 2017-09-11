@@ -36,8 +36,13 @@ void QCefApp::OnBeforeCommandLineProcessing(
     CefRefPtr<CefCommandLine> command_line) {
   (void)process_type;
   for (const QPair<QString, QString>& argument : appended_args_) {
-    command_line->AppendSwitchWithValue(argument.first.toStdString(),
-                                        argument.second.toStdString());
+    const QString& value = argument.second;
+    if (value.isEmpty()) {
+      command_line->AppendSwitch(argument.first.toStdString());
+    } else {
+      command_line->AppendSwitchWithValue(argument.first.toStdString(),
+                                          value.toStdString());
+    }
   }
 }
 
@@ -56,7 +61,9 @@ void QCefApp::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar) {
 }
 
 void QCefApp::appendCommandLineSwitches(const AppendedArguments& args) {
-  appended_args_ = args;
+  for (const QPair<QString, QString>& item : args) {
+    appended_args_.append(item);
+  }
 }
 
 CefRefPtr<CefRenderProcessHandler> QCefApp::GetRenderProcessHandler() {

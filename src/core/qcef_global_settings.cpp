@@ -44,6 +44,10 @@ struct QCefGlobalSettingsPrivate {
 
   QCefSchemeHandler custom_scheme_handler = nullptr;
   QCefSyncMethodMap sync_method_handlers;
+
+  QCefGlobalSettings::ProxyType proxy_type =
+      QCefGlobalSettings::ProxyType::Default;
+  QString proxy_info;
 };
 
 QCefGlobalSettings::QCefGlobalSettings()
@@ -220,4 +224,32 @@ void QCefGlobalSettings::registerSyncMethod(const QString& name,
 
 const QCefSyncMethodMap& QCefGlobalSettings::getSyncMethods() const {
   return p_->sync_method_handlers;
+}
+
+void QCefGlobalSettings::setNoProxy() {
+  p_->proxy_type = ProxyType::NoProxy;
+  p_->proxy_info = "";
+}
+
+void QCefGlobalSettings::setProxyPacUrl(const QUrl& url) {
+  p_->proxy_type = ProxyType::PacUrl;
+  p_->proxy_info = url.toString();
+}
+
+void QCefGlobalSettings::setAutoDetectProxy() {
+  p_->proxy_type = ProxyType::AutoDetect;
+  p_->proxy_info = "";
+}
+
+void QCefGlobalSettings::setProxyServer(const QString& server) {
+  p_->proxy_type = ProxyType::ProxyServer;
+  p_->proxy_info = server;
+}
+
+QCefGlobalSettings::ProxyType QCefGlobalSettings::proxyType() const {
+  return p_->proxy_type;
+}
+
+const QString& QCefGlobalSettings::proxyInfo() const {
+  return p_->proxy_info;
 }
