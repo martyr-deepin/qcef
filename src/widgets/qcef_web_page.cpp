@@ -79,8 +79,10 @@ struct QCefWebPagePrivate {
   ~QCefWebPagePrivate();
 
   QWidget* view = nullptr;
-  QWidget* browser_widget = nullptr;
   QWindow* browser_window = nullptr;
+  QWindow* browser_window_wrapper = nullptr;
+  WId browser_wid;
+//  WId browser_wrapper_wid;
   QUrl url;
   QString html;
   QUrl iconUrl;
@@ -115,11 +117,17 @@ CefRefPtr<CefBrowser> QCefWebPagePrivate::browser() {
 }
 
 void QCefWebPagePrivate::createBrowserWidget() {
-  qDebug() << "createBrowserWidget()";
+//  browser_wrapper_wid = InitCefBrowserWindow(view->width(), view->height());
+
+  browser_window_wrapper = new QWindow();
+  browser_window_wrapper->create();
+  browser_window_wrapper->setParent(view->windowHandle());
+  browser_window_wrapper->setVisible(true);
+  browser_window_wrapper->resize(view->size());
 
   CefWindowInfo window_info;
-  CefRect rect{0, 0, 10, 10};
-  window_info.SetAsChild(0, rect);
+  const CefRect rect {0, 0, view->width(), view->height() };
+  window_info.SetAsChild(browser_window_wrapper->winId(), rect);
   CefBrowserSettings cef_settings;
   MergeWebPageSettings(cef_settings, *settings);
 
@@ -128,11 +136,8 @@ void QCefWebPagePrivate::createBrowserWidget() {
                                                CefString(""),
                                                cef_settings,
                                                nullptr);
-  const WId wid = browser_->GetHost()->GetWindowHandle();
-  browser_window = QWindow::fromWinId(wid);
-  browser_widget = QWidget::createWindowContainer(browser_window);
-  view->setFocusProxy(browser_widget);
-  view->layout()->addWidget(browser_widget);
+  browser_wid = browser_->GetHost()->GetWindowHandle();
+  browser_window = QWindow::fromWinId(browser_wid);
 }
 
 QCefWebPage::QCefWebPage(QObject* parent)
@@ -224,12 +229,7 @@ void QCefWebPage::zoomOut() {
 }
 
 qreal QCefWebPage::zoomFactor() const {
-  const double factor = p_->browser()->GetHost()->GetZoomLevel();
-  if (factor == 0.0) {
-    // The default zoom value is 0.0 in CEF, so convert to 1.0
-    return 1.0;
-  }
-  return factor;
+  return p_->browser()->GetHost()->GetZoomLevel();
 }
 
 QIcon QCefWebPage::icon() const {
@@ -349,6 +349,20 @@ void QCefWebPage::onBrowserCreated() {
 
 void QCefWebPage::onBrowserGotFocus() {
   p_->view->setFocus(Qt::MouseFocusReason);
+}
+
+void QCefWebPage::resizeBrowserWindow(const QSize& size) {
+//  SetXWindowBounds(p_->browser_wrapper_wid, 0, 0, size.width(), size.height());
+//  SetXWindowBounds(p_->browser_wid, 0, 0, size.width(), size.height());
+  p_->browser_window_wrapper->resize(size);
+  if (p_->browser_window != nullptr) {
+    p_->browser_window->resize(size);
+  }
+}
+
+void QCefWebPage::updateBrowserGeometry() {
+  this->resizeBrowserWindow(QSize(400, 400));
+  this->resizeBrowserWindow(p_->view->size());
 }
 
 void QCefWebPage::createTransportChannel() {

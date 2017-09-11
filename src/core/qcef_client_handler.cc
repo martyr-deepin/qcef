@@ -179,7 +179,6 @@ void QCefClientHandler::OnBeforeContextMenu(
   (void)params;
   CEF_REQUIRE_UI_THREAD();
   model->AddSeparator();
-  model->AddItem(MENU_ID_CUSTOM_FIRST, "Fuck");
 }
 
 bool QCefClientHandler::OnContextMenuCommand(

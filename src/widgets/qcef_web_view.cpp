@@ -7,7 +7,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QEvent>
-#include <QStackedLayout>
+#include <QResizeEvent>
 
 #include "widgets/qcef_web_page.h"
 #include "widgets/qcef_web_settings.h"
@@ -19,13 +19,11 @@ struct QCefWebViewPrivate {
 QCefWebView::QCefWebView(QWidget* parent)
     : QWidget(parent),
       p_(new QCefWebViewPrivate()) {
+  this->setAttribute(Qt::WA_NativeWindow, true);
+  this->setAttribute(Qt::WA_DontCreateNativeAncestors, true);
+  this->setFocusPolicy(Qt::StrongFocus);
 
-  // Child window will fill this widget.
-  auto layout = new QStackedLayout();
-  layout->setContentsMargins(0, 0, 0, 0);
-  layout->setSpacing(0);
-  this->setLayout(layout);
-  this->setContentsMargins(0, 0, 0, 0);
+  qApp->installEventFilter(this);
 }
 
 QCefWebView::~QCefWebView() {
@@ -53,7 +51,14 @@ QCefWebPage* QCefWebView::page() const {
   return p_->page;
 }
 
-void QCefWebView::showEvent(QShowEvent* event) {
-  qDebug() << "show event:" << event;
-  QWidget::showEvent(event);
+void QCefWebView::resizeEvent(QResizeEvent* event) {
+  QWidget::resizeEvent(event);
+  p_->page->resizeBrowserWindow(this->size());
+}
+
+bool QCefWebView::eventFilter(QObject* watched, QEvent* event) {
+  if (event->type() == QEvent::Move) {
+    p_->page->updateBrowserGeometry();
+  }
+  return QObject::eventFilter(watched, event);
 }

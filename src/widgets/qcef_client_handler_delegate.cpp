@@ -102,6 +102,8 @@ void QCefClientHandlerDelegate::OnLoadStarted(CefRefPtr<CefBrowser> browser,
       browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
     emit web_page_->loadStarted();
   }
+
+  web_page_->updateBrowserGeometry();
 }
 
 void QCefClientHandlerDelegate::OnLoadingStateChange(

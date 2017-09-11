@@ -153,6 +153,9 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void onBrowserCreated();
   void onBrowserGotFocus();
 
+  void resizeBrowserWindow(const QSize& size);
+  void updateBrowserGeometry();
+
   // Handle messages received from renderer process.
   void createTransportChannel();
   void releaseTransportChannel();
