@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/resources">
         <file>index.html</file>
+        <file>script.js</file>
     </qresource>
 </RCC>

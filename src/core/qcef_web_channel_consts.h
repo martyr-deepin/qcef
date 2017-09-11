@@ -10,4 +10,8 @@ const char kQCefRenderContextCreated[] = "QCefRenderContextCreated";
 const char kQCefRenderContextReleased[] = "QCefRenderContextReleased";
 const char kQCefRenderQtMessage[] = "QCefRenderQtMessage";
 
+// Web Notification
+const char kQCefWebNotificationRequest[] = "QCefWebNotificationRequest";
+const char kQCefWebNotificationBody[] = "QCefWebNotificationBody";
+
 #endif  // QCEF_CORE_QCEF_WEB_CHANNEL_CONSTS_H

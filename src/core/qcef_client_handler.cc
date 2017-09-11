@@ -176,6 +176,7 @@ void QCefClientHandler::OnBeforeContextMenu(
 
   (void)browser;
   (void)frame;
+  (void)params;
   CEF_REQUIRE_UI_THREAD();
   model->AddSeparator();
   model->AddItem(MENU_ID_CUSTOM_FIRST, "Fuck");
@@ -187,6 +188,11 @@ bool QCefClientHandler::OnContextMenuCommand(
     CefRefPtr<CefContextMenuParams> params,
     int command_id,
     CefContextMenuHandler::EventFlags event_flags) {
+  (void)browser;
+  (void)frame;
+  (void)params;
+  (void)command_id;
+  (void)event_flags;
   LOG(ERROR) << __FUNCTION__;
   CEF_REQUIRE_UI_THREAD();
 
@@ -293,8 +299,14 @@ bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
                                       XEvent* os_event,
                                       bool* is_keyboard_shortcut) {
   if (delegate_ != nullptr) {
+    qDebug() << "event:" << " modifiers:" << event.modifiers
+             << ", native key code: " << event.native_key_code
+             << ", char: " << event.character
+             << ", raw char:" << event.unmodified_character
+             << ", type:" << event.type
+             << ", is_system_key: " << event.is_system_key;
     // TODO(LiuLang): Filters shortcuts in QApplication.
-    if (event.type == KEYEVENT_KEYDOWN) {
+    if (event.type == KEYEVENT_RAWKEYDOWN) {
       // FIXME(LiuLang): keyboard modifier is invalid.
       QKeyEvent key_event(QEvent::KeyPress, event.native_key_code,
                           static_cast<Qt::KeyboardModifier>(event.modifiers));
@@ -325,12 +337,12 @@ void QCefClientHandler::OnDownloadUpdated(
     CefRefPtr<CefBrowser> browser,
     CefRefPtr<CefDownloadItem> download_item,
     CefRefPtr<CefDownloadItemCallback> callback) {
-  qDebug()
-      << "process:" << download_item->IsInProgress()
-      << ", completed:" << download_item->IsComplete()
-      << ", speed;" << download_item->GetCurrentSpeed()
-      << ", percent:" << download_item->GetPercentComplete()
-      << ", total:" << download_item->GetTotalBytes()
-      << ", path:" << download_item->GetFullPath().ToString().c_str();
+//  qDebug()
+//      << "process:" << download_item->IsInProgress()
+//      << ", completed:" << download_item->IsComplete()
+//      << ", speed;" << download_item->GetCurrentSpeed()
+//      << ", percent:" << download_item->GetPercentComplete()
+//      << ", total:" << download_item->GetTotalBytes()
+//      << ", path:" << download_item->GetFullPath().ToString().c_str();
   CefDownloadHandler::OnDownloadUpdated(browser, download_item, callback);
 }

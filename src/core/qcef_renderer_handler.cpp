@@ -8,9 +8,10 @@
 #include <QDebug>
 
 #include "base/file_util.h"
-#include "core/qcef_web_channel_consts.h"
+#include "core/qcef_notification_constructor.h"
 #include "core/qcef_renderer_transport_handler.h"
 #include "core/qcef_sync_method_handler.h"
+#include "core/qcef_web_channel_consts.h"
 #include "include/wrapper/cef_helpers.h"
 
 namespace {
@@ -62,6 +63,25 @@ void QCefRendererHandler::OnContextCreated(CefRefPtr<CefBrowser> browser,
                                                                 sync_handler);
     window->SetValue(name, function, V8_PROPERTY_ATTRIBUTE_NONE);
   }
+
+  // Register the Notification javascript object.
+  CefRefPtr<CefV8Value> notificationObj = CefV8Value::CreateFunction(
+      "Notification",
+      new QCefNotificationConstructor(browser, frame));
+
+  // TODO(LiuLang): implement notification permission.
+  notificationObj->SetValue("permission",
+                            CefV8Value::CreateString("granted"),
+                            V8_PROPERTY_ATTRIBUTE_NONE);
+  auto request_permission = CefV8Value::CreateFunction(
+      "requestPermission",
+      new QCefNotificationRequestPermission(browser, frame));
+  notificationObj->SetValue("requestPermission",
+                            request_permission,
+                            V8_PROPERTY_ATTRIBUTE_NONE);
+  context->GetGlobal()->SetValue("Notification",
+                                 notificationObj,
+                                 V8_PROPERTY_ATTRIBUTE_NONE);
   context->Exit();
 
   // Register qt web channel transport.
@@ -72,7 +92,6 @@ void QCefRendererHandler::OnContextCreated(CefRefPtr<CefBrowser> browser,
 
   CefRefPtr<CefProcessMessage> msg =
       CefProcessMessage::Create(kQCefRenderContextCreated);
-//  CefRefPtr<CefListValue> args = msg->GetArgumentList();
   browser->SendProcessMessage(PID_BROWSER, msg);
 }
 

@@ -5,73 +5,47 @@
 </head>
 
 <body>
-    <h1>Hello</h1>
+<h1>Hello</h1>
 
-    <p id="serverMsg"></p>
+<p id="serverMsg"></p>
 
-    <br />
-    <input type="text" id="msg"/>
-    <input type="submit" id="send" value="Send to Server"/>
+<br/>
+<input type="text" id="msg"/>
+<input type="submit" id="send" value="Send to Server"/>
 
-    <div>
-        <a href="http://z.cn" title="Amazon CN">Amazon China</a>
-    </div>
+<div>
+    <a href="http://z.cn" title="Amazon CN">Amazon China</a>
+</div>
 
-    <h2>Dialog test</h2>
-    <div>
-        <input type="button" onclick="alert('Alert!');" value="Alter dialog"/>
-        <input type="button" onclick="onConfirmButtonClicked();" value="Confirm dialog"/>
-        <input type="button" onclick="onPromptButtonClicked();" value="Prompt dialog"/>
-    </div>
-    <div>
-        <input type="file" name="fileUpload" value="fileUpload" id="fileUpload">
-    </div>
+<h2>Dialog test</h2>
+<div>
+    <input type="button" onclick="alert('Alert!');" value="Alter dialog"/>
+    <input type="button" onclick="onConfirmButtonClicked();"
+           value="Confirm dialog"/>
+    <input type="button" onclick="onPromptButtonClicked();"
+           value="Prompt dialog"/>
+</div>
+<div>
+    <input type="file" name="fileUpload" value="fileUpload" id="fileUpload">
+</div>
 
-    <div>
-        <h2>Download Handler</h2>
-        <a href="https://codeload.github.com/LiuLang/qcef/zip/master">qcef.zip</a>
-    </div>
+<div>
+    <h2>Download Handler</h2>
+    <a href="https://codeload.github.com/LiuLang/qcef/zip/master">qcef.zip</a>
+</div>
 
-    <div>
-        <h2>PDF files</h2>
-        <a href="http://www.gnu.org/software/gnu-c-manual/gnu-c-manual.pdf">The GNU C Reference Manual</a>
-    </div>
-    <script>
-        function onConfirmButtonClicked() {
-            var ret = confirm("Confirm?");
-            console.log("confirm result: ", ret);
-        }
-        function onPromptButtonClicked() {
-            var ret = prompt("Please input your name:");
-            console.log("prompt returns: ", ret);
-        }
-    </script>
+<div>
+    <h2>PDF files</h2>
+    <a href="http://www.gnu.org/software/gnu-c-manual/gnu-c-manual.pdf">The GNU
+        C Reference Manual</a>
+</div>
 
-    <script>
-        function testCrossDomain() {
-            var xhr = new XMLHttpRequest();
-            xhr.open('get', 'http://music.163.com');
-            xhr.send();
-        }
+<div>
+    <h2>Web Notification</h2>
+    <input type="button" id="requestNotification" onclick="onNotificationButtonClicked()"
+           value="Show Notification"/>
+</div>
 
-        function bootstrap() {
-            document.getElementById("send").onclick = function () {
-                var msg = document.getElementById("msg").value;
-                console.log("msg:", msg, ", dialog:", dialog);
-                dialog && dialog.printMessage(msg);
-            };
+<script src="qrc://resources/script.js"></script>
 
-//            dialog.onTimeout.connect(function () {
-//                console.log("dialog onTimeout");
-//            })
-
-            testCrossDomain();
-        }
-
-        new QWebChannel(qt.webChannelTransport, function(channel) {
-            window.channel = channel;
-            window.dialog = channel.objects.dialog;
-            bootstrap();
-        });
-    </script>
 </body>

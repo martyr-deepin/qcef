@@ -182,6 +182,19 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
     return true;
   }
 
+  // Web Notification.
+  if (name == kQCefWebNotificationBody) {
+    CefRefPtr<CefListValue> args = message->GetArgumentList();
+    if (args->GetSize() != 2) {
+      qCritical() << "Invalid web notification body, parameters mismatch";
+      return false;
+    }
+    const std::string url = args->GetString(0);
+    const std::string body = args->GetString(1);
+    qDebug() << "Web notification" << url.c_str() << body.c_str();
+    return true;
+  }
+
   return false;
 }
 

@@ -20,7 +20,14 @@ bool BrowserEventDelegate::onBeforePopup(
 
 bool BrowserEventDelegate::onPreKeyEvent(const QKeyEvent& event) {
   Q_UNUSED(event);
-  qDebug() << "key event:" << event.key() << event.text() << event.modifiers()
-           << event.nativeModifiers() << event.nativeVirtualKey();
+//  qDebug() << "qt key event:" << event.key()
+//           << ", text: " << event.text()
+//           << ", modifiers:" << event.modifiers()
+//           << ", native modifiers:" << event.nativeModifiers()
+//           << ", native virtual key:" << event.nativeVirtualKey();
+//  qDebug() << "F11:" << (int)Qt::Key_F11;
+//  if (event.key() == Qt::Key_F11) {
+//    qDebug() << "F11 pressed";
+//  }
   return false;
 }
