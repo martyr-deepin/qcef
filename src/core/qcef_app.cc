@@ -49,7 +49,7 @@ void QCefApp::OnBeforeCommandLineProcessing(
 void QCefApp::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar) {
   // Register file:/ and qrc:/ schemes.
   registrar->AddCustomScheme("file", true, true, false, true, true, false);
-  registrar->AddCustomScheme("qrc", true, true, false, true, true, false);
+  registrar->AddCustomScheme("qrc", false, true, false, true, true, false);
 
   // Register custom scheme names.
   if (!custom_scheme_list_.empty()) {

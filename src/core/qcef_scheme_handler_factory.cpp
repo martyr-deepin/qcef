@@ -6,11 +6,12 @@
 
 #include <QDebug>
 #include <QFile>
+//#include <QMimeDatabase>
 #include <QUrl>
 
 namespace {
 
-//QString ext2Mime(const QString& fileName) {
+//QString Ext2Mime(const QString& fileName) {
 //  const auto pos = fileName.lastIndexOf('.');
 //  const auto ext = fileName.mid(pos + 1).toLower();
 //
@@ -52,7 +53,14 @@ CefStreamResourceHandler* CreateQFileStreamResourceHandler(
     qWarning() << __FUNCTION__ << "Failed to open file: " << path;
     return nullptr;
   }
-  const auto content = file.readAll();
+
+  const QByteArray content = file.readAll();
+//  QString mime(Ext2Mime(path));
+//  if (mime.isEmpty()) {
+//    QMimeDatabase mime_database;
+//    const QMimeType mime_type = mime_database.mimeTypeForData(content);
+//    mime = mime_type.name();
+//  }
   const char* content_bytes = content.constData();
   CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForData(
           static_cast<void*>(const_cast<char*>(content_bytes)),
@@ -74,6 +82,7 @@ CefRefPtr<CefResourceHandler> QCefSchemeHandlerFactory::Create(
 
   const QString url(QString::fromStdString(request->GetURL().ToString()));
   if (scheme_name == "qrc") {
+    qDebug() << "qrc url:" << request->GetURL().ToString().c_str() << url;
     // Handle qrc protocol.
     const QString qrc_file(url.mid(3));
     return CreateQFileStreamResourceHandler(qrc_file);

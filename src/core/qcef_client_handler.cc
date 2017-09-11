@@ -299,12 +299,12 @@ bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
                                       XEvent* os_event,
                                       bool* is_keyboard_shortcut) {
   if (delegate_ != nullptr) {
-    qDebug() << "event:" << " modifiers:" << event.modifiers
-             << ", native key code: " << event.native_key_code
-             << ", char: " << event.character
-             << ", raw char:" << event.unmodified_character
-             << ", type:" << event.type
-             << ", is_system_key: " << event.is_system_key;
+//    qDebug() << "event:" << " modifiers:" << event.modifiers
+//             << ", native key code: " << event.native_key_code
+//             << ", char: " << event.character
+//             << ", raw char:" << event.unmodified_character
+//             << ", type:" << event.type
+//             << ", is_system_key: " << event.is_system_key;
     // TODO(LiuLang): Filters shortcuts in QApplication.
     if (event.type == KEYEVENT_RAWKEYDOWN) {
       // FIXME(LiuLang): keyboard modifier is invalid.
