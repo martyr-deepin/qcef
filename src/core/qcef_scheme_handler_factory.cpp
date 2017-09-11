@@ -6,10 +6,40 @@
 
 #include <QDebug>
 #include <QFile>
-#include <QMimeDatabase>
 #include <QUrl>
 
 namespace {
+
+//QString ext2Mime(const QString& fileName) {
+//  const auto pos = fileName.lastIndexOf('.');
+//  const auto ext = fileName.mid(pos + 1).toLower();
+//
+//  if (ext == "css") {
+//    return "text/css";
+//  }
+//  if (ext == "html") {
+//    return "text/html";
+//  }
+//  if (ext == "js") {
+//    return "application/javascript";
+//  }
+//  if (ext == "less") {
+//    return "text/less";
+//  }
+//  if (ext == "svg") {
+//    return "image/svg+xml";
+//  }
+//  if (ext == "png") {
+//    return "image/png";
+//  }
+//  if (ext == "gif") {
+//    return "image/gif";
+//  }
+//  if (ext == "jpg" || ext == "jpeg") {
+//    return "image/jpeg";
+//  }
+//  return "";
+//}
 
 CefStreamResourceHandler* CreateQFileStreamResourceHandler(
     const QString& path) {
@@ -22,16 +52,14 @@ CefStreamResourceHandler* CreateQFileStreamResourceHandler(
     qWarning() << __FUNCTION__ << "Failed to open file: " << path;
     return nullptr;
   }
-  // TODO(LiuLang): Cache mime database object.
-  QMimeDatabase mime_database;
-  const QString mime_type = mime_database.mimeTypeForData(&file).name();
   const auto content = file.readAll();
   const char* content_bytes = content.constData();
   CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForData(
           static_cast<void*>(const_cast<char*>(content_bytes)),
           (size_t)(file.size()));
 
-  return new CefStreamResourceHandler(mime_type.toStdString(), stream);
+  // Set mime type name to empty.
+  return new CefStreamResourceHandler("", stream);
 };
 
 }  // namespace

@@ -1,7 +1,10 @@
 <!doctype html>
 <head>
     <meta charset="UTF-8"/>
-    <title>Hello, WebEngine</title>
+    <title>Hello, CEF</title>
+    <link href="https://tower.im/favicon.ico" rel="icon" />
+    <link href="qrc://resources/style.css" type="text/css" rel="stylesheet"/>
+    <link href="https://cr.deepin.io/gerrit_ui/gwt/chrome/7CF1DE6EF2AABFEFAE4D469A16D60071.cache.css" type="text/css" rel="stylesheet"/>
 </head>
 
 <body>
@@ -15,6 +18,11 @@
 
 <div>
     <a href="http://z.cn" title="Amazon CN">Amazon China</a>
+</div>
+
+<div>
+    <h2>Cross Domain</h2>
+    <input type="button" onclick="testCrossDomain()" value="Send xhr">
 </div>
 
 <h2>Dialog test</h2>
@@ -42,7 +50,8 @@
 
 <div>
     <h2>Web Notification</h2>
-    <input type="button" id="requestNotification" onclick="onNotificationButtonClicked()"
+    <input type="button" id="requestNotification"
+           onclick="onNotificationButtonClicked()"
            value="Show Notification"/>
 </div>
 

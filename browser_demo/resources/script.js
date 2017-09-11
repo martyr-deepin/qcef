@@ -10,8 +10,6 @@ function bootstrap() {
         console.log("msg:", msg, ", dialog:", dialog);
         dialog && dialog.printMessage(msg);
     };
-
-    testCrossDomain();
 }
 
 function onConfirmButtonClicked() {
