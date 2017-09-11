@@ -33,6 +33,8 @@ class QCefApp : public CefApp,
   void OnRegisterCustomSchemes(
       CefRawPtr<CefSchemeRegistrar> registrar) override;
 
+  CefRefPtr<CefPrintHandler> GetPrintHandler() override;
+
   // Open API used to customize cef app.
   typedef QVector<QPair<QString, QString>> AppendedArguments;
   // Append |args| to command line.

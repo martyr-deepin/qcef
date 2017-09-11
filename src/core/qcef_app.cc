@@ -6,6 +6,7 @@
 
 #include <set>
 
+#include "core/qcef_print_handler.h"
 #include "core/qcef_renderer_handler.h"
 #include "core/qcef_scheme_handler_factory.h"
 #include "include/wrapper/cef_helpers.h"
@@ -72,4 +73,8 @@ void QCefApp::setCustomSchemeHandler(QCefSchemeHandler handler) {
 
 void QCefApp::setSyncMethods(const QCefSyncMethodMap& map) {
   sync_methods_ = map;
+}
+
+CefRefPtr<CefPrintHandler> QCefApp::GetPrintHandler() {
+  return new QCefPrintHandler();
 }

@@ -8,8 +8,8 @@
 #include <QKeyEvent>
 #include <QString>
 
+#include "core/qcef_dialog_handler.h"
 #include "include/cef_client.h"
-#include "qcef_dialog_handler.h"
 
 class QCefClientDownloadImageCallback;
 
