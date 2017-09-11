@@ -4,6 +4,9 @@
 
 #include "browser_event_delegate.h"
 
+#include <QDebug>
+#include <QKeyEvent>
+
 BrowserEventDelegate::BrowserEventDelegate(QObject* parent) : QObject(parent) {
 
 }
@@ -17,5 +20,7 @@ bool BrowserEventDelegate::onBeforePopup(
 
 bool BrowserEventDelegate::onPreKeyEvent(const QKeyEvent& event) {
   Q_UNUSED(event);
+  qDebug() << "key event:" << event.key() << event.text() << event.modifiers()
+           << event.nativeModifiers() << event.nativeVirtualKey();
   return false;
 }
