@@ -193,6 +193,20 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
     const std::string url = args->GetString(0);
     const std::string body = args->GetString(1);
     qCritical() << "Web notification" << url.c_str() << body.c_str();
+
+    if (args->GetSize() > 2) {
+      // Parse notification option.
+      CefRefPtr<CefDictionaryValue> dict = args->GetDictionary(2);
+      CefDictionaryValue::KeyList keys;
+      if (dict->GetKeys(keys)) {
+        for (const CefString& key : keys) {
+          CefString value = dict->GetString(key);
+          qCritical() << "delegate, key:" << key.ToString().c_str()
+                   << ", value:" << value.ToString().c_str();
+        }
+      }
+    }
+
     return true;
   }
 

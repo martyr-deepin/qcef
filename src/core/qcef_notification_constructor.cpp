@@ -34,9 +34,18 @@ bool QCefNotificationConstructor::Execute(const CefString& name,
   args->SetString(1, arguments.at(0)->GetStringValue());
   if (arguments.size() > 1) {
     // Pass through notification option.
-//    CefRefPtr<CefV8Value> v8_value = arguments.at(1);
-//    CefRefPtr<CefValue> value = new CefValue();
-//    args->SetValue(2, value);
+    CefRefPtr<CefV8Value> v8_value = arguments.at(1);
+    std::vector<CefString> v8_keys;
+    CefRefPtr<CefDictionaryValue> dict = CefDictionaryValue::Create();
+    if (v8_value->GetKeys(v8_keys)) {
+      for (const CefString& key : v8_keys) {
+        CefRefPtr<CefV8Value> v = v8_value->GetValue(key);
+        LOG(ERROR) << "key: " << key.ToString()
+        << ", value: " << v->GetStringValue().ToString();
+        dict->SetString(key, v->GetStringValue());
+      }
+      args->SetDictionary(2, dict);
+    }
   }
   browser_->SendProcessMessage(PID_BROWSER, message);
 

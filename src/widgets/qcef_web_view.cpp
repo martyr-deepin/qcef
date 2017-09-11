@@ -4,13 +4,12 @@
 
 #include "widgets/qcef_web_view.h"
 
-#include <QApplication>
 #include <QDebug>
 #include <QEvent>
 #include <QResizeEvent>
+#include <QTimer>
 
 #include "widgets/qcef_web_page.h"
-#include "widgets/qcef_web_settings.h"
 
 struct QCefWebViewPrivate {
   QCefWebPage* page = nullptr;
@@ -22,8 +21,6 @@ QCefWebView::QCefWebView(QWidget* parent)
   this->setAttribute(Qt::WA_NativeWindow, true);
   this->setAttribute(Qt::WA_DontCreateNativeAncestors, true);
   this->setFocusPolicy(Qt::StrongFocus);
-
-  qApp->installEventFilter(this);
 }
 
 QCefWebView::~QCefWebView() {
@@ -56,9 +53,9 @@ void QCefWebView::resizeEvent(QResizeEvent* event) {
   p_->page->resizeBrowserWindow(this->size());
 }
 
-bool QCefWebView::eventFilter(QObject* watched, QEvent* event) {
-  if (event->type() == QEvent::Move) {
+void QCefWebView::showEvent(QShowEvent* event) {
+  QWidget::showEvent(event);
+  QTimer::singleShot(0, [=]() {
     p_->page->updateBrowserGeometry();
-  }
-  return QObject::eventFilter(watched, event);
+  });
 }
