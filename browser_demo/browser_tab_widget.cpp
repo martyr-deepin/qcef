@@ -42,13 +42,13 @@ BrowserTabWidget::BrowserTabWidget(QWidget* parent)
           [=](const QUrl& url, QCefWindowOpenDisposition disposition) {
     switch (disposition) {
       case QCefWindowOpenDisposition::NEW_BACKGROUND_TAB: {
-        this->createNewBrowser(false, url);
+        this->createNewBrowser(true, url);
         break;
       }
       case QCefWindowOpenDisposition::NEW_FOREGROUND_TAB:  // fall through
       case QCefWindowOpenDisposition::NEW_WINDOW:  // fall through
       case QCefWindowOpenDisposition::NEW_POPUP: {
-        this->createNewBrowser(true, url);
+        this->createNewBrowser(false, url);
         break;
       }
       case QCefWindowOpenDisposition::SAVE_TO_DISK: {
@@ -79,7 +79,6 @@ QCefSSLStatus BrowserTabWidget::getSSlStatus() const {
 
 void BrowserTabWidget::createNewBrowser(bool in_background,
                                         const QUrl& url) {
-  qDebug() << "create new browser";
   auto web_view = new QCefWebView();
   web_view->page()->setEventDelegate(p_->event_delegate);
 
