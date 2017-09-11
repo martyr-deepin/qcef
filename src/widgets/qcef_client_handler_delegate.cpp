@@ -102,7 +102,6 @@ void QCefClientHandlerDelegate::OnLoadStarted(CefRefPtr<CefBrowser> browser,
       browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
     emit web_page_->loadStarted();
   }
-
   web_page_->updateBrowserGeometry();
 }
 
@@ -187,13 +186,13 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
   // Web Notification.
   if (name == kQCefWebNotificationBody) {
     CefRefPtr<CefListValue> args = message->GetArgumentList();
-    if (args->GetSize() != 2) {
+    if (args->GetSize() < 2) {
       qCritical() << "Invalid web notification body, parameters mismatch";
       return false;
     }
     const std::string url = args->GetString(0);
     const std::string body = args->GetString(1);
-    qDebug() << "Web notification" << url.c_str() << body.c_str();
+    qCritical() << "Web notification" << url.c_str() << body.c_str();
     return true;
   }
 

@@ -82,7 +82,6 @@ struct QCefWebPagePrivate {
   QWindow* browser_window = nullptr;
   QWindow* browser_window_wrapper = nullptr;
   WId browser_wid;
-//  WId browser_wrapper_wid;
   QUrl url;
   QString html;
   QUrl iconUrl;
@@ -117,8 +116,6 @@ CefRefPtr<CefBrowser> QCefWebPagePrivate::browser() {
 }
 
 void QCefWebPagePrivate::createBrowserWidget() {
-//  browser_wrapper_wid = InitCefBrowserWindow(view->width(), view->height());
-
   browser_window_wrapper = new QWindow();
   browser_window_wrapper->create();
   browser_window_wrapper->setParent(view->windowHandle());
@@ -194,6 +191,7 @@ void QCefWebPage::setUrl(const QUrl& url) {
   p_->html.clear();
 
   p_->browser()->GetMainFrame()->LoadURL(url.toString().toStdString());
+  this->updateBrowserGeometry();
 }
 
 void QCefWebPage::setHtml(const QString& html, const QUrl& url) {
@@ -206,6 +204,7 @@ void QCefWebPage::setHtml(const QString& html, const QUrl& url) {
 
   p_->browser()->GetMainFrame()->LoadString(html.toStdString(),
                                             url.toString().toStdString());
+  this->updateBrowserGeometry();
 }
 
 void QCefWebPage::setZoomFactor(qreal factor) {
@@ -352,8 +351,6 @@ void QCefWebPage::onBrowserGotFocus() {
 }
 
 void QCefWebPage::resizeBrowserWindow(const QSize& size) {
-//  SetXWindowBounds(p_->browser_wrapper_wid, 0, 0, size.width(), size.height());
-//  SetXWindowBounds(p_->browser_wid, 0, 0, size.width(), size.height());
   p_->browser_window_wrapper->resize(size);
   if (p_->browser_window != nullptr) {
     p_->browser_window->resize(size);
