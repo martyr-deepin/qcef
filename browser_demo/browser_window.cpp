@@ -29,13 +29,17 @@ const char kBackIcon[] = ":/images/go-previous-symbolic.svg";
 const char kForwardIcon[] = ":/images/go-next-symbolic.svg";
 const char kReloadIcon[] = ":/images/view-refresh-symbolic.svg";
 const char kStopIcon[] = ":/images/window-close-symbolic.svg";
+const char kHomeIcon[] = ":/images/user-home-symbolic.svg";
 const char kSettingsIcon[] = ":/images/view-more-symbolic.svg";
 
 const char kBackTip[] = "Click to go back";
 const char kForwardTip[] = "Click to go forward";
 const char kReloadTip[] = "Reload this page";
 const char kStopTip[] = "Stop loading this page";
+const char kHomeTip[] = "Show home page";
 const char kSettingsTip[] = "Customized and control browser";
+
+const char kHomePage[] = "qrc://resources/index.html";
 
 }  // namespace
 
@@ -44,6 +48,7 @@ struct BrowserWindowPrivate {
   QPushButton* back_button = nullptr;
   QPushButton* forward_button = nullptr;
   QPushButton* reload_button = nullptr;
+  QPushButton* home_button = nullptr;
   QPushButton* settings_button = nullptr;
   BrowserAddressEdit* address_edit = nullptr;
   BrowserTabWidget* tab_widget = nullptr;
@@ -75,6 +80,8 @@ BrowserWindow::BrowserWindow(QWidget* parent)
   this->setObjectName("BrowserWindow");
   this->initUI();
   this->initConnections();
+  
+  p_->address_edit->setFocus();
 }
 
 BrowserWindow::~BrowserWindow() {
@@ -92,6 +99,8 @@ void BrowserWindow::initConnections() {
           p_->tab_widget, &BrowserTabWidget::forward);
   connect(p_->reload_button, &QPushButton::clicked,
           this, &BrowserWindow::onReloadButtonClicked);
+  connect(p_->home_button, &QPushButton::clicked,
+          this, &BrowserWindow::showHomePage);
 
   connect(p_->tab_widget, &BrowserTabWidget::fullscreenRequested,
           this, &BrowserWindow::onFullscreenRequested);
@@ -128,6 +137,11 @@ void BrowserWindow::initUI() {
   p_->reload_button->setToolTip(kReloadTip);
   p_->reload_button->setFlat(true);
   p_->reload_button->setFixedSize(button_size);
+  p_->home_button = new QPushButton(QIcon(kHomeIcon), "", this);
+  p_->home_button->setFlat(true);
+  p_->home_button->setToolTip(kHomeTip);
+  p_->home_button->setFixedSize(button_size);
+
   p_->address_edit = new BrowserAddressEdit(this);
   p_->settings_button = new QPushButton(QIcon(kSettingsIcon), "", this);
   // TODO(LiuLang): Remove drop-down arrow.
@@ -157,6 +171,7 @@ void BrowserWindow::initUI() {
   toolbar_layout->addWidget(p_->back_button);
   toolbar_layout->addWidget(p_->forward_button);
   toolbar_layout->addWidget(p_->reload_button);
+  toolbar_layout->addWidget(p_->home_button);
   toolbar_layout->addSpacing(5);
   toolbar_layout->addWidget(p_->address_edit);
   toolbar_layout->addSpacing(5);
@@ -164,7 +179,6 @@ void BrowserWindow::initUI() {
   p_->address_bar->setLayout(toolbar_layout);
   p_->back_button->setEnabled(false);
   p_->forward_button->setEnabled(false);
-  p_->reload_button->setEnabled(true);
 
   QVBoxLayout* layout = new QVBoxLayout();
   layout->setContentsMargins(0, 0, 0, 0);
@@ -219,4 +233,8 @@ void BrowserWindow::onLoadingStateChanged(bool is_loading,
 
 void BrowserWindow::onUrlChanged(const QUrl& url) {
   p_->address_edit->setText(url.toDisplayString());
+}
+
+void BrowserWindow::showHomePage() {
+  p_->tab_widget->load(QUrl(kHomePage));
 }

@@ -19,7 +19,7 @@ struct QCEF_WIDGETS_EXPORT QCefSSLStatus {
   // Whether the status is related to a secure SSL/TLS connection.
   bool is_secure_connection = false;
 
-  // A bitmask containing the page security content status.
+  // A bit mask containing the page security content status.
   QCefSSLContentStatus content_status = QCefSSLContentStatus::NORMAL_CONTENT;
 };
 

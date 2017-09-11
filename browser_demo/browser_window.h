@@ -32,6 +32,8 @@ class BrowserWindow : public QFrame {
                              bool can_go_back,
                              bool can_go_forward);
   void onUrlChanged(const QUrl& url);
+
+  void showHomePage();
 };
 
 #endif  // QCEF_BROWSER_DEMO_BROWSER_WINDOW_H
