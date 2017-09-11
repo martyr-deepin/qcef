@@ -28,13 +28,17 @@ enum class QCEF_WIDGETS_EXPORT QCefWindowOpenDisposition {
 // Implement this class to handle mouse/keyboard events in cef browser window.
 class QCEF_WIDGETS_EXPORT QCefBrowserEventDelegate {
  public:
-  virtual bool onPreKeyEvent(const QKeyEvent& event) = 0;
+  // Return true to cancel the navigation or false to allow the navigation
+  // to proceed. |url| is the target url to be navigated to.
+  virtual bool onBeforeBrowse(const QUrl& url, bool is_redirect) = 0;
 
   // This method is called before a new popup browser is created.
   // |url| is the position new popup window should navigate.
   // Returns true to popup default popup window.
   virtual bool onBeforePopup(const QUrl& url,
                              QCefWindowOpenDisposition disposition) = 0;
+
+  virtual bool onPreKeyEvent(const QKeyEvent& event) = 0;
 };
 
 

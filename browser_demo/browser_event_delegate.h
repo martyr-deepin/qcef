@@ -15,10 +15,12 @@ class BrowserEventDelegate : public QObject,
  public:
   explicit BrowserEventDelegate(QObject* parent = nullptr);
 
-  bool onPreKeyEvent(const QKeyEvent& event) override;
+  bool onBeforeBrowse(const QUrl& url, bool is_redirect) override;
 
   bool onBeforePopup(const QUrl& url,
                      QCefWindowOpenDisposition disposition) override;
+
+  bool onPreKeyEvent(const QKeyEvent& event) override;
 
  signals:
   void popupRequested(const QUrl& url, QCefWindowOpenDisposition disposition);

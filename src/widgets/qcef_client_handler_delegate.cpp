@@ -218,3 +218,14 @@ bool QCefClientHandlerDelegate::OnPreKeyEvent(const QKeyEvent& event) {
     return false;
   }
 }
+
+bool QCefClientHandlerDelegate::OnBeforeBrowse(const CefString& url,
+                                               bool is_redirect) {
+  auto event_delegate = web_page_->getEventDelegate();
+  if (event_delegate != nullptr) {
+    const QUrl qUrl(QString::fromStdString(url.ToString()));
+    return event_delegate->onBeforeBrowse(qUrl, is_redirect);
+  } else {
+    return false;
+  }
+}

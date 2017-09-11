@@ -20,14 +20,16 @@ class QCefClientHandler : public CefClient,
                           public CefFocusHandler,
                           public CefKeyboardHandler,
                           public CefLifeSpanHandler,
-                          public CefLoadHandler {
+                          public CefLoadHandler,
+                          public CefRequestHandler {
  public:
   class Delegate {
    public:
     // CefLifeSpanHandler methods
     // Request to popup new browser window to access |target_url|.
-    virtual bool OnBeforePopup(const CefString& target_url,
-                               WindowOpenDisposition target_disposition) = 0;
+    virtual bool OnBeforePopup(
+        const CefString& target_url,
+        CefLifeSpanHandler::WindowOpenDisposition target_disposition) = 0;
 
     // Called when the browser is created.
     virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) = 0;
@@ -70,6 +72,8 @@ class QCefClientHandler : public CefClient,
 
     virtual bool OnPreKeyEvent(const QKeyEvent& event) = 0;
 
+    virtual bool OnBeforeBrowse(const CefString& url, bool is_redirect) = 0;
+
    protected:
     virtual ~Delegate() {}
   };
@@ -104,6 +108,10 @@ class QCefClientHandler : public CefClient,
   }
 
   CefRefPtr<CefLoadHandler> GetLoadHandler() override {
+    return this;
+  }
+
+  CefRefPtr<CefRequestHandler> GetRequestHandler() override {
     return this;
   }
 
@@ -162,17 +170,18 @@ class QCefClientHandler : public CefClient,
                      bool* is_keyboard_shortcut) override;
 
   // CefLifeSpanHandler methods:
-  bool OnBeforePopup(CefRefPtr<CefBrowser> browser,
-                     CefRefPtr<CefFrame> frame,
-                     const CefString& target_url,
-                     const CefString& target_frame_name,
-                     WindowOpenDisposition target_disposition,
-                     bool user_gesture,
-                     const CefPopupFeatures& popupFeatures,
-                     CefWindowInfo& windowInfo,
-                     CefRefPtr<CefClient>& client,
-                     CefBrowserSettings& settings,
-                     bool* no_javascript_access) override;
+  bool OnBeforePopup(
+      CefRefPtr<CefBrowser> browser,
+      CefRefPtr<CefFrame> frame,
+      const CefString& target_url,
+      const CefString& target_frame_name,
+      CefLifeSpanHandler::WindowOpenDisposition target_disposition,
+      bool user_gesture,
+      const CefPopupFeatures& popupFeatures,
+      CefWindowInfo& windowInfo,
+      CefRefPtr<CefClient>& client,
+      CefBrowserSettings& settings,
+      bool* no_javascript_access) override;
 
   void OnAfterCreated(CefRefPtr<CefBrowser> browser) override;
 
@@ -199,6 +208,10 @@ class QCefClientHandler : public CefClient,
                    ErrorCode errorCode,
                    const CefString& errorText,
                    const CefString& failedUrl) override;
+
+  // CefRequestHandler methods:
+  bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
+                      CefRefPtr<CefRequest> request, bool is_redirect) override;
 
  private:
   void NotifyFavicon(const CefString& icon_url, CefRefPtr<CefImage> icon);

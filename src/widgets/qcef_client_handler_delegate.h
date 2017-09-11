@@ -19,6 +19,8 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
 
   ~QCefClientHandlerDelegate() override;
 
+  bool OnBeforeBrowse(const CefString& url, bool is_redirect) override;
+
   bool OnBeforePopup(
       const CefString& target_url,
       CefLifeSpanHandler::WindowOpenDisposition target_disposition) override;

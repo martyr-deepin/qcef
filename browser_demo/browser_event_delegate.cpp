@@ -31,3 +31,11 @@ bool BrowserEventDelegate::onPreKeyEvent(const QKeyEvent& event) {
 //  }
   return false;
 }
+
+bool BrowserEventDelegate::onBeforeBrowse(const QUrl& url, bool is_redirect) {
+  if (url.host() == "bing.com") {
+    qDebug() << "Prevent browser from navigating to bing.com, " << is_redirect;
+    return true;
+  }
+  return false;
+}

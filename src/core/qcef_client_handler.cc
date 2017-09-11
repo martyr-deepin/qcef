@@ -346,3 +346,14 @@ void QCefClientHandler::OnDownloadUpdated(
 //      << ", path:" << download_item->GetFullPath().ToString().c_str();
   CefDownloadHandler::OnDownloadUpdated(browser, download_item, callback);
 }
+
+bool QCefClientHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
+                                       CefRefPtr<CefFrame> frame,
+                                       CefRefPtr<CefRequest> request,
+                                       bool is_redirect) {
+  if (delegate_ != nullptr) {
+    return delegate_->OnBeforeBrowse(request->GetURL().ToString(), is_redirect);
+  } else {
+    return false;
+  }
+}
