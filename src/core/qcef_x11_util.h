@@ -9,6 +9,9 @@
 
 void SetXErrorHandler();
 
+// Wraps XReparentWindow().
+void ReparentWindow(CefWindowHandle parent, CefWindowHandle child);
+
 //unsigned long InitCefBrowserWindow(int width, int height);
 //
 //void SetXWindowBounds(CefWindowHandle xwindow,

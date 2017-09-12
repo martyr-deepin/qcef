@@ -53,8 +53,6 @@ QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
                                     entry.target.host().toStdString(),
                                     true);
   }
-
-  web_page_->onBrowserCreated();
 }
 
 void QCefClientHandlerDelegate::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
@@ -102,7 +100,6 @@ void QCefClientHandlerDelegate::OnLoadStarted(CefRefPtr<CefBrowser> browser,
       browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
     emit web_page_->loadStarted();
   }
-  web_page_->updateBrowserGeometry();
 }
 
 void QCefClientHandlerDelegate::OnLoadingStateChange(

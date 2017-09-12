@@ -35,7 +35,13 @@ void SetXErrorHandler() {
   XSetErrorHandler(XErrorHandlerImpl);
   XSetIOErrorHandler(XIOErrorHandlerImpl);
 }
-//
+
+void ReparentWindow(CefWindowHandle parent, CefWindowHandle child) {
+  ::Display* xdisplay = cef_get_xdisplay();
+  DCHECK(xdisplay != nullptr);
+  XReparentWindow(xdisplay, child, parent, 0, 0);
+}
+
 //unsigned long InitCefBrowserWindow(int width, int height) {
 //  auto gtk_window = gtk_window_new(GTK_WINDOW_POPUP);
 //  gtk_window_resize(GTK_WINDOW(gtk_window), width, height);

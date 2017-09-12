@@ -182,7 +182,7 @@ void BrowserWindow::initUI() {
 
   QVBoxLayout* layout = new QVBoxLayout();
   layout->setContentsMargins(0, 0, 0, 0);
-  layout->setSpacing(5);
+  layout->setSpacing(0);
   layout->addWidget(p_->address_bar, 0);
   layout->addWidget(p_->tab_widget, 100);
   this->setLayout(layout);

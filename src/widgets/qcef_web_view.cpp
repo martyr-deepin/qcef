@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QEvent>
 #include <QResizeEvent>
+#include <QStackedLayout>
 #include <QTimer>
 
 #include "widgets/qcef_web_page.h"
@@ -18,9 +19,13 @@ struct QCefWebViewPrivate {
 QCefWebView::QCefWebView(QWidget* parent)
     : QWidget(parent),
       p_(new QCefWebViewPrivate()) {
-  this->setAttribute(Qt::WA_NativeWindow, true);
-  this->setAttribute(Qt::WA_DontCreateNativeAncestors, true);
-  this->setFocusPolicy(Qt::StrongFocus);
+
+  // Child window will fill this widget.
+  QStackedLayout* layout = new QStackedLayout();
+  layout->setContentsMargins(0, 0, 0, 0);
+  layout->setSpacing(0);
+  this->setLayout(layout);
+  this->setContentsMargins(0, 0, 0, 0);
 }
 
 QCefWebView::~QCefWebView() {
@@ -46,16 +51,4 @@ QCefWebPage* QCefWebView::page() const {
     that->p_->page = new QCefWebPage(that);
   }
   return p_->page;
-}
-
-void QCefWebView::resizeEvent(QResizeEvent* event) {
-  QWidget::resizeEvent(event);
-  p_->page->resizeBrowserWindow(this->size());
-}
-
-void QCefWebView::showEvent(QShowEvent* event) {
-  QWidget::showEvent(event);
-  QTimer::singleShot(0, [=]() {
-    p_->page->updateBrowserGeometry();
-  });
 }

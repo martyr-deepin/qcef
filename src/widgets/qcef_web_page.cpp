@@ -79,9 +79,10 @@ struct QCefWebPagePrivate {
   ~QCefWebPagePrivate();
 
   QWidget* view = nullptr;
+  QWidget* wrapper_widget = nullptr;
+  QWindow* wrapper_window = nullptr;
   QWindow* browser_window = nullptr;
-  QWindow* browser_window_wrapper = nullptr;
-  WId browser_wid;
+  WId browser_wid = 0;
   QUrl url;
   QString html;
   QUrl iconUrl;
@@ -116,15 +117,15 @@ CefRefPtr<CefBrowser> QCefWebPagePrivate::browser() {
 }
 
 void QCefWebPagePrivate::createBrowserWidget() {
-  browser_window_wrapper = new QWindow();
-  browser_window_wrapper->create();
-  browser_window_wrapper->setParent(view->windowHandle());
-  browser_window_wrapper->setVisible(true);
-  browser_window_wrapper->resize(view->size());
+  wrapper_window = new QWindow();
+  wrapper_window->create();
+  wrapper_widget = QWidget::createWindowContainer(wrapper_window);
+  view->setFocusProxy(wrapper_widget);
+  view->layout()->addWidget(wrapper_widget);
 
   CefWindowInfo window_info;
-  const CefRect rect {0, 0, view->width(), view->height() };
-  window_info.SetAsChild(browser_window_wrapper->winId(), rect);
+  const CefRect rect{0, 0, wrapper_window->width(), wrapper_window->height()};
+  window_info.SetAsChild(wrapper_window->winId(), rect);
   CefBrowserSettings cef_settings;
   MergeWebPageSettings(cef_settings, *settings);
 
@@ -135,6 +136,13 @@ void QCefWebPagePrivate::createBrowserWidget() {
                                                nullptr);
   browser_wid = browser_->GetHost()->GetWindowHandle();
   browser_window = QWindow::fromWinId(browser_wid);
+  browser_window->setParent(wrapper_window);
+  QObject::connect(wrapper_window, &QWindow::visibilityChanged,
+                   browser_window, &QWindow::setVisibility);
+  QObject::connect(wrapper_window, &QWindow::widthChanged,
+                   browser_window, &QWindow::setWidth);
+  QObject::connect(wrapper_window, &QWindow::heightChanged,
+                   browser_window, &QWindow::setHeight);
 }
 
 QCefWebPage::QCefWebPage(QObject* parent)
@@ -340,18 +348,11 @@ void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
   p_->event_delegate = delegate;
 }
 
-void QCefWebPage::onBrowserCreated() {
-  if (!p_->html.isEmpty()) {
-    this->setHtml(p_->html, p_->url);
-  }
-}
-
 void QCefWebPage::onBrowserGotFocus() {
-  p_->view->setFocus(Qt::MouseFocusReason);
+  this->updateBrowserGeometry();
 }
 
 void QCefWebPage::resizeBrowserWindow(const QSize& size) {
-  p_->browser_window_wrapper->resize(size);
   if (p_->browser_window != nullptr) {
     p_->browser_window->resize(size);
   }

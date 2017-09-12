@@ -150,7 +150,6 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   friend class QCefWebView;
   friend class QCefClientHandlerDelegate;
 
-  void onBrowserCreated();
   void onBrowserGotFocus();
 
   void resizeBrowserWindow(const QSize& size);
