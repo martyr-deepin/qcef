@@ -9,6 +9,7 @@
 #include <QKeyEvent>
 #include <QTextStream>
 
+#include "core/qcef_key_event_map.h"
 #include "include/cef_app.h"
 #include "include/views/cef_browser_view.h"
 #include "include/wrapper/cef_helpers.h"
@@ -295,27 +296,16 @@ void QCefClientHandler::NotifyFavicon(const CefString& icon_url,
 
 bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
                                       const CefKeyEvent& event,
-                                      XEvent* os_event,
+                                      CefEventHandle os_event,
                                       bool* is_keyboard_shortcut) {
-  if (delegate_ != nullptr) {
-//    qDebug() << "event:" << " modifiers:" << event.modifiers
-//             << ", native key code: " << event.native_key_code
-//             << ", char: " << event.character
-//             << ", raw char:" << event.unmodified_character
-//             << ", type:" << event.type
-//             << ", is_system_key: " << event.is_system_key;
-    // TODO(LiuLang): Filters shortcuts in QApplication.
-    if (event.type == KEYEVENT_RAWKEYDOWN) {
-      // FIXME(LiuLang): keyboard modifier is invalid.
-      QKeyEvent key_event(QEvent::KeyPress, event.native_key_code,
-                          static_cast<Qt::KeyboardModifier>(event.modifiers));
-      return delegate_->OnPreKeyEvent(key_event);
-    } else if (event.type == KEYEVENT_KEYUP) {
-      QKeyEvent key_event(QEvent::KeyRelease, event.native_key_code,
-                          static_cast<Qt::KeyboardModifier>(event.modifiers));
-      return delegate_->OnPreKeyEvent(key_event);
-    }
-  }
+//  if (delegate_ != nullptr) {
+//    // TODO(LiuLang): Filters shortcuts in QApplication.
+//    if (event.type == KEYEVENT_RAWKEYDOWN ||
+//        event.type == KEYEVENT_KEYUP) {
+//      const QKeyEvent key_event(XEvent2QtKeyEvent(os_event));
+//      return delegate_->OnPreKeyEvent(key_event);
+//    }
+//  }
   return CefKeyboardHandler::OnPreKeyEvent(browser, event, os_event,
                                            is_keyboard_shortcut);
 }

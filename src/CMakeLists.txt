@@ -98,6 +98,8 @@ set(CORE_FILES
     core/qcef_dialog_handler.h
     core/qcef_global_settings.cpp
     core/qcef_global_settings.h
+    core/qcef_key_event_map.cpp
+    core/qcef_key_event_map.h
     core/qcef_notification_constructor.cpp
     core/qcef_notification_constructor.h
     core/qcef_print_handler.cpp

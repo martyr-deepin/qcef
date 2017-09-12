@@ -166,7 +166,7 @@ class QCefClientHandler : public CefClient,
   // CefKeyboardHandler methods:
   bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
                      const CefKeyEvent& event,
-                     XEvent* os_event,
+                     CefEventHandle os_event,
                      bool* is_keyboard_shortcut) override;
 
   // CefLifeSpanHandler methods:
