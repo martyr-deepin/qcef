@@ -48,6 +48,7 @@ endif()
 
 find_package(PkgConfig REQUIRED)
 find_package(Qt5Core REQUIRED)
+find_package(Qt5DBus REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Network REQUIRED)
 find_package(Qt5WebChannel REQUIRED)
@@ -63,6 +64,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(QT_LIBS
+    Qt5::DBus
     Qt5::Gui
     Qt5::Network
     Qt5::WebChannel
@@ -174,6 +176,21 @@ set(CEF_TARGET_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 ADD_LOGICAL_TARGET("libcef_lib"
                    "${CEF_TARGET_OUT_DIR}/libcef.so"
                    "${CEF_TARGET_OUT_DIR}/libcef.so")
+
+
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+
+  add_executable(notification-test
+                 tests/notification_test.cpp
+
+                 tests/notification_window.cpp
+                 tests/notification_window.h
+                 widgets/qcef_notification_service.cpp
+                 widgets/qcef_notification_service.h
+                 )
+  target_link_libraries(notification-test ${LINK_LIBS})
+endif ()
+
 
 # Executable target.
 add_library(${CEF_TARGET} SHARED

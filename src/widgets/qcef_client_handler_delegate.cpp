@@ -194,10 +194,11 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
       qCritical() << "Invalid web notification body, parameters mismatch";
       return false;
     }
-    const std::string url = args->GetString(0);
-    const std::string body = args->GetString(1);
-    qCritical() << "Web notification" << url.c_str() << body.c_str();
+    const QString title = QString::fromStdString(args->GetString(1).ToString());
+    qCritical() << "Web notification" << title;
 
+    QString body;
+    QIcon icon;
     if (args->GetSize() > 2) {
       // Parse notification option.
       CefRefPtr<CefDictionaryValue> dict = args->GetDictionary(2);
@@ -205,12 +206,18 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
       if (dict->GetKeys(keys)) {
         for (const CefString& key : keys) {
           CefString value = dict->GetString(key);
-          qCritical() << "delegate, key:" << key.ToString().c_str()
-                      << ", value:" << value.ToString().c_str();
+          if (key == "body") {
+            body = QString::fromStdString(value.ToString());
+          } else if (key == "icon") {
+            icon = QIcon(QString::fromStdString(value.ToString()));
+          }
         }
       }
+//      web_page_->showNotification(title, body, icon);
+//      return true;
     }
 
+    web_page_->showNotification(title, body);
     return true;
   }
 

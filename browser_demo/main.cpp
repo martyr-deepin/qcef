@@ -3,6 +3,7 @@
 // in the LICENSE file.
 
 #include <QApplication>
+#include <QIcon>
 #include <qcef_context.h>
 #include <qcef_util.h>
 
@@ -53,6 +54,7 @@ int main(int argc, char* argv[]) {
   QCefInit(argc, argv, settings);
 
   QApplication app(argc, argv);
+  app.setWindowIcon(QIcon(":/images/firefox.png"));
 
   BrowserWindow browser_window;
   browser_window.resize(860, 640);

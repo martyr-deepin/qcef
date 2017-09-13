@@ -176,6 +176,11 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void updateTitle(const QString& title);
   void updateUrl(const QUrl& url);
 
+  void showNotification(const QString& title, const QString& body);
+  void showNotification(const QString& title,
+                        const QString& body,
+                        const QIcon& icon);
+
   QCefWebPagePrivate* p_ = nullptr;
 };
 
