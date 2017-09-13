@@ -7,15 +7,16 @@
 
 #include "include/cef_string_visitor.h"
 
+#include <functional>
 #include <QString>
+#include <utility>
 
-typedef void(*StringVisitorCallback)(const QString& value) ;
+typedef std::function<void(const QString& value)> StringVisitorCallback ;
 
 // Retrieve cef string asynchronously.
 class StringVisitor : public CefStringVisitor {
  public:
-  StringVisitor(StringVisitorCallback callback) : callback_(callback) {
-  }
+  explicit StringVisitor(StringVisitorCallback callback);
 
   void Visit(const CefString& string) override;
 

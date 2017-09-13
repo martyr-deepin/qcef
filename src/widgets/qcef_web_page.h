@@ -5,6 +5,7 @@
 #ifndef QCEF_WIDGETS_QCEF_WEB_PAGE_H
 #define QCEF_WIDGETS_QCEF_WEB_PAGE_H
 
+#include <functional>
 #include <QObject>
 #include <QIcon>
 #include <QUrl>
@@ -91,16 +92,18 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   bool canGoForward() const;
   bool isLoading() const;
 
+  typedef std::function<void(const QString& html)> Callback;
+
   // Asynchronous method to retrieve the page's content as HTML,
   // enclosed in HTML and BODY tags. Upon successful completion,
   // resultCallback is called with the page's content.
-  void toHtml(void (* callback)(const QString& html)) const;
+  void toHtml(Callback callback) const;
 
   // Asynchronous method to retrieve the page's content converted
   // to plain text, completely stripped of all HTML formatting.
   // Upon successful completion, resultCallback is called
   // with the page's content.
-  void toPlainText(void (* callback)(const QString& text)) const;
+  void toPlainText(Callback callback) const;
 
   // Change the zoom level to the specified value. Specify 0.0 to reset the
   // zoom level. If called on the UI thread the change will be applied

@@ -4,6 +4,10 @@
 
 #include "core/qcef_string_visitor.h"
 
+StringVisitor::StringVisitor(StringVisitorCallback callback)
+    : callback_(std::move(callback)) {
+}
+
 void StringVisitor::Visit(const CefString& string) {
   if (callback_ != nullptr) {
     callback_(QString::fromStdString(string.ToString()));

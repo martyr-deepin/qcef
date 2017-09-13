@@ -347,11 +347,11 @@ void QCefWebPage::stop() {
   p_->browser()->StopLoad();
 }
 
-void QCefWebPage::toHtml(void (* callback)(const QString& html)) const {
+void QCefWebPage::toHtml(Callback callback) const {
   p_->browser()->GetMainFrame()->GetSource(new StringVisitor(callback));
 }
 
-void QCefWebPage::toPlainText(void (* callback)(const QString& text)) const {
+void QCefWebPage::toPlainText(Callback callback) const {
   p_->browser()->GetMainFrame()->GetText(new StringVisitor(callback));
 }
 
