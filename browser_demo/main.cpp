@@ -9,6 +9,14 @@
 #include "browser_window.h"
 #include "sync_methods.h"
 
+#ifndef N_DEBUG
+// operation overloading is missing in debug mode.
+std::ostream& operator<<(std::ostream& os, wchar_t const* c) {
+  os << c;
+  return os;
+}
+#endif
+
 namespace {
 
 const char kPlatformThemeName[] = "QT_QPA_PLATFORMTHEME";
