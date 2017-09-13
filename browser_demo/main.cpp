@@ -3,6 +3,7 @@
 // in the LICENSE file.
 
 #include <QApplication>
+#include <QDir>
 #include <QIcon>
 #include <qcef_context.h>
 #include <qcef_util.h>
@@ -49,6 +50,12 @@ int main(int argc, char* argv[]) {
 //  settings.setRemoteDebug(true);
 //  settings.setLogSeverity(QCefGlobalSettings::LogSeverity::Info);
 
+  QDir cache_dir(QDir::home().filePath(".cache/qcef/browser-demo"));
+  cache_dir.mkpath(".");
+  settings.setUserDataPath(cache_dir.filePath("data"));
+  settings.setCachePath(cache_dir.filePath("cache"));
+  settings.setLogFile(cache_dir.filePath("web-console.log"));
+
   // Register echoMessage in web page.
   settings.registerSyncMethod("echoMessage", EchoMessage);
   QCefInit(argc, argv, settings);
@@ -60,9 +67,9 @@ int main(int argc, char* argv[]) {
   browser_window.resize(860, 640);
   browser_window.show();
 
-//  QCefBindApp(&app);
-//  return app.exec();
-  QCefRunLoop();
-
-  return 0;
+  QCefBindApp(&app);
+  return app.exec();
+//  QCefRunLoop();
+//
+//  return 0;
 }
