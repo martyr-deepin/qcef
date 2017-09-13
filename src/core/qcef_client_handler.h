@@ -74,6 +74,16 @@ class QCefClientHandler : public CefClient,
 
     virtual bool OnBeforeBrowse(const CefString& url, bool is_redirect) = 0;
 
+    virtual void OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
+                                     CefRefPtr<CefFrame> frame,
+                                     CefRefPtr<CefContextMenuParams> params,
+                                     CefRefPtr<CefMenuModel> model) = 0;
+
+    virtual bool OnContextMenuCommand(CefRefPtr<CefBrowser> browser,
+                                      CefRefPtr<CefFrame> frame,
+                                      CefRefPtr<CefContextMenuParams> params,
+                                      int command_id);
+
    protected:
     virtual ~Delegate() {}
   };

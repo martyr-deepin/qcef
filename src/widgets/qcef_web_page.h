@@ -111,6 +111,15 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void zoomIn();
   void zoomOut();
 
+  // Editing.
+  void undo();
+  void redo();
+  void cut();
+  void copy();
+  void paste();
+  void doDelete();
+  void selectAll();
+
   // Returns ssl status of current page.
   QCefSSLStatus getSSLStatus() const;
 

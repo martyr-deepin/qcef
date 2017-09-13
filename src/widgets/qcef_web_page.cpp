@@ -235,6 +235,34 @@ void QCefWebPage::zoomOut() {
   p_->browser()->GetHost()->SetZoomLevel(factor);
 }
 
+void QCefWebPage::undo() {
+  p_->browser()->GetFocusedFrame()->Undo();
+}
+
+void QCefWebPage::redo() {
+  p_->browser()->GetFocusedFrame()->Redo();
+}
+
+void QCefWebPage::cut() {
+  p_->browser()->GetFocusedFrame()->Cut();
+}
+
+void QCefWebPage::copy() {
+  p_->browser()->GetFocusedFrame()->Copy();
+}
+
+void QCefWebPage::paste() {
+  p_->browser()->GetFocusedFrame()->Paste();
+}
+
+void QCefWebPage::doDelete() {
+  p_->browser()->GetFocusedFrame()->Delete();
+}
+
+void QCefWebPage::selectAll() {
+  p_->browser()->GetFocusedFrame()->SelectAll();
+}
+
 qreal QCefWebPage::zoomFactor() const {
   return p_->browser()->GetHost()->GetZoomLevel();
 }

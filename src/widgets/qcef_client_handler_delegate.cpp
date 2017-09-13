@@ -11,17 +11,22 @@
 #include "core/qcef_web_channel_consts.h"
 #include "include/cef_origin_whitelist.h"
 #include "qcef_browser_event_delegate.h"
+#include "qcef_browser_event_delegate_p.h"
 #include "widgets/qcef_web_settings.h"
 
 QCefClientHandlerDelegate::QCefClientHandlerDelegate(QCefWebPage* web_page)
-  : web_page_(web_page){
+    : web_page_(web_page) {
 }
 
 QCefClientHandlerDelegate::~QCefClientHandlerDelegate() {
   if (cef_browser_ != nullptr) {
-    cef_browser_->GetHost()->CloseBrowser(true);
-    cef_browser_->Release();
+    cef_browser_->GetHost()->CloseBrowser(false);
+//    cef_browser_->Release();
     cef_browser_ = nullptr;
+  }
+  if (context_menu_ != nullptr) {
+    delete context_menu_;
+    context_menu_ = nullptr;
   }
 }
 
@@ -72,7 +77,7 @@ void QCefClientHandlerDelegate::OnFaviconURLChange(const CefString& icon_url,
                                                     pixel_width, pixel_height);
   if (binary != nullptr) {
     const size_t image_size = binary->GetSize();
-    unsigned char* data = (unsigned char *) malloc(image_size);
+    unsigned char* data = (unsigned char*)malloc(image_size);
     const size_t read = binary.get()->GetData(data, image_size, 0);
     pixmap.loadFromData(data, static_cast<uint>(read));
     free(data);
@@ -199,7 +204,7 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
         for (const CefString& key : keys) {
           CefString value = dict->GetString(key);
           qCritical() << "delegate, key:" << key.ToString().c_str()
-                   << ", value:" << value.ToString().c_str();
+                      << ", value:" << value.ToString().c_str();
         }
       }
     }
@@ -240,4 +245,56 @@ bool QCefClientHandlerDelegate::OnBeforeBrowse(const CefString& url,
   } else {
     return false;
   }
+}
+
+void QCefClientHandlerDelegate::OnBeforeContextMenu(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefContextMenuParams> params,
+    CefRefPtr<CefMenuModel> model) {
+  Q_UNUSED(browser);
+  Q_UNUSED(frame);
+  auto event_delegate = web_page_->getEventDelegate();
+  if (event_delegate != nullptr) {
+    QCefContextMenuParams qcef_params;
+    qcef_params.p->params = params;
+    if (context_menu_ == nullptr) {
+      context_menu_ = new QCefContextMenu();
+    }
+    context_menu_->clear();
+    event_delegate->onBeforeContextMenu(web_page_, context_menu_, qcef_params);
+    model->Clear();
+    for (const QCefContextMenu::MenuItem& item : context_menu_->items()) {
+      switch (item.type) {
+        case QCefContextMenu::ItemType::Separator: {
+          model->AddSeparator();
+          break;
+        }
+        case QCefContextMenu::ItemType::Item: {
+          model->AddItem(item.id, item.label.toStdString());
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    }
+  }
+}
+
+bool QCefClientHandlerDelegate::OnContextMenuCommand(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefContextMenuParams> params,
+    int command_id) {
+  Q_UNUSED(browser);
+  Q_UNUSED(frame);
+  Q_UNUSED(params);
+  if (context_menu_ != nullptr) {
+    if (context_menu_->callbacks().contains(command_id)) {
+      context_menu_->callbacks().value(command_id)(web_page_);
+      return true;
+    }
+  }
+  return false;
 }

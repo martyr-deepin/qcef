@@ -11,6 +11,8 @@
 #include "include/cef_life_span_handler.h"
 #include "widgets/qcef_web_page.h"
 
+class QCefContextMenu;
+
 // Implements delegate of QCefClientHandler, to let QCefWebPage be notified
 // about state change of cef browser.
 class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
@@ -20,6 +22,16 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
   ~QCefClientHandlerDelegate() override;
 
   bool OnBeforeBrowse(const CefString& url, bool is_redirect) override;
+
+  void OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
+                           CefRefPtr<CefFrame> frame,
+                           CefRefPtr<CefContextMenuParams> params,
+                           CefRefPtr<CefMenuModel> model) override;
+
+  bool OnContextMenuCommand(CefRefPtr<CefBrowser> browser,
+                            CefRefPtr<CefFrame> frame,
+                            CefRefPtr<CefContextMenuParams> params,
+                            int command_id) override;
 
   bool OnBeforePopup(
       const CefString& target_url,
@@ -65,6 +77,7 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
  private:
   CefRefPtr<CefBrowser> cef_browser_ = nullptr;
   QCefWebPage* web_page_ = nullptr;
+  QCefContextMenu* context_menu_ = nullptr;
 };
 
 #endif  // QCEF_WIDGETS_QCEF_CLIENT_HANDLER_DELEGATE_H

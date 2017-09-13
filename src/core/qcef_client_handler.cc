@@ -16,16 +16,10 @@
 
 namespace {
 
-enum client_menu_ids {
-  CLIENT_ID_SHOW_DEVTOOLS = MENU_ID_USER_FIRST,
-  CLIENT_ID_CLOSE_DEVTOOLS,
-  CLIENT_ID_INSPECT_ELEMENT,
-  CLIENT_ID_SHOW_SSL_INFO,
-  CLIENT_ID_TESTMENU_SUBMENU,
-  CLIENT_ID_TESTMENU_CHECKITEM,
-  CLIENT_ID_TESTMENU_RADIOITEM1,
-  CLIENT_ID_TESTMENU_RADIOITEM2,
-  CLIENT_ID_TESTMENU_RADIOITEM3,
+enum USER_MENU_IDS {
+  MENU_OPEN_LINK_IN_TAB = MENU_ID_USER_FIRST,
+  MENU_OPEN_LINK_IN_WINDOW,
+  MENU_COPY_LINK_ADDRESS,
 };
 
 }  // namespace
@@ -173,13 +167,10 @@ void QCefClientHandler::OnBeforeContextMenu(
     CefRefPtr<CefFrame> frame,
     CefRefPtr<CefContextMenuParams> params,
     CefRefPtr<CefMenuModel> model) {
-  LOG(ERROR) << __FUNCTION__;
-
-  (void)browser;
-  (void)frame;
-  (void)params;
   CEF_REQUIRE_UI_THREAD();
-  model->AddSeparator();
+  if (delegate_ != nullptr) {
+    delegate_->OnBeforeContextMenu(browser, frame, params, model);
+  }
 }
 
 bool QCefClientHandler::OnContextMenuCommand(
@@ -188,15 +179,13 @@ bool QCefClientHandler::OnContextMenuCommand(
     CefRefPtr<CefContextMenuParams> params,
     int command_id,
     CefContextMenuHandler::EventFlags event_flags) {
-  (void)browser;
-  (void)frame;
-  (void)params;
-  (void)command_id;
-  (void)event_flags;
-  LOG(ERROR) << __FUNCTION__;
   CEF_REQUIRE_UI_THREAD();
 
-  return false;
+  if (delegate_ != nullptr) {
+    return delegate_->OnContextMenuCommand(browser, frame, params, command_id);
+  }
+  return CefContextMenuHandler::OnContextMenuCommand(browser, frame, params,
+                                                     command_id, event_flags);
 }
 
 CefRefPtr<CefDialogHandler> QCefClientHandler::GetDialogHandler() {
@@ -315,11 +304,11 @@ void QCefClientHandler::OnBeforeDownload(
     CefRefPtr<CefDownloadItem> download_item,
     const CefString& suggested_name,
     CefRefPtr<CefBeforeDownloadCallback> callback) {
-  (void) browser;
-  (void) download_item;
+  (void)browser;
+  (void)download_item;
   // Set default folder to $HOME, default is /tmp.
   const QString path = QDir::home().filePath(suggested_name.ToString().c_str());
-  callback->Continue(path.toStdString(),  true);
+  callback->Continue(path.toStdString(), true);
 }
 
 void QCefClientHandler::OnDownloadUpdated(
