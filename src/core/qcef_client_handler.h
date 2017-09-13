@@ -82,7 +82,7 @@ class QCefClientHandler : public CefClient,
     virtual bool OnContextMenuCommand(CefRefPtr<CefBrowser> browser,
                                       CefRefPtr<CefFrame> frame,
                                       CefRefPtr<CefContextMenuParams> params,
-                                      int command_id);
+                                      int command_id) = 0;
 
    protected:
     virtual ~Delegate() {}
