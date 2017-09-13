@@ -70,7 +70,7 @@ BrowserTabWidget::~BrowserTabWidget() {
 }
 
 bool BrowserTabWidget::isLoading() const {
-  p_->current_web->page()->isLoading();
+  return p_->current_web->page()->isLoading();
 }
 
 QCefSSLStatus BrowserTabWidget::getSSlStatus() const {
