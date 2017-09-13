@@ -6,41 +6,41 @@
 
 #include <QDebug>
 #include <QFile>
-//#include <QMimeDatabase>
+#include <QMimeDatabase>
 #include <QUrl>
 
 namespace {
 
-//QString Ext2Mime(const QString& fileName) {
-//  const auto pos = fileName.lastIndexOf('.');
-//  const auto ext = fileName.mid(pos + 1).toLower();
-//
-//  if (ext == "css") {
-//    return "text/css";
-//  }
-//  if (ext == "html") {
-//    return "text/html";
-//  }
-//  if (ext == "js") {
-//    return "application/javascript";
-//  }
-//  if (ext == "less") {
-//    return "text/less";
-//  }
-//  if (ext == "svg") {
-//    return "image/svg+xml";
-//  }
-//  if (ext == "png") {
-//    return "image/png";
-//  }
-//  if (ext == "gif") {
-//    return "image/gif";
-//  }
-//  if (ext == "jpg" || ext == "jpeg") {
-//    return "image/jpeg";
-//  }
-//  return "";
-//}
+QString Ext2Mime(const QString& fileName) {
+  const auto pos = fileName.lastIndexOf('.');
+  const auto ext = fileName.mid(pos + 1).toLower();
+
+  if (ext == "css") {
+    return "text/css";
+  }
+  if (ext == "html") {
+    return "text/html";
+  }
+  if (ext == "js") {
+    return "application/javascript";
+  }
+  if (ext == "less") {
+    return "text/less";
+  }
+  if (ext == "svg") {
+    return "image/svg+xml";
+  }
+  if (ext == "png") {
+    return "image/png";
+  }
+  if (ext == "gif") {
+    return "image/gif";
+  }
+  if (ext == "jpg" || ext == "jpeg") {
+    return "image/jpeg";
+  }
+  return "";
+}
 
 CefStreamResourceHandler* CreateQFileStreamResourceHandler(
     const QString& path) {
@@ -55,19 +55,19 @@ CefStreamResourceHandler* CreateQFileStreamResourceHandler(
   }
 
   const QByteArray content = file.readAll();
-//  QString mime(Ext2Mime(path));
-//  if (mime.isEmpty()) {
-//    QMimeDatabase mime_database;
-//    const QMimeType mime_type = mime_database.mimeTypeForData(content);
-//    mime = mime_type.name();
-//  }
+  QString mime(Ext2Mime(path));
+  if (mime.isEmpty()) {
+    QMimeDatabase mime_database;
+    const QMimeType mime_type = mime_database.mimeTypeForData(content);
+    mime = mime_type.name();
+  }
   const char* content_bytes = content.constData();
   CefRefPtr<CefStreamReader> stream = CefStreamReader::CreateForData(
           static_cast<void*>(const_cast<char*>(content_bytes)),
           (size_t)(file.size()));
 
   // Set mime type name to empty.
-  return new CefStreamResourceHandler("", stream);
+  return new CefStreamResourceHandler(mime.toStdString(), stream);
 };
 
 }  // namespace
