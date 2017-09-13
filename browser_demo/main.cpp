@@ -45,8 +45,8 @@ int main(int argc, char* argv[]) {
 //  settings.setProxyServer("socks5://127.0.0.1:1080");
 
   // Open http://localhost:9222 in chromium browser to see dev tools.
-  settings.setRemoteDebug(true);
-  settings.setLogSeverity(QCefGlobalSettings::LogSeverity::Info);
+//  settings.setRemoteDebug(true);
+//  settings.setLogSeverity(QCefGlobalSettings::LogSeverity::Info);
 
   // Register echoMessage in web page.
   settings.registerSyncMethod("echoMessage", EchoMessage);
@@ -54,11 +54,13 @@ int main(int argc, char* argv[]) {
 
   QApplication app(argc, argv);
 
-  QCefBindApp(&app);
-
   BrowserWindow browser_window;
   browser_window.resize(860, 640);
   browser_window.show();
 
-  return app.exec();
+//  QCefBindApp(&app);
+//  return app.exec();
+  QCefRunLoop();
+
+  return 0;
 }

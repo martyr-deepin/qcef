@@ -81,7 +81,6 @@ void BrowserEventDelegate::onBeforeContextMenu(
   if (params.isEditable()) {
     // Editable menu.
     auto state = params.getEditStateFlags();
-    qDebug() << "edit flag:" << state;
     menu->addItem(MenuIds::MenuUndo, "Undo",
                   state & QCefContextMenuEditFlags::QCM_EDITFLAG_CAN_UNDO,
                   [](QCefWebPage* page) {
@@ -113,6 +112,7 @@ void BrowserEventDelegate::onBeforeContextMenu(
                   [](QCefWebPage* page) {
                     page->doDelete();
                   });
+    menu->addSeparator();
     menu->addItem(MenuIds::MenuSelectAll, "Select all",
                   state & QCefContextMenuEditFlags::QCM_EDITFLAG_CAN_SELECT_ALL,
                   [](QCefWebPage* page) {

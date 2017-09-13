@@ -20,8 +20,8 @@ QCefClientHandlerDelegate::QCefClientHandlerDelegate(QCefWebPage* web_page)
 
 QCefClientHandlerDelegate::~QCefClientHandlerDelegate() {
   if (cef_browser_ != nullptr) {
-    cef_browser_->GetHost()->CloseBrowser(false);
-//    cef_browser_->Release();
+    qDebug() << "delegate close browser():";
+    cef_browser_->GetHost()->TryCloseBrowser();
     cef_browser_ = nullptr;
   }
   if (context_menu_ != nullptr) {
@@ -61,7 +61,9 @@ QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
 }
 
 void QCefClientHandlerDelegate::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
-  if (cef_browser_->GetIdentifier() == browser->GetIdentifier()) {
+  qDebug() << "delegate on before close";
+  if (cef_browser_ != nullptr &&
+      cef_browser_->GetIdentifier() == browser->GetIdentifier()) {
     cef_browser_ = nullptr;
     // TODO(LiuLang): Emit close signal.
   }
