@@ -126,15 +126,15 @@ void BrowserEventDelegate::onBeforeContextMenu(
     // Link is selected.
     const QUrl url(params.getLinkUrl());
     menu->addItem(MenuIds::MenuOpenLinkInNewTab, "Open link in new tab", true,
-                  [](QCefWebPage* page) {
-//                    emit this->popupRequested(
-//                            url,
-//                            QCefWindowOpenDisposition::NEW_FOREGROUND_TAB);
+                  [this, url](QCefWebPage* page) {
+                    emit this->popupRequested(
+                            url,
+                            QCefWindowOpenDisposition::NEW_FOREGROUND_TAB);
 
                   });
     menu->addItem(MenuIds::MenuCopyLinkAddress, "Copy link address", true,
-                  [](QCefWebPage* page) {
-//                    emit this->copyLinkToClipboard(url);
+                  [this, url](QCefWebPage* page) {
+                    emit this->copyLinkToClipboard(url);
                   });
     return;
   }

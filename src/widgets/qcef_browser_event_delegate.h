@@ -5,6 +5,7 @@
 #ifndef QCEF_WIDGETS_QCEF_BROWSER_EVENT_DELEGATE_H
 #define QCEF_WIDGETS_QCEF_BROWSER_EVENT_DELEGATE_H
 
+#include <functional>
 #include <QKeyEvent>
 #include <QMenu>
 #include <QUrl>
@@ -32,42 +33,36 @@ enum class QCEF_WIDGETS_EXPORT QCefWindowOpenDisposition {
 // Supported context menu type flags.
 enum QCefContextMenuFlags {
   // No node is selected.
-      QCM_FLAG_NONE = 0,
-
+  QCM_FLAG_NONE = 0,
   // The top page is selected.
-      QCM_FLAG_PAGE = 1 << 0,
-
+  QCM_FLAG_PAGE = 1 << 0,
   // A subframe page is selected.
-      QCM_FLAG_FRAME = 1 << 1,
-
+  QCM_FLAG_FRAME = 1 << 1,
   // A link is selected.
-      QCM_FLAG_LINK = 1 << 2,
-
+  QCM_FLAG_LINK = 1 << 2,
   // A media node is selected.
-      QCM_FLAG_MEDIA = 1 << 3,
-
+  QCM_FLAG_MEDIA = 1 << 3,
   // There is a textual or mixed selection that is selected.
-      QCM_FLAG_SELECTION = 1 << 4,
-
+  QCM_FLAG_SELECTION = 1 << 4,
   // An editable element is selected.
-      QCM_FLAG_EDITABLE = 1 << 5,
+  QCM_FLAG_EDITABLE = 1 << 5,
 };
 
 
 // Supported context menu media types.
 enum QCefContextMenuMediaTypeFlags {
   // No special node is in context.
-      QCM_MEDIATYPE_NONE,
+  QCM_MEDIATYPE_NONE,
   // An image node is selected.
-      QCM_MEDIATYPE_IMAGE,
+  QCM_MEDIATYPE_IMAGE,
   // A video node is selected.
-      QCM_MEDIATYPE_VIDEO,
+  QCM_MEDIATYPE_VIDEO,
   // An audio node is selected.
-      QCM_MEDIATYPE_AUDIO,
+  QCM_MEDIATYPE_AUDIO,
   // A file node is selected.
-      QCM_MEDIATYPE_FILE,
+  QCM_MEDIATYPE_FILE,
   // A plugin node is selected.
-      QCM_MEDIATYPE_PLUGIN,
+  QCM_MEDIATYPE_PLUGIN,
 };
 
 // Supported context menu media state bit flags.
@@ -180,7 +175,7 @@ class QCEF_WIDGETS_EXPORT QCefContextMenu {
  public:
   QCefContextMenu();
 
-  typedef void (* Callback)(QCefWebPage* web_page);
+  typedef std::function<void(QCefWebPage* page)> Callback;
 
   enum class ItemType {
     Item,
