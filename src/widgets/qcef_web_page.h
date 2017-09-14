@@ -71,7 +71,8 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   const QString& pageErrorContent() const;
 
   // Returns a pointer to the page's settings object.
-  // Update browser settings before loading any url or html content.
+  // Update browser settings before loading any url or html content or any
+  // other methods which will initialize cef window.
   QCefWebSettings* settings() const;
 
   // Returns a pointer to the web channel instance used by this page.

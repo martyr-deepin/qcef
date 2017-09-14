@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QMouseEvent>
 #include <qcef_web_page.h>
+#include <qcef_web_settings.h>
 #include <qcef_web_view.h>
 
 #include "browser_event_delegate.h"
@@ -79,14 +80,11 @@ QCefSSLStatus BrowserTabWidget::getSSlStatus() const {
 
 void BrowserTabWidget::createNewBrowser(bool in_background,
                                         const QUrl& url) {
-  auto web_view = new QCefWebView();
+  QCefWebView* web_view = new QCefWebView();
   web_view->page()->setEventDelegate(p_->event_delegate);
 
-  this->addTab(web_view, "New Tab");
-  if (!in_background) {
-    this->setCurrentWidget(web_view);
-  }
-  auto page = web_view->page();
+  QCefWebPage* page = web_view->page();
+
   connect(page, &QCefWebPage::iconChanged,
           [this, web_view](const QIcon& icon) {
             const int index = this->indexOf(web_view);
@@ -111,6 +109,12 @@ void BrowserTabWidget::createNewBrowser(bool in_background,
     this->removeTab(index);
     web_view->deleteLater();
   });
+
+  this->addTab(web_view, "New Tab");
+  if (!in_background) {
+    this->setCurrentWidget(web_view);
+  }
+
   if (url.isValid()) {
     web_view->load(url);
   }

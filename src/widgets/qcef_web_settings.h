@@ -106,6 +106,8 @@ class QCEF_WIDGETS_EXPORT QCefWebSettings {
   QString acceptLanguageList() const;
 
   // Decline cross-origin limitation from |source| url to |target| url.
+  // NOTE(LiuLang): Currently, cross origin white list instance is invalid,
+  // Use setWebSecurity() instead.
   void addCrossOriginWhiteEntry(const QUrl& source,
                                 const QUrl& target,
                                 bool allow_subdomains);
