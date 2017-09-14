@@ -266,7 +266,7 @@ void QCefClientHandlerDelegate::OnBeforeContextMenu(
   auto event_delegate = web_page_->getEventDelegate();
   if (event_delegate != nullptr) {
     QCefContextMenuParams qcef_params;
-    qcef_params.p->params = params;
+    qcef_params.p_->params = params;
     if (context_menu_ == nullptr) {
       context_menu_ = new QCefContextMenu();
     }

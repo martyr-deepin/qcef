@@ -7,81 +7,81 @@
 #include "widgets/qcef_browser_event_delegate_p.h"
 
 QCefContextMenuParams::QCefContextMenuParams()
-    : p(new QCefContextMenuParamsPrivate()) {
+    : p_(new QCefContextMenuParamsPrivate()) {
 }
 
 QCefContextMenuParams::~QCefContextMenuParams() {
-  if (p != nullptr) {
-    delete p;
-    p = nullptr;
+  if (p_ != nullptr) {
+    delete p_;
+    p_ = nullptr;
   }
 }
 
 int QCefContextMenuParams::getXCoord() const {
-  return p->params->GetXCoord();
+  return p_->params->GetXCoord();
 }
 
 int QCefContextMenuParams::getYCoord() const {
-  return p->params->GetYCoord();
+  return p_->params->GetYCoord();
 }
 
 QCefContextMenuParams::TypeFlags QCefContextMenuParams::getTypeFlags() const {
-  return static_cast<QCefContextMenuFlags>(p->params->GetTypeFlags());
+  return static_cast<QCefContextMenuFlags>(p_->params->GetTypeFlags());
 }
 
 QString QCefContextMenuParams::getLinkUrl() const {
-  return QString::fromStdString(p->params->GetLinkUrl());
+  return QString::fromStdString(p_->params->GetLinkUrl());
 }
 
 QString QCefContextMenuParams::getUnfilteredLinkUrl() const {
-  return QString::fromStdString(p->params->GetUnfilteredLinkUrl());
+  return QString::fromStdString(p_->params->GetUnfilteredLinkUrl());
 }
 
 QString QCefContextMenuParams::getSourceUrl() const {
-  return QString::fromStdString(p->params->GetSourceUrl());
+  return QString::fromStdString(p_->params->GetSourceUrl());
 }
 
 bool QCefContextMenuParams::hasImageContents() const {
-  return p->params->HasImageContents();
+  return p_->params->HasImageContents();
 }
 
 QString QCefContextMenuParams::getTitleText() const {
-  return QString::fromStdString(p->params->GetTitleText());
+  return QString::fromStdString(p_->params->GetTitleText());
 }
 
 QString QCefContextMenuParams::getPageUrl() const {
-  return QString::fromStdString(p->params->GetPageUrl());
+  return QString::fromStdString(p_->params->GetPageUrl());
 }
 
 QString QCefContextMenuParams::getFrameUrl() const {
-  return QString::fromStdString(p->params->GetFrameUrl());
+  return QString::fromStdString(p_->params->GetFrameUrl());
 }
 
 QString QCefContextMenuParams::getFrameCharset() const {
-  return QString::fromStdString(p->params->GetFrameCharset());
+  return QString::fromStdString(p_->params->GetFrameCharset());
 }
 
 QCefContextMenuParams::MediaType QCefContextMenuParams::getMediaType() const {
-  return static_cast<QCefContextMenuMediaTypeFlags>(p->params->GetMediaType());
+  return static_cast<QCefContextMenuMediaTypeFlags>(p_->params->GetMediaType());
 }
 
 QCefContextMenuParams::MediaStateFlags
 QCefContextMenuParams::getMediaStateFlags() const {
   return static_cast<QCefContextMenuMediaFlags>(
-      p->params->GetMediaStateFlags());
+      p_->params->GetMediaStateFlags());
 }
 
 QString QCefContextMenuParams::getSelectionText() const {
-  return QString::fromStdString(p->params->GetSelectionText().ToString());
+  return QString::fromStdString(p_->params->GetSelectionText().ToString());
 }
 
 bool QCefContextMenuParams::isEditable() const {
-  return p->params->IsEditable();
+  return p_->params->IsEditable();
 }
 
 QCefContextMenuParams::EditStateFlags
 QCefContextMenuParams::getEditStateFlags() const {
-  return static_cast<QCefContextMenuEditFlags>(p->params->GetEditStateFlags());
+  return static_cast<QCefContextMenuEditFlags>(p_->params->GetEditStateFlags());
 }
 
 QCefContextMenu::QCefContextMenu() : items_(), callbacks_() {

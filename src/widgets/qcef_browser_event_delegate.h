@@ -167,7 +167,9 @@ class QCEF_WIDGETS_EXPORT QCefContextMenuParams {
   // any, that the context menu was invoked on.
   EditStateFlags getEditStateFlags() const;
 
-  QCefContextMenuParamsPrivate* p = nullptr;
+ private:
+  friend class QCefClientHandlerDelegate;
+  QCefContextMenuParamsPrivate* p_ = nullptr;
 };
 
 // A wrapper of Cef context menu.
