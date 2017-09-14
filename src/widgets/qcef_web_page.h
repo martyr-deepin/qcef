@@ -154,6 +154,10 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // Emit this signal when web notification received from cef browser.
   void notificationReceived(const QString& summary, const QString& title);
 
+  // Emitted when cef browser window is closed by javascript.
+  // This requires QWebSettings::setJavascriptCloseWindow().
+  void windowClosed();
+
  public slots:
   void back();
   void forward();

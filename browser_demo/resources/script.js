@@ -27,7 +27,7 @@ function closeWindow() {
 }
 
 function popupWindow() {
-
+    window.open("http://www.z.cn");
 }
 
 function onNotificationButtonClicked() {

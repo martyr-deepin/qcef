@@ -39,7 +39,7 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
 
   void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
 
-  void OnBeforeClose(CefRefPtr<CefBrowser> browser) override;
+  void DoClose(CefRefPtr<CefBrowser> browser) override;
 
   void OnFaviconURLChange(const CefString& icon_url,
                           CefRefPtr<CefImage> icon) override;

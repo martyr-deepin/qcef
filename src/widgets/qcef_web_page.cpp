@@ -107,13 +107,9 @@ struct QCefWebPagePrivate {
 QCefWebPagePrivate::~QCefWebPagePrivate() {
   qDebug() << "QCefWebPagePrivate::destructor()";
 
-  if (browser_ != nullptr) {
-    qDebug() << "close browser():";
-    browser_->GetHost()->CloseBrowser(true);
-    qDebug() << "End of close browser()";
-    browser_ = nullptr;
-  }
   view = nullptr;
+  // Cef Browser is released in delegate.
+  browser_ = nullptr;
   if (browser_window != nullptr) {
     browser_window->destroy();
     browser_window->deleteLater();
@@ -141,7 +137,6 @@ QCefWebPagePrivate::~QCefWebPagePrivate() {
   }
   if (client_handler != nullptr) {
     qDebug() << "delete client handler" << client_handler->HasOneRef();
-//    client_handler->Release();
     client_handler = nullptr;
   }
 
@@ -195,8 +190,6 @@ QCefWebPage::QCefWebPage(QObject* parent)
   p_->view = qobject_cast<QWidget*>(parent);
   p_->delegate = new QCefClientHandlerDelegate(this);
   p_->client_handler = new QCefClientHandler(p_->delegate);
-  // client_handler->Release() is called in destructor.
-//  p_->client_handler->AddRef();
   p_->settings = new QCefWebSettings();
   p_->channel = new QWebChannel();
 }

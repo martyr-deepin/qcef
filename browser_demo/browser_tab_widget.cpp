@@ -106,6 +106,11 @@ void BrowserTabWidget::createNewBrowser(bool in_background,
           });
   connect(page, &QCefWebPage::fullscreenRequested,
           this, &BrowserTabWidget::fullscreenRequested);
+  connect(page, &QCefWebPage::windowClosed, [=]() {
+    const int index = this->indexOf(web_view);
+    this->removeTab(index);
+    web_view->deleteLater();
+  });
   if (url.isValid()) {
     web_view->load(url);
   }
@@ -181,10 +186,6 @@ void BrowserTabWidget::onFullscreenRequested(bool fullscreen) {
 }
 
 void BrowserTabWidget::onTabCloseRequested(int index) {
-  if (this->count() == 1) {
-    // If only one web view is displayed, do nothing.
-    return;
-  }
   auto web_view = qobject_cast<QCefWebView*>(this->widget(index));
   web_view->deleteLater();
   this->removeTab(index);
