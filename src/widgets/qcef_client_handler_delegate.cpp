@@ -19,20 +19,16 @@ QCefClientHandlerDelegate::QCefClientHandlerDelegate(QCefWebPage* web_page)
 }
 
 QCefClientHandlerDelegate::~QCefClientHandlerDelegate() {
-  qDebug() << "QCefClientHandlerDelegate::destructor()";
   if (cef_browser_ != nullptr) {
-    qDebug() << "close browsesr";
     auto host = cef_browser_->GetHost();
     cef_browser_ = nullptr;
     host->CloseBrowser(true);
-    qDebug() << "END of close browsesr";
   }
 
   if (context_menu_ != nullptr) {
     delete context_menu_;
     context_menu_ = nullptr;
   }
-  qDebug() << "End of QCefClientHandlerDelegate::destructor()";
 }
 
 bool QCefClientHandlerDelegate::OnBeforePopup(
@@ -66,7 +62,6 @@ QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
 }
 
 void QCefClientHandlerDelegate::DoClose(CefRefPtr<CefBrowser> browser) {
-  qDebug() << "delegate on before close";
   if (cef_browser_ != nullptr &&
       cef_browser_->GetIdentifier() == browser->GetIdentifier()) {
     cef_browser_ = nullptr;

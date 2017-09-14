@@ -105,8 +105,6 @@ struct QCefWebPagePrivate {
 };
 
 QCefWebPagePrivate::~QCefWebPagePrivate() {
-  qDebug() << "QCefWebPagePrivate::destructor()";
-
   view = nullptr;
   // Cef Browser is released in delegate.
   browser_ = nullptr;
@@ -116,33 +114,26 @@ QCefWebPagePrivate::~QCefWebPagePrivate() {
     browser_window = nullptr;
   }
   if (settings != nullptr) {
-    qDebug() << "delete settings";
     delete settings;
     settings = nullptr;
   }
   if (channel != nullptr) {
-    qDebug() << "delete channels";
     delete channel;
     channel = nullptr;
   }
   if (transport != nullptr) {
-    qDebug() << "delete transport";
     delete transport;
     transport = nullptr;
   }
   if (delegate != nullptr) {
-    qDebug() << "delete delegate";
     delete delegate;
     delegate = nullptr;
   }
   if (client_handler != nullptr) {
-    qDebug() << "delete client handler" << client_handler->HasOneRef();
     client_handler = nullptr;
   }
 
   event_delegate = nullptr;
-
-  qDebug() << "END of QCefWebPagePrivate::destructor()";
 }
 
 CefRefPtr<CefBrowser> QCefWebPagePrivate::browser() {
@@ -195,12 +186,10 @@ QCefWebPage::QCefWebPage(QObject* parent)
 }
 
 QCefWebPage::~QCefWebPage() {
-  qDebug() << "CefWebPage::destructor()";
   if (p_ != nullptr) {
     delete p_;
     p_ = nullptr;
   }
-  qDebug() << "End of QCefWebPage::destructor()";
 }
 
 void QCefWebPage::load(const QUrl& url) {

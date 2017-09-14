@@ -29,7 +29,6 @@ QCefWebView::QCefWebView(QWidget* parent)
 }
 
 QCefWebView::~QCefWebView() {
-  qDebug() << "QCefWebView::destructor()";
   if (p_ != nullptr) {
     if (p_->page != nullptr) {
       delete p_->page;
@@ -39,7 +38,6 @@ QCefWebView::~QCefWebView() {
     delete p_;
     p_ = nullptr;
   }
-  qDebug() << "END of QCefWebView::destructor()";
 }
 
 void QCefWebView::load(const QUrl& url) {
