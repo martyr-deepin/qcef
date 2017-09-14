@@ -22,6 +22,14 @@ function onPromptButtonClicked() {
     console.log("prompt returns: ", ret);
 }
 
+function closeWindow() {
+    window.close();
+}
+
+function popupWindow() {
+
+}
+
 function onNotificationButtonClicked() {
     var msgTitle = "Message title";
     var msgOption = {

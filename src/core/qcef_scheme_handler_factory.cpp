@@ -82,7 +82,6 @@ CefRefPtr<CefResourceHandler> QCefSchemeHandlerFactory::Create(
 
   const QString url(QString::fromStdString(request->GetURL().ToString()));
   if (scheme_name == "qrc") {
-    qDebug() << "qrc url:" << request->GetURL().ToString().c_str() << url;
     // Handle qrc protocol.
     const QString qrc_file(url.mid(3));
     return CreateQFileStreamResourceHandler(qrc_file);

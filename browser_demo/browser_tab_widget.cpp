@@ -186,6 +186,6 @@ void BrowserTabWidget::onTabCloseRequested(int index) {
     return;
   }
   auto web_view = qobject_cast<QCefWebView*>(this->widget(index));
-  delete web_view;
+  web_view->deleteLater();
   this->removeTab(index);
 }

@@ -65,6 +65,7 @@ void QCefClientHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
 bool QCefClientHandler::DoClose(CefRefPtr<CefBrowser> browser) {
   (void)browser;
   CEF_REQUIRE_UI_THREAD();
+  qDebug() << "QCefClientHandler::DoClose()";
 
   // Allow the close. For windowed browsers this will result in the OS close
   // event being sent.
@@ -72,11 +73,12 @@ bool QCefClientHandler::DoClose(CefRefPtr<CefBrowser> browser) {
 }
 
 void QCefClientHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
-  CEF_REQUIRE_UI_THREAD();
-
-  if (delegate_ != nullptr) {
-    delegate_->OnBeforeClose(browser);
-  }
+  qDebug() << "QCefClientHandler::OnBeforeClose():" << browser;
+  (void)browser;
+//  CEF_REQUIRE_UI_THREAD();
+//  if (delegate_ != nullptr) {
+//    delegate_->OnBeforeClose(browser);
+//  }
 }
 
 void QCefClientHandler::OnLoadStart(

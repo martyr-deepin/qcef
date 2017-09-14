@@ -80,7 +80,6 @@ struct QCefWebPagePrivate {
 
   QWidget* view = nullptr;
   QWidget* wrapper_widget = nullptr;
-  QWindow* wrapper_window = nullptr;
   QWindow* browser_window = nullptr;
   WId browser_wid = 0;
   QUrl url;
@@ -106,7 +105,49 @@ struct QCefWebPagePrivate {
 };
 
 QCefWebPagePrivate::~QCefWebPagePrivate() {
-  browser_ = nullptr;
+  qDebug() << "QCefWebPagePrivate::destructor()";
+
+  if (browser_ != nullptr) {
+    qDebug() << "close browser():";
+    browser_->GetHost()->CloseBrowser(true);
+    qDebug() << "End of close browser()";
+    browser_ = nullptr;
+  }
+  view = nullptr;
+  if (browser_window != nullptr) {
+    browser_window->destroy();
+    browser_window->deleteLater();
+    browser_window = nullptr;
+  }
+  if (settings != nullptr) {
+    qDebug() << "delete settings";
+    delete settings;
+    settings = nullptr;
+  }
+  if (channel != nullptr) {
+    qDebug() << "delete channels";
+    delete channel;
+    channel = nullptr;
+  }
+  if (transport != nullptr) {
+    qDebug() << "delete transport";
+    delete transport;
+    transport = nullptr;
+  }
+  if (delegate != nullptr) {
+    qDebug() << "delete delegate";
+    delete delegate;
+    delegate = nullptr;
+  }
+  if (client_handler != nullptr) {
+    qDebug() << "delete client handler" << client_handler->HasOneRef();
+//    client_handler->Release();
+    client_handler = nullptr;
+  }
+
+  event_delegate = nullptr;
+
+  qDebug() << "END of QCefWebPagePrivate::destructor()";
 }
 
 CefRefPtr<CefBrowser> QCefWebPagePrivate::browser() {
@@ -117,10 +158,13 @@ CefRefPtr<CefBrowser> QCefWebPagePrivate::browser() {
 }
 
 void QCefWebPagePrivate::createBrowserWidget() {
+  QWindow* wrapper_window = nullptr;
   wrapper_window = new QWindow();
   wrapper_window->create();
+  // wrapper_widget takes ownership of wrapper_window.
   wrapper_widget = QWidget::createWindowContainer(wrapper_window);
   view->setFocusProxy(wrapper_widget);
+  // And now, wrapper_widget is child of view.
   view->layout()->addWidget(wrapper_widget);
 
   CefWindowInfo window_info;
@@ -151,42 +195,19 @@ QCefWebPage::QCefWebPage(QObject* parent)
   p_->view = qobject_cast<QWidget*>(parent);
   p_->delegate = new QCefClientHandlerDelegate(this);
   p_->client_handler = new QCefClientHandler(p_->delegate);
+  // client_handler->Release() is called in destructor.
+//  p_->client_handler->AddRef();
   p_->settings = new QCefWebSettings();
   p_->channel = new QWebChannel();
-
-  p_->browser();
 }
 
 QCefWebPage::~QCefWebPage() {
+  qDebug() << "CefWebPage::destructor()";
   if (p_ != nullptr) {
-
-    if (p_->delegate != nullptr) {
-      delete p_->delegate;
-      p_->delegate = nullptr;
-    }
-
-    if (p_->client_handler != nullptr) {
-      p_->client_handler = nullptr;
-    }
-
-    if (p_->settings != nullptr) {
-      delete p_->settings;
-      p_->settings = nullptr;
-    }
-
-    if (p_->transport != nullptr) {
-      delete p_->transport;
-      p_->transport = nullptr;
-    }
-
-    if (p_->channel != nullptr) {
-      delete p_->channel;
-      p_->channel = nullptr;
-    }
-
     delete p_;
     p_ = nullptr;
   }
+  qDebug() << "End of QCefWebPage::destructor()";
 }
 
 void QCefWebPage::load(const QUrl& url) {
@@ -379,6 +400,12 @@ void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
 
 void QCefWebPage::onBrowserGotFocus() {
   this->updateBrowserGeometry();
+}
+
+void QCefWebPage::closeBrowser() {
+  qDebug() << "Web page close browser";
+  p_->browser()->GetHost()->CloseBrowser(true);
+//  p_->browser()->GetHost()->TryCloseBrowser();
 }
 
 void QCefWebPage::resizeBrowserWindow(const QSize& size) {
