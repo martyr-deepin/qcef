@@ -4,7 +4,6 @@
 
 #include "widgets/qcef_web_page.h"
 
-#include <QApplication>
 #include <QDebug>
 #include <QJsonObject>
 #include <QLayout>
@@ -20,7 +19,6 @@
 #include "include/cef_ssl_status.h"
 #include "widgets/qcef_client_handler_delegate.h"
 #include "widgets/qcef_web_settings.h"
-#include "widgets/qcef_notification_service.h"
 
 namespace {
 
@@ -99,8 +97,6 @@ struct QCefWebPagePrivate {
   bool channel_connected = false;
   QCefBrowserEventDelegate* event_delegate = nullptr;
 
-  QCefNotificationService* notification = nullptr;
-
   CefRefPtr<CefBrowser> browser();
 
  private:
@@ -157,8 +153,6 @@ QCefWebPage::QCefWebPage(QObject* parent)
   p_->client_handler = new QCefClientHandler(p_->delegate);
   p_->settings = new QCefWebSettings();
   p_->channel = new QWebChannel();
-
-  p_->notification = new QCefNotificationService(parent);
 
   p_->browser();
 }
@@ -442,14 +436,4 @@ void QCefWebPage::updateTitle(const QString& title) {
 void QCefWebPage::updateUrl(const QUrl& url) {
   p_->url = url;
   emit this->urlChanged(p_->url);
-}
-
-void QCefWebPage::showNotification(const QString& title, const QString& body) {
-  p_->notification->notify(title, body, QApplication::windowIcon());
-}
-
-void QCefWebPage::showNotification(const QString& title,
-                                   const QString& body,
-                                   const QIcon& icon) {
-  p_->notification->notify(title, body, icon);
 }

@@ -151,6 +151,9 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // Notified when page icon is changed.
   void iconUrlChanged(const QUrl& icon_url);
 
+  // Emit this signal when web notification received from cef browser.
+  void notificationReceived(const QString& summary, const QString& title);
+
  public slots:
   void back();
   void forward();
@@ -175,11 +178,6 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void updateFavicon(const QUrl& url, const QIcon& icon);
   void updateTitle(const QString& title);
   void updateUrl(const QUrl& url);
-
-  void showNotification(const QString& title, const QString& body);
-  void showNotification(const QString& title,
-                        const QString& body,
-                        const QIcon& icon);
 
   QCefWebPagePrivate* p_ = nullptr;
 };

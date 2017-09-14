@@ -160,6 +160,7 @@ set(WIDGETS_FILES
 
 set(WIDGETS_EXPORT_FILES
     widgets/qcef_browser_event_delegate.h
+    widgets/qcef_notification_service.h
     widgets/qcef_ssl_status.h
     widgets/qcef_web_page.h
     widgets/qcef_web_settings.h

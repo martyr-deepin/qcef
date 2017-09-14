@@ -217,7 +217,7 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
 //      return true;
     }
 
-    web_page_->showNotification(title, body);
+    emit web_page_->notificationReceived(title, body);
     return true;
   }
 
