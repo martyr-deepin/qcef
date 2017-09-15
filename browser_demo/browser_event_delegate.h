@@ -34,6 +34,9 @@ class BrowserEventDelegate : public QObject,
   void popupRequested(const QUrl& url, QCefWindowOpenDisposition disposition);
   void copyLinkToClipboard(const QUrl& url);
 
+  void refreshRequested();
+  void toggleFullscreen();
+
  private:
   BrowserEventDelegatePrivate* p_ = nullptr;
 };

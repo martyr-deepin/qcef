@@ -39,28 +39,12 @@ BrowserTabWidget::BrowserTabWidget(QWidget* parent)
   connect(this, &BrowserTabWidget::fullscreenRequested,
           this, &BrowserTabWidget::onFullscreenRequested);
 
+  connect(p_->event_delegate, &BrowserEventDelegate::refreshRequested,
+          this, &BrowserTabWidget::onRefreshRequested);
   connect(p_->event_delegate, &BrowserEventDelegate::popupRequested,
-          [=](const QUrl& url, QCefWindowOpenDisposition disposition) {
-    switch (disposition) {
-      case QCefWindowOpenDisposition::NEW_BACKGROUND_TAB: {
-        this->createNewBrowser(true, url);
-        break;
-      }
-      case QCefWindowOpenDisposition::NEW_FOREGROUND_TAB:  // fall through
-      case QCefWindowOpenDisposition::NEW_WINDOW:  // fall through
-      case QCefWindowOpenDisposition::NEW_POPUP: {
-        this->createNewBrowser(false, url);
-        break;
-      }
-      case QCefWindowOpenDisposition::SAVE_TO_DISK: {
-        qDebug() << "save file to disk:" << url;
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  });
+          this, &BrowserTabWidget::onPopupRequested);
+  connect(p_->event_delegate, &BrowserEventDelegate::toggleFullscreen,
+          this, &BrowserTabWidget::onToggleFullscreen);
 }
 
 BrowserTabWidget::~BrowserTabWidget() {
@@ -193,4 +177,36 @@ void BrowserTabWidget::onTabCloseRequested(int index) {
   auto web_view = qobject_cast<QCefWebView*>(this->widget(index));
   web_view->deleteLater();
   this->removeTab(index);
+}
+
+void BrowserTabWidget::onRefreshRequested() {
+  qDebug() << "Refresh page";
+  p_->current_web->page()->reload();
+}
+
+void BrowserTabWidget::onPopupRequested(const QUrl& url,
+                                        QCefWindowOpenDisposition disposition) {
+  switch (disposition) {
+    case QCefWindowOpenDisposition::NEW_BACKGROUND_TAB: {
+      this->createNewBrowser(true, url);
+      break;
+    }
+    case QCefWindowOpenDisposition::NEW_FOREGROUND_TAB:  // fall through
+    case QCefWindowOpenDisposition::NEW_WINDOW:  // fall through
+    case QCefWindowOpenDisposition::NEW_POPUP: {
+      this->createNewBrowser(false, url);
+      break;
+    }
+    case QCefWindowOpenDisposition::SAVE_TO_DISK: {
+      qDebug() << "save file to disk:" << url;
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+}
+
+void BrowserTabWidget::onToggleFullscreen() {
+//  p_->tab_bar->setVisible(!p_->tab_bar->isVisible());
 }

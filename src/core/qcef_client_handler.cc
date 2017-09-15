@@ -271,6 +271,8 @@ bool QCefClientHandler::OnBeforePopup(
 }
 
 void QCefClientHandler::OnGotFocus(CefRefPtr<CefBrowser> browser) {
+  CEF_REQUIRE_UI_THREAD();
+
   if (delegate_ != nullptr) {
     delegate_->OnGotFocus(browser);
   }
@@ -278,6 +280,8 @@ void QCefClientHandler::OnGotFocus(CefRefPtr<CefBrowser> browser) {
 
 void QCefClientHandler::NotifyFavicon(const CefString& icon_url,
                                       CefRefPtr<CefImage> icon) {
+  CEF_REQUIRE_UI_THREAD();
+
   if (delegate_ != nullptr) {
     delegate_->OnFaviconURLChange(icon_url, icon);
   }
@@ -287,14 +291,16 @@ bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
                                       const CefKeyEvent& event,
                                       CefEventHandle os_event,
                                       bool* is_keyboard_shortcut) {
-//  if (delegate_ != nullptr) {
-//    // TODO(LiuLang): Filters shortcuts in QApplication.
-//    if (event.type == KEYEVENT_RAWKEYDOWN ||
-//        event.type == KEYEVENT_KEYUP) {
-//      const QKeyEvent key_event(XEvent2QtKeyEvent(os_event));
-//      return delegate_->OnPreKeyEvent(key_event);
-//    }
-//  }
+  CEF_REQUIRE_UI_THREAD();
+
+  if (delegate_ != nullptr) {
+    // TODO(LiuLang): Filters shortcuts in QApplication.
+    if (event.type == KEYEVENT_RAWKEYDOWN ||
+        event.type == KEYEVENT_KEYUP) {
+      const QKeyEvent key_event(XEvent2QtKeyEvent(os_event));
+      return delegate_->OnPreKeyEvent(key_event);
+    }
+  }
   return CefKeyboardHandler::OnPreKeyEvent(browser, event, os_event,
                                            is_keyboard_shortcut);
 }

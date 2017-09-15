@@ -11,6 +11,9 @@
 
 namespace {
 
+const int kF11Code = 95;
+const int kF5Code = 71;
+
 enum MenuIds {
   // Normal navigation.
   MenuBack = QCefContextMenu::MENU_ID_USER_FIRST,
@@ -62,6 +65,17 @@ bool BrowserEventDelegate::onBeforePopup(
 
 bool BrowserEventDelegate::onPreKeyEvent(const QKeyEvent& event) {
   Q_UNUSED(event);
+  qDebug() << "event:" << event.nativeScanCode();
+  switch (event.nativeScanCode()) {
+    case kF5Code: {
+      emit this->refreshRequested();
+      return true;
+    }
+    case kF11Code: {
+      emit this->toggleFullscreen();
+      return true;
+    }
+  }
   return false;
 }
 

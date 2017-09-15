@@ -77,7 +77,6 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   client_app->setSyncMethods(settings.getSyncMethods());
 
 #ifdef QCEF_OVERRIDE_PATH
-  qDebug() << "Override cef path:" << QCEF_OVERRIDE_PATH;
   if (!CefOverridePath(PK_DIR_EXE, QCEF_OVERRIDE_PATH)) {
     qCritical() << "Failed to override PK_DIR_EXE";
   }

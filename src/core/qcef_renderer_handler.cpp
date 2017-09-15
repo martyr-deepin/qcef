@@ -139,7 +139,6 @@ bool QCefRendererHandler::OnProcessMessageReceived(
     auto handler = transport->GetValue("onmessage");
 
     const std::string data = args->GetString(0);
-    qDebug() << "Renderer received message from browser: " << data.c_str();
     CefV8ValueList vlist;
     CefRefPtr<CefV8Value> resp = CefV8Value::CreateObject(nullptr, nullptr);
     resp->SetValue("data",

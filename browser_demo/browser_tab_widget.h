@@ -7,6 +7,7 @@
 
 #include <QTabWidget>
 #include <QUrl>
+#include <qcef_browser_event_delegate.h>
 #include <qcef_ssl_status.h>
 
 struct BrowserTabWidgetPrivate;
@@ -61,6 +62,11 @@ class BrowserTabWidget : public QTabWidget {
 
   // Close web view at |index|.
   void onTabCloseRequested(int index);
+
+  void onRefreshRequested();
+  void onPopupRequested(const QUrl& url,
+                        QCefWindowOpenDisposition disposition);
+  void onToggleFullscreen();
 };
 
 
