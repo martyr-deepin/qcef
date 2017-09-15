@@ -14,16 +14,6 @@
 #include "include/views/cef_browser_view.h"
 #include "include/wrapper/cef_helpers.h"
 
-namespace {
-
-enum USER_MENU_IDS {
-  MENU_OPEN_LINK_IN_TAB = MENU_ID_USER_FIRST,
-  MENU_OPEN_LINK_IN_WINDOW,
-  MENU_COPY_LINK_ADDRESS,
-};
-
-}  // namespace
-
 class QCefClientDownloadImageCallback : public CefDownloadImageCallback {
  public:
   explicit QCefClientDownloadImageCallback(
@@ -295,7 +285,9 @@ bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
 
   if (delegate_ != nullptr) {
     // TODO(LiuLang): Filters shortcuts in QApplication.
-    const QKeyEvent key_event(XEvent2QtKeyEvent(os_event));
+    const QKeyEvent key_event(QEvent::KeyPress, 0, Qt::NoModifier,
+                              static_cast<quint32>(event.native_key_code),
+                              0, event.modifiers);
     delegate_->OnPreKeyEvent(key_event);
   }
   return false;
