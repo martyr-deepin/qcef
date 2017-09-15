@@ -79,7 +79,6 @@ void QCefNotificationService::notify(const QString& title,
   image_data.append(channels);
   const QByteArray bytes((const char*)(image.constBits()),
                          image.width() * image.height());
-  qDebug() << "bytes size:" << bytes.size();
   image_data.append(bytes);
 
   hints.insert("imdage-data", image_data);

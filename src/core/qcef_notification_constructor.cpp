@@ -40,8 +40,6 @@ bool QCefNotificationConstructor::Execute(const CefString& name,
     if (v8_value->GetKeys(v8_keys)) {
       for (const CefString& key : v8_keys) {
         CefRefPtr<CefV8Value> v = v8_value->GetValue(key);
-        LOG(ERROR) << "key: " << key.ToString()
-        << ", value: " << v->GetStringValue().ToString();
         dict->SetString(key, v->GetStringValue());
       }
       args->SetDictionary(2, dict);

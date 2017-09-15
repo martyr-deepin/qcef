@@ -64,8 +64,6 @@ bool BrowserEventDelegate::onBeforePopup(
 }
 
 bool BrowserEventDelegate::onPreKeyEvent(const QKeyEvent& event) {
-  Q_UNUSED(event);
-  qDebug() << "event:" << event.nativeScanCode();
   switch (event.nativeScanCode()) {
     case kF5Code: {
       emit this->refreshRequested();
@@ -74,6 +72,9 @@ bool BrowserEventDelegate::onPreKeyEvent(const QKeyEvent& event) {
     case kF11Code: {
       emit this->toggleFullscreen();
       return true;
+    }
+    default: {
+      break;
     }
   }
   return false;

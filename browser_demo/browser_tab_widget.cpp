@@ -4,8 +4,10 @@
 
 #include "browser_tab_widget.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QMouseEvent>
+#include <qcef_notification_service.h>
 #include <qcef_web_page.h>
 #include <qcef_web_settings.h>
 #include <qcef_web_view.h>
@@ -18,12 +20,14 @@ struct BrowserTabWidgetPrivate {
   BrowserTabBar* tab_bar = nullptr;
   QCefWebView* current_web = nullptr;
   QIcon blank_icon{":/images/document-new-symbolic.svg"};
+  QCefNotificationService* notification_service = nullptr;
 };
 
 BrowserTabWidget::BrowserTabWidget(QWidget* parent)
     : QTabWidget(parent),
       p_(new BrowserTabWidgetPrivate()) {
   p_->event_delegate = new BrowserEventDelegate(this);
+  p_->notification_service = new QCefNotificationService(this);
 
   p_->tab_bar = new BrowserTabBar(this);
   this->setTabBar(p_->tab_bar);
@@ -86,6 +90,8 @@ void BrowserTabWidget::createNewBrowser(bool in_background,
             this->setTabText(index, title);
             this->setTabToolTip(index, title);
           });
+  connect(page, &QCefWebPage::notificationReceived,
+          this, &BrowserTabWidget::onNotificationReceived);
   connect(page, &QCefWebPage::fullscreenRequested,
           this, &BrowserTabWidget::fullscreenRequested);
   connect(page, &QCefWebPage::windowClosed, [=]() {
@@ -171,6 +177,13 @@ void BrowserTabWidget::onCurrentChanged(int index) {
 
 void BrowserTabWidget::onFullscreenRequested(bool fullscreen) {
   p_->tab_bar->setVisible(!fullscreen);
+}
+
+void BrowserTabWidget::onNotificationReceived(const QString& summary,
+                                              const QString& body) {
+  // TODO(LiuLang): popup notification only if current window is not activated.
+  qDebug() << "show notification:" << summary << body;
+  p_->notification_service->notify(summary, body, qApp->windowIcon());
 }
 
 void BrowserTabWidget::onTabCloseRequested(int index) {

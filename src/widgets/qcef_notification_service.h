@@ -5,7 +5,7 @@
 #ifndef QCEF_WIDGETS_QCEF_NOTIFICATION_SERVICE_H
 #define QCEF_WIDGETS_QCEF_NOTIFICATION_SERVICE_H
 
-#include <QtDBus>
+#include <QtDBus/QtDBus>
 
 #include "qcef_widgets_export.h"
 

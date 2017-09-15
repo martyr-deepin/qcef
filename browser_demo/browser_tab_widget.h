@@ -60,6 +60,8 @@ class BrowserTabWidget : public QTabWidget {
   // Hide tab bar in fullscreen mode.
   void onFullscreenRequested(bool fullscreen);
 
+  void onNotificationReceived(const QString& summary, const QString& body);
+
   // Close web view at |index|.
   void onTabCloseRequested(int index);
 

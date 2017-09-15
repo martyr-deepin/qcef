@@ -197,7 +197,6 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
       return false;
     }
     const QString title = QString::fromStdString(args->GetString(1).ToString());
-    qCritical() << "Web notification" << title;
 
     QString body;
     QIcon icon;
@@ -211,7 +210,8 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
           if (key == "body") {
             body = QString::fromStdString(value.ToString());
           } else if (key == "icon") {
-            icon = QIcon(QString::fromStdString(value.ToString()));
+            // TODO(LiuLang): call DownloadImage()
+            //icon = QIcon(QString::fromStdString(value.ToString()));
           }
         }
       }

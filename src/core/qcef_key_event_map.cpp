@@ -383,8 +383,6 @@ QKeyEvent XEvent2QtKeyEvent(CefEventHandle event) {
   Qt::KeyboardModifiers modifiers = TranslateModifiers(x_key_event.state);
   const unsigned int native_scan_code = x_key_event.keycode;
   const int qt_code = KeysymToQtKey(x_key_event.keycode);
-//  qDebug() << "qt code:" << qt_code;
-  printf("qt code: %d, code: %d\n", qt_code, native_scan_code);
   const quint32 native_virtual_key = x_key_event.keycode;
   const quint32 native_modifiers = x_key_event.state;
 
