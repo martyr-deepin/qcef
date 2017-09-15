@@ -28,7 +28,7 @@ class BrowserEventDelegate : public QObject,
   bool onBeforePopup(const QUrl& url,
                      QCefWindowOpenDisposition disposition) override;
 
-  bool onPreKeyEvent(const QKeyEvent& event) override;
+  void onPreKeyEvent(const QKeyEvent& event) override;
 
  signals:
   void popupRequested(const QUrl& url, QCefWindowOpenDisposition disposition);

@@ -238,7 +238,10 @@ class QCEF_WIDGETS_EXPORT QCefBrowserEventDelegate {
   virtual bool onBeforePopup(const QUrl& url,
                              QCefWindowOpenDisposition disposition) = 0;
 
-  virtual bool onPreKeyEvent(const QKeyEvent& event) = 0;
+  // Triggered before a key event is sent to renderer process.
+  // NOTE(LiuLang): Current |event| does not map to Qt Key event, only native
+  // key code is available.
+  virtual void onPreKeyEvent(const QKeyEvent& event) = 0;
 };
 
 

@@ -63,21 +63,20 @@ bool BrowserEventDelegate::onBeforePopup(
   return true;
 }
 
-bool BrowserEventDelegate::onPreKeyEvent(const QKeyEvent& event) {
+void BrowserEventDelegate::onPreKeyEvent(const QKeyEvent& event) {
   switch (event.nativeScanCode()) {
     case kF5Code: {
       emit this->refreshRequested();
-      return true;
+      break;
     }
     case kF11Code: {
       emit this->toggleFullscreen();
-      return true;
+      break;
     }
     default: {
       break;
     }
   }
-  return false;
 }
 
 bool BrowserEventDelegate::onBeforeBrowse(const QUrl& url, bool is_redirect) {

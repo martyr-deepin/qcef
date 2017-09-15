@@ -238,12 +238,10 @@ void QCefClientHandlerDelegate::OnUrlChanged(const CefString& url) {
   web_page_->updateUrl(QUrl(QString::fromStdString(url)));
 }
 
-bool QCefClientHandlerDelegate::OnPreKeyEvent(const QKeyEvent& event) {
+void QCefClientHandlerDelegate::OnPreKeyEvent(const QKeyEvent& event) {
   auto event_delegate = web_page_->getEventDelegate();
   if (event_delegate != nullptr) {
-    return event_delegate->onPreKeyEvent(event);
-  } else {
-    return false;
+    event_delegate->onPreKeyEvent(event);
   }
 }
 

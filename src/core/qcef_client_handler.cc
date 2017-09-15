@@ -295,14 +295,18 @@ bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
 
   if (delegate_ != nullptr) {
     // TODO(LiuLang): Filters shortcuts in QApplication.
-    if (event.type == KEYEVENT_RAWKEYDOWN ||
-        event.type == KEYEVENT_KEYUP) {
-      const QKeyEvent key_event(XEvent2QtKeyEvent(os_event));
-      return delegate_->OnPreKeyEvent(key_event);
+    if (event.type == KEYEVENT_RAWKEYDOWN) {
+      // FIXME(LiuLang): keyboard modifier is invalid.
+      QKeyEvent key_event(QEvent::KeyPress, event.native_key_code,
+                          static_cast<Qt::KeyboardModifier>(event.modifiers));
+      delegate_->OnPreKeyEvent(key_event);
+    } else if (event.type == KEYEVENT_KEYUP) {
+      QKeyEvent key_event(QEvent::KeyRelease, event.native_key_code,
+                          static_cast<Qt::KeyboardModifier>(event.modifiers));
+      delegate_->OnPreKeyEvent(key_event);
     }
   }
-  return CefKeyboardHandler::OnPreKeyEvent(browser, event, os_event,
-                                           is_keyboard_shortcut);
+  return false;
 }
 
 void QCefClientHandler::OnBeforeDownload(

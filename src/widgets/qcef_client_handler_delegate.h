@@ -72,7 +72,7 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
 
   void OnUrlChanged(const CefString& url) override;
 
-  bool OnPreKeyEvent(const QKeyEvent& event) override;
+  void OnPreKeyEvent(const QKeyEvent& event) override;
 
  private:
   CefRefPtr<CefBrowser> cef_browser_ = nullptr;
