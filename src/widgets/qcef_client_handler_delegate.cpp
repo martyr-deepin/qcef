@@ -53,7 +53,6 @@ QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
   // Set Cross-Origin white list.
   const auto white_list = web_page_->settings()->crossOriginWhiteList();
   for (const QCefWebSettings::CrossOriginEntry& entry : white_list) {
-    qDebug() << "Add cross-origin white entry:" << entry.source << entry.target;
     CefAddCrossOriginWhitelistEntry(entry.source.toString().toStdString(),
                                     entry.target.scheme().toStdString(),
                                     entry.target.host().toStdString(),
@@ -179,7 +178,6 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
       return false;
     }
     const QString msg = QString::fromStdString(args->GetString(0));
-    qDebug() << __FUNCTION__ << " message :" << msg;
     const QJsonDocument doc(QJsonDocument::fromJson(msg.toUtf8()));
     if (doc.isObject()) {
       web_page_->handleWebMessage(doc.object());

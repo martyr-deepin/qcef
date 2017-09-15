@@ -193,7 +193,6 @@ void BrowserTabWidget::onTabCloseRequested(int index) {
 }
 
 void BrowserTabWidget::onRefreshRequested() {
-  qDebug() << "Refresh page";
   p_->current_web->page()->reload();
 }
 

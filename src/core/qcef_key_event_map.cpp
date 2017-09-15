@@ -335,54 +335,56 @@ static const unsigned int KeyTbl[] = {
 
     0, 0
 };
-
-int KeysymToQtKey(quint32 key) {
-  int code = 0;
-  int i = 0;
-  while (KeyTbl[i]) {
-    if (key == KeyTbl[i]) {
-      code = (int)KeyTbl[i + 1];
-      break;
-    }
-    i += 2;
-  }
-
-  // translate Super/Hyper keys to Meta if we're using them as the MetaModifier
-  if ((code == Qt::Key_Super_L || code == Qt::Key_Super_R)) {
-    code = Qt::Key_Meta;
-  } else if (code == Qt::Key_Hyper_L || code == Qt::Key_Hyper_R) {
-    code = Qt::Key_Meta;
-  }
-
-  return code;
-}
-
-Qt::KeyboardModifiers TranslateModifiers(int s) {
-  Qt::KeyboardModifiers ret = 0;
-  if (s & ShiftMask) {
-    ret |= Qt::ShiftModifier;
-  }
-  if (s & ControlMask) {
-    ret |= Qt::ControlModifier;
-  }
-  if (s & Mod2Mask) {
-    // FIXME(Liulang):
-    ret |= Qt::AltModifier;
-  }
-  if (s & Mod4Mask) {
-    ret |= Qt::MetaModifier;
-  }
-  return ret;
-}
+//
+//int KeysymToQtKey(quint32 key) {
+//  int code = 0;
+//  int i = 0;
+//  while (KeyTbl[i]) {
+//    if (key == KeyTbl[i]) {
+//      code = (int)KeyTbl[i + 1];
+//      break;
+//    }
+//    i += 2;
+//  }
+//
+//  // translate Super/Hyper keys to Meta if we're using them as the MetaModifier
+//  if ((code == Qt::Key_Super_L || code == Qt::Key_Super_R)) {
+//    code = Qt::Key_Meta;
+//  } else if (code == Qt::Key_Hyper_L || code == Qt::Key_Hyper_R) {
+//    code = Qt::Key_Meta;
+//  }
+//
+//  return code;
+//}
+//
+//Qt::KeyboardModifiers TranslateModifiers(int s) {
+//  Qt::KeyboardModifiers ret = 0;
+//  if (s & ShiftMask) {
+//    ret |= Qt::ShiftModifier;
+//  }
+//  if (s & ControlMask) {
+//    ret |= Qt::ControlModifier;
+//  }
+//  if (s & Mod2Mask) {
+//    // FIXME(Liulang):
+//    ret |= Qt::AltModifier;
+//  }
+//  if (s & Mod4Mask) {
+//    ret |= Qt::MetaModifier;
+//  }
+//  return ret;
+//}
 
 }  // namespace
 
 QKeyEvent XEvent2QtKeyEvent(CefEventHandle event) {
   const XKeyEvent& x_key_event = event->xkey;
 
-  Qt::KeyboardModifiers modifiers = TranslateModifiers(x_key_event.state);
   const unsigned int native_scan_code = x_key_event.keycode;
-  const int qt_code = KeysymToQtKey(x_key_event.keycode);
+//  const int qt_code = KeysymToQtKey(x_key_event.keycode);
+//  Qt::KeyboardModifiers modifiers = TranslateModifiers(x_key_event.state);
+  const int qt_code = 0;
+  const Qt::KeyboardModifiers modifiers = Qt::NoModifier;
   const quint32 native_virtual_key = x_key_event.keycode;
   const quint32 native_modifiers = x_key_event.state;
 
