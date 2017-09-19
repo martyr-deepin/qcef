@@ -31,11 +31,13 @@ QCefBrowserTransport::QCefBrowserTransport(CefRefPtr<CefBrowser> browser,
 }
 
 void QCefBrowserTransport::sendMessage(const QJsonObject& message) {
+  qCritical() << "QCefBrowserTransport::sendMessage()" << message;
   // Send message from browser process to renderer process.
   CefRefPtr<CefProcessMessage> msg =
       CefProcessMessage::Create(kQCefRenderQtMessage);
   CefRefPtr<CefListValue> args = msg->GetArgumentList();
   const std::string data = QJsonDocument(message).toJson().toStdString();
+  qCritical() << "data: " << data.c_str();
   args->SetString(0, data);
   browser_->SendProcessMessage(PID_RENDERER, msg);
 }

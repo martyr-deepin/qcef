@@ -31,3 +31,8 @@ int Channel::count() {
   count_ ++;
   return count_;
 }
+
+void Channel::execSql(const QString& id, const QString& statement) {
+  qDebug() << "execSql()" << id << statement;
+  emit this->onExecSqlDone(id, 0, QVariantList({"hello", "world"}));
+}

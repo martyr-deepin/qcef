@@ -18,7 +18,6 @@
 #include "core/qcef_renderer_handler.h"
 
 #include <string>
-#include <QDebug>
 
 #include "base/file_util.h"
 #include "core/qcef_notification_constructor.h"
@@ -120,7 +119,6 @@ void QCefRendererHandler::OnContextReleased(CefRefPtr<CefBrowser> browser,
 
   CefRefPtr<CefProcessMessage> msg =
       CefProcessMessage::Create(kQCefRenderContextReleased);
-//  CefRefPtr<CefListValue> args = msg->GetArgumentList();
   browser->SendProcessMessage(PID_BROWSER, msg);
 }
 
@@ -133,15 +131,16 @@ bool QCefRendererHandler::OnProcessMessageReceived(
 
   const std::string name = std::string(message->GetName());
   if (name == kQCefRenderQtMessage) {
+    LOG(ERROR) << "QCefRendererHandler::OnProcessMessageReceived() qt render message";
     CefRefPtr<CefFrame> frame = browser->GetMainFrame();
     if (frame == nullptr) {
-      qWarning() << __FUNCTION__ << "main frame is null!";
+      LOG(ERROR) << __FUNCTION__ << "main frame is null!";
       return false;
     }
 
     CefRefPtr<CefListValue> args = message->GetArgumentList();
     if (args->GetSize() != 1) {
-      qWarning() << __FUNCTION__ << "args size mismatch, expect 1!";
+      LOG(ERROR) << __FUNCTION__ << "args size mismatch, expect 1!";
       return false;
     }
     CefRefPtr<CefV8Context> context = frame->GetV8Context();
@@ -151,7 +150,6 @@ bool QCefRendererHandler::OnProcessMessageReceived(
     auto transport = window->GetValue("qt")->GetValue("webChannelTransport");
     auto handler = transport->GetValue("onmessage");
 
-    const std::string data = args->GetString(0);
     CefV8ValueList vlist;
     CefRefPtr<CefV8Value> resp = CefV8Value::CreateObject(nullptr, nullptr);
     resp->SetValue("data",

@@ -10,6 +10,15 @@ function channelCount() {
     });
 }
 
+function execSql() {
+    var id = "query-1";
+    var statement = "statement-1";
+    qWebChannel.objects.channel.onExecSqlDone.connect(function(id, state, result) {
+        console.log("id: ", id, ", state: ", state, ", result:", result);
+    });
+    qWebChannel.objects.channel.execSql(id, statement);
+}
+
 function printMessage(msg) {
     qWebChannel.objects.channel.printMessage(msg);
 }

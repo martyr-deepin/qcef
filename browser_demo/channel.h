@@ -29,6 +29,11 @@ class Channel : public QObject {
   void printMessage(const QString& msg);
   int count();
 
+  void execSql(const QString& id, const QString& statement);
+
+ signals:
+  void onExecSqlDone(const QString& id, int state, const QVariantList& result);
+
  private:
   int count_ = 0;
 };
