@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>iframe</title>
+</head>
+<body>
+
+<div>
+    <h2>iframe-test</h2>
+    <div>
+        <input type="button" onclick="execSql()" value="DB Query">
+    </div>
+</div>
+<script>
+
+    function execSql() {
+        var id = "query-1";
+        var statement = "statement-1";
+        qWebChannel.objects.channel.onExecSqlDone.connect(function(id, state, result) {
+            console.log("id: ", id, ", state: ", state, ", result:", result);
+        });
+        qWebChannel.objects.channel.execSql(id, statement);
+    }
+</script>
+
+</body>
+</html>
