@@ -4,12 +4,14 @@ function testCrossDomain() {
     xhr.send();
 }
 
-function bootstrap() {
-    document.getElementById("send").onclick = function () {
-        var msg = document.getElementById("msg").value;
-        console.log("msg:", msg, ", dialog:", dialog);
-        dialog && dialog.printMessage(msg);
-    };
+function channelCount() {
+    qWebChannel.objects.channel.count(function(id) {
+        console.log("id: ", id);
+    });
+}
+
+function printMessage(msg) {
+    qWebChannel.objects.channel.printMessage(msg);
 }
 
 function onConfirmButtonClicked() {
@@ -58,9 +60,14 @@ function onNotificationButtonClicked() {
     // want to be respectful there is no need to bother them any more.
 }
 
+function bootstrap() {
+    document.getElementById("send").onclick = function () {
+        var msg = document.getElementById("msg").value;
+        printMessage(msg);
+    };
+}
 
 new QWebChannel(qt.webChannelTransport, function (channel) {
-    window.channel = channel;
-    window.dialog = channel.objects.dialog;
+    window.qWebChannel = channel;
     bootstrap();
 });

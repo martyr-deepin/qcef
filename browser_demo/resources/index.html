@@ -2,21 +2,28 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Hello, CEF</title>
-    <link href="https://tower.im/favicon.ico" rel="icon" />
+    <link href="https://tower.im/favicon.ico" rel="icon"/>
     <link href="qrc://resources/style.css" type="text/css" rel="stylesheet"/>
-    <link href="https://cr.deepin.io/gerrit_ui/gwt/chrome/7CF1DE6EF2AABFEFAE4D469A16D60071.cache.css" type="text/css" rel="stylesheet"/>
+    <link href="https://cr.deepin.io/gerrit_ui/gwt/chrome/7CF1DE6EF2AABFEFAE4D469A16D60071.cache.css"
+          type="text/css" rel="stylesheet"/>
 </head>
 
 <body>
-<h1>Hello</h1>
-
-<p id="serverMsg"></p>
-
-<br/>
-<input type="text" id="msg"/>
-<input type="submit" id="send" value="Send to Server"/>
 
 <div>
+    <h2>Channel test</h2>
+    <div>
+        <p>Send message to channel object</p>
+        <input type="text" id="msg"/>
+        <input type="submit" id="send" value="Send to Server"/>
+    </div>
+    <div>
+        <input type="button" onclick="channelCount()" value="Print Count">
+    </div>
+</div>
+
+<div>
+    <h2>Tooltip position</h2>
     <a href="http://z.cn" title="Amazon CN">Amazon China</a>
 </div>
 
@@ -25,14 +32,17 @@
     <input type="button" onclick="testCrossDomain()" value="Send xhr">
 </div>
 
-<h2>Dialog test</h2>
 <div>
-    <input type="button" onclick="alert('Alert!');" value="Alter dialog"/>
-    <input type="button" onclick="onConfirmButtonClicked();"
-           value="Confirm dialog"/>
-    <input type="button" onclick="onPromptButtonClicked();"
-           value="Prompt dialog"/>
+    <h2>Dialog test</h2>
+    <div>
+        <input type="button" onclick="alert('Alert!');" value="Alter dialog"/>
+        <input type="button" onclick="onConfirmButtonClicked();"
+               value="Confirm dialog"/>
+        <input type="button" onclick="onPromptButtonClicked();"
+               value="Prompt dialog"/>
+    </div>
 </div>
+
 <div>
     <input type="file" name="fileUpload" value="fileUpload" id="fileUpload">
 </div>

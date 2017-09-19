@@ -65,7 +65,7 @@ set(BROWSER_DEMO_FILES
 
     images/images.qrc
     resources/resources.qrc
-    )
+    channel.cpp channel.h)
 
 add_executable(browser-demo
                ${BROWSER_DEMO_FILES})

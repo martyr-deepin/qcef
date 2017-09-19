@@ -20,6 +20,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QWebChannel>
 #include <qcef_notification_service.h>
 #include <qcef_web_page.h>
 #include <qcef_web_settings.h>
@@ -27,6 +28,7 @@
 
 #include "browser_event_delegate.h"
 #include "browser_tab_bar.h"
+#include "channel.h"
 
 struct BrowserTabWidgetPrivate {
   BrowserEventDelegate* event_delegate = nullptr;
@@ -34,6 +36,8 @@ struct BrowserTabWidgetPrivate {
   QCefWebView* current_web = nullptr;
   QIcon blank_icon{":/images/document-new-symbolic.svg"};
   QCefNotificationService* notification_service = nullptr;
+
+  Channel* channel = nullptr;
 };
 
 BrowserTabWidget::BrowserTabWidget(QWidget* parent)
@@ -42,6 +46,7 @@ BrowserTabWidget::BrowserTabWidget(QWidget* parent)
   p_->event_delegate = new BrowserEventDelegate(this);
   p_->notification_service = new QCefNotificationService(this);
 
+  p_->channel = new Channel(this);
   p_->tab_bar = new BrowserTabBar(this);
   this->setTabBar(p_->tab_bar);
 
@@ -85,7 +90,6 @@ void BrowserTabWidget::createNewBrowser(bool in_background,
   web_view->page()->setEventDelegate(p_->event_delegate);
 
   QCefWebPage* page = web_view->page();
-
   connect(page, &QCefWebPage::iconChanged,
           [this, web_view](const QIcon& icon) {
             const int index = this->indexOf(web_view);
@@ -112,6 +116,8 @@ void BrowserTabWidget::createNewBrowser(bool in_background,
     this->removeTab(index);
     web_view->deleteLater();
   });
+
+  page->webChannel()->registerObject("channel", p_->channel);
 
   this->addTab(web_view, "New Tab");
   if (!in_background) {
@@ -200,7 +206,8 @@ void BrowserTabWidget::onNotificationReceived(const QString& summary,
 }
 
 void BrowserTabWidget::onTabCloseRequested(int index) {
-  auto web_view = qobject_cast<QCefWebView*>(this->widget(index));
+  auto widget = this->widget(index);
+  QCefWebView* web_view = qobject_cast<QCefWebView*>(widget);
   web_view->deleteLater();
   this->removeTab(index);
 }
