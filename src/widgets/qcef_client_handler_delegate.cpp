@@ -51,10 +51,12 @@ bool QCefClientHandlerDelegate::OnBeforePopup(
     const QUrl url(target_url.ToString().c_str());
     QCefWindowOpenDisposition disposition =
         static_cast<QCefWindowOpenDisposition>(target_dispositio);
-    return web_page_->getEventDelegate()->onBeforePopup(url, disposition);
-  } else {
-    return true;
+    auto event_delegate = web_page_->getEventDelegate();
+    if (event_delegate != nullptr) {
+      return event_delegate->onBeforePopup(url, disposition);
+    }
   }
+  return true;
 }
 
 void
