@@ -131,7 +131,6 @@ bool QCefRendererHandler::OnProcessMessageReceived(
 
   const std::string name = std::string(message->GetName());
   if (name == kQCefRenderQtMessage) {
-    LOG(ERROR) << "QCefRendererHandler::OnProcessMessageReceived() qt render message";
     CefRefPtr<CefFrame> frame = browser->GetMainFrame();
     if (frame == nullptr) {
       LOG(ERROR) << __FUNCTION__ << "main frame is null!";
