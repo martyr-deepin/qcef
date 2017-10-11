@@ -39,6 +39,8 @@ QCefWebView::QCefWebView(QWidget* parent)
   layout->setSpacing(0);
   this->setLayout(layout);
   this->setContentsMargins(0, 0, 0, 0);
+
+  this->installEventFilter(this);
 }
 
 QCefWebView::~QCefWebView() {
@@ -71,4 +73,11 @@ QCefWebPage* QCefWebView::page() const {
     that->p_->page = new QCefWebPage(that);
   }
   return p_->page;
+}
+
+bool QCefWebView::event(QEvent* event) {
+  if (event->type() == QEvent::WindowActivate) {
+    this->page()->updateBrowserGeometry();
+  }
+  return QWidget::event(event);
 }

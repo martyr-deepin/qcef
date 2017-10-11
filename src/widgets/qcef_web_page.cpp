@@ -214,7 +214,6 @@ void QCefWebPage::setUrl(const QUrl& url) {
   p_->html.clear();
 
   p_->browser()->GetMainFrame()->LoadURL(url.toString().toStdString());
-  this->updateBrowserGeometry();
 }
 
 void QCefWebPage::setHtml(const QString& html, const QUrl& url) {
@@ -227,7 +226,6 @@ void QCefWebPage::setHtml(const QString& html, const QUrl& url) {
 
   p_->browser()->GetMainFrame()->LoadString(html.toStdString(),
                                             url.toString().toStdString());
-  this->updateBrowserGeometry();
 }
 
 void QCefWebPage::setZoomFactor(qreal factor) {
@@ -392,7 +390,6 @@ void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
 }
 
 void QCefWebPage::onBrowserGotFocus() {
-  this->updateBrowserGeometry();
 }
 
 void QCefWebPage::closeBrowser() {
@@ -401,16 +398,12 @@ void QCefWebPage::closeBrowser() {
 //  p_->browser()->GetHost()->TryCloseBrowser();
 }
 
-void QCefWebPage::resizeBrowserWindow(const QSize& size) {
-  if (p_->browser_window != nullptr) {
-    p_->browser_window->resize(size);
-  }
-}
-
 void QCefWebPage::updateBrowserGeometry() {
   const QSize old_size = p_->browser_window->size();
-  this->resizeBrowserWindow(QSize(400, 400));
-  this->resizeBrowserWindow(old_size);
+  if (p_->browser_window != nullptr) {
+    p_->browser_window->setHeight(400);
+    p_->browser_window->setHeight(old_size.height());
+  }
 }
 
 void QCefWebPage::createTransportChannel() {
