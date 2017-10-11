@@ -157,8 +157,8 @@ CefRefPtr<CefBrowser> QCefWebPagePrivate::browser() {
 }
 
 void QCefWebPagePrivate::createBrowserWidget() {
-  QWindow* wrapper_window = nullptr;
-  wrapper_window = new QWindow();
+  // QCefWebView -> wrapper_widget -> window_x11_ -> web content widget
+  QWindow* wrapper_window = new QWindow();
   wrapper_window->create();
   // wrapper_widget takes ownership of wrapper_window.
   wrapper_widget = QWidget::createWindowContainer(wrapper_window);
@@ -179,9 +179,7 @@ void QCefWebPagePrivate::createBrowserWidget() {
                                                nullptr);
   browser_wid = browser_->GetHost()->GetWindowHandle();
   browser_window = QWindow::fromWinId(browser_wid);
-  browser_window->setParent(wrapper_window);
-  QObject::connect(wrapper_window, &QWindow::visibilityChanged,
-                   browser_window, &QWindow::setVisibility);
+  // Auto resize web content window.
   QObject::connect(wrapper_window, &QWindow::widthChanged,
                    browser_window, &QWindow::setWidth);
   QObject::connect(wrapper_window, &QWindow::heightChanged,
@@ -191,7 +189,7 @@ void QCefWebPagePrivate::createBrowserWidget() {
 QCefWebPage::QCefWebPage(QObject* parent)
     : QObject(parent),
       p_(new QCefWebPagePrivate()) {
-  p_->view = qobject_cast<QWidget*>(parent);
+  p_->view = static_cast<QWidget*>(parent);
   p_->delegate = new QCefClientHandlerDelegate(this);
   p_->client_handler = new QCefClientHandler(p_->delegate);
   p_->settings = new QCefWebSettings();
@@ -373,7 +371,7 @@ void QCefWebPage::toPlainText(Callback callback) const {
 }
 
 QCefSSLStatus QCefWebPage::getSSLStatus() const {
-  QCefSSLStatus ssl_status;
+  QCefSSLStatus ssl_status{};
   // Returns a nullptr if navigation entry list is empty.
   auto navigation = p_->browser()->GetHost()->GetVisibleNavigationEntry();
   if (navigation.get() != nullptr) {
@@ -410,8 +408,9 @@ void QCefWebPage::resizeBrowserWindow(const QSize& size) {
 }
 
 void QCefWebPage::updateBrowserGeometry() {
+  const QSize old_size = p_->browser_window->size();
   this->resizeBrowserWindow(QSize(400, 400));
-  this->resizeBrowserWindow(p_->view->size());
+  this->resizeBrowserWindow(old_size);
 }
 
 void QCefWebPage::createTransportChannel() {
