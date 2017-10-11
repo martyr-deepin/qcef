@@ -109,13 +109,6 @@ void QCefClientHandlerDelegate::OnFaviconURLChange(const CefString& icon_url,
   }
 }
 
-void QCefClientHandlerDelegate::OnGotFocus(CefRefPtr<CefBrowser> browser) {
-  if (cef_browser_ != nullptr &&
-      browser->GetIdentifier() == cef_browser_->GetIdentifier()) {
-    web_page_->onBrowserGotFocus();
-  }
-}
-
 void QCefClientHandlerDelegate::OnLoadStarted(CefRefPtr<CefBrowser> browser,
                                               CefRefPtr<CefFrame> frame) {
   if (cef_browser_ != nullptr &&

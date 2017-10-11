@@ -183,8 +183,6 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   friend class QCefWebView;
   friend class QCefClientHandlerDelegate;
 
-  void onBrowserGotFocus();
-
   void closeBrowser();
   void updateBrowserGeometry();
 

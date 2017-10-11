@@ -17,7 +17,6 @@ class QCefClientHandler : public CefClient,
                           public CefContextMenuHandler,
                           public CefDisplayHandler,
                           public CefDownloadHandler,
-                          public CefFocusHandler,
                           public CefKeyboardHandler,
                           public CefLifeSpanHandler,
                           public CefLoadHandler,
@@ -35,8 +34,6 @@ class QCefClientHandler : public CefClient,
     virtual void OnBrowserCreated(CefRefPtr<CefBrowser> browser) = 0;
 
     virtual void DoClose(CefRefPtr<CefBrowser> browser) = 0;
-
-    virtual void OnGotFocus(CefRefPtr<CefBrowser> browser) = 0;
 
     // CefLoadHandler methods
     virtual void OnLoadStarted(CefRefPtr<CefBrowser> browser,
@@ -105,10 +102,6 @@ class QCefClientHandler : public CefClient,
     return this;
   }
 
-  CefRefPtr<CefFocusHandler> GetFocusHandler() override {
-    return this;
-  }
-
   CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() override {
     return this;
   }
@@ -169,9 +162,6 @@ class QCefClientHandler : public CefClient,
   void OnDownloadUpdated(CefRefPtr<CefBrowser> browser,
                          CefRefPtr<CefDownloadItem> download_item,
                          CefRefPtr<CefDownloadItemCallback> callback) override;
-
-  // CefFocusHandler methods:
-  void OnGotFocus(CefRefPtr<CefBrowser> browser) override;
 
   // CefKeyboardHandler methods:
   bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser,

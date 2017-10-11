@@ -158,6 +158,9 @@ void QCefClientHandler::OnBeforeContextMenu(
     CefRefPtr<CefContextMenuParams> params,
     CefRefPtr<CefMenuModel> model) {
   CEF_REQUIRE_UI_THREAD();
+
+  qDebug() << "OnBeforeContextMenu()";
+
   if (delegate_ != nullptr) {
     delegate_->OnBeforeContextMenu(browser, frame, params, model);
   }
@@ -257,14 +260,6 @@ bool QCefClientHandler::OnBeforePopup(
     return delegate_->OnBeforePopup(target_url, target_disposition);
   } else {
     return true;
-  }
-}
-
-void QCefClientHandler::OnGotFocus(CefRefPtr<CefBrowser> browser) {
-  CEF_REQUIRE_UI_THREAD();
-
-  if (delegate_ != nullptr) {
-    delegate_->OnGotFocus(browser);
   }
 }
 

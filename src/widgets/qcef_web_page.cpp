@@ -389,9 +389,6 @@ void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
   p_->event_delegate = delegate;
 }
 
-void QCefWebPage::onBrowserGotFocus() {
-}
-
 void QCefWebPage::closeBrowser() {
   qDebug() << "Web page close browser";
   p_->browser()->GetHost()->CloseBrowser(true);
