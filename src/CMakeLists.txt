@@ -89,11 +89,11 @@ set(BASE_FILES
     )
 
 set(CORE_FILES
-    core/qcef_app.cc
+    core/qcef_app.cpp
     core/qcef_app.h
     core/qcef_browser_transport.cpp
     core/qcef_browser_transport.h
-    core/qcef_client_handler.cc
+    core/qcef_client_handler.cpp
     core/qcef_client_handler.h
     core/qcef_context.cpp
     core/qcef_context.h
