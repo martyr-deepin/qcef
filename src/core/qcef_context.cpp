@@ -159,9 +159,9 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   // Initialize CEF for the browser process.
   if (!CefInitialize(main_args, cef_settings, client_app.get(), nullptr)) {
     qCritical() << "CefInitialize() failed!";
-    return 1;
+    return -2;
   }
-  return 0;
+  return -1;
 }
 
 void QCefBindApp(QCoreApplication* app) {

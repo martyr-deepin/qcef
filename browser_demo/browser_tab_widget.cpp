@@ -18,6 +18,7 @@
 #include "browser_tab_widget.h"
 
 #include <QApplication>
+#include <QClipboard>
 #include <QDebug>
 #include <QMouseEvent>
 #include <QWebChannel>
@@ -65,6 +66,10 @@ BrowserTabWidget::BrowserTabWidget(QWidget* parent)
           this, &BrowserTabWidget::onRefreshRequested);
   connect(p_->event_delegate, &BrowserEventDelegate::popupRequested,
           this, &BrowserTabWidget::onPopupRequested);
+  connect(p_->event_delegate, &BrowserEventDelegate::copyLinkToClipboard,
+          [=](const QUrl& url) {
+            QApplication::clipboard()->setText(url.toString());
+          });
   connect(p_->event_delegate, &BrowserEventDelegate::toggleFullscreen,
           this, &BrowserTabWidget::onToggleFullscreen);
 }
