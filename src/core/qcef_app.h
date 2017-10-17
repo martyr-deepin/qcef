@@ -7,6 +7,7 @@
 
 #include <QVector>
 
+#include "core/qcef_global_settings.h"
 #include "core/qcef_scheme_handler.h"
 #include "core/qcef_sync_method.h"
 #include "include/cef_app.h"
@@ -46,6 +47,8 @@ class QCefApp : public CefApp,
 
   void setSyncMethods(const QCefSyncMethodMap& map);
 
+  void setRegisterScripts(const QCefUserScriptList& scripts);
+
  private:
   // Include the default reference counting implementation.
   IMPLEMENT_REFCOUNTING(QCefApp);
@@ -55,6 +58,7 @@ class QCefApp : public CefApp,
   QList<QUrl> custom_scheme_list_;
   QCefSchemeHandler custom_scheme_handler_ = nullptr;
   QCefSyncMethodMap sync_methods_;
+  QCefUserScriptList register_scripts_;
 };
 
 #endif  // QCEF_CORE_QCEF_APP_H

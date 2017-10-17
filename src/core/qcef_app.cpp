@@ -67,7 +67,7 @@ void QCefApp::appendCommandLineSwitches(const AppendedArguments& args) {
 }
 
 CefRefPtr<CefRenderProcessHandler> QCefApp::GetRenderProcessHandler() {
-  return new QCefRendererHandler(sync_methods_);
+  return new QCefRendererHandler(sync_methods_, register_scripts_);
 }
 
 void QCefApp::addCustomSchemes(const QList<QUrl>& list) {
@@ -84,4 +84,8 @@ void QCefApp::setSyncMethods(const QCefSyncMethodMap& map) {
 
 CefRefPtr<CefPrintHandler> QCefApp::GetPrintHandler() {
   return new QCefPrintHandler();
+}
+
+void QCefApp::setRegisterScripts(const QCefUserScriptList& scripts) {
+  register_scripts_ = scripts;
 }

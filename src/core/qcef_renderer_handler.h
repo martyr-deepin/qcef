@@ -18,6 +18,7 @@
 #ifndef QCEF_CORE_QCEF_RENDERER_HANDLER_H
 #define QCEF_CORE_QCEF_RENDERER_HANDLER_H
 
+#include "core/qcef_global_settings.h"
 #include "core/qcef_sync_method.h"
 #include "include/cef_render_process_handler.h"
 
@@ -25,7 +26,8 @@
 class QCefRendererHandler : public CefRenderProcessHandler {
  public:
   QCefRendererHandler() { }
-  explicit QCefRendererHandler(const QCefSyncMethodMap& map);
+  explicit QCefRendererHandler(const QCefSyncMethodMap& map,
+                               const QCefUserScriptList& scripts);
   void OnContextCreated(CefRefPtr<CefBrowser> browser,
                         CefRefPtr<CefFrame> frame,
                         CefRefPtr<CefV8Context> context) override;
@@ -45,6 +47,7 @@ class QCefRendererHandler : public CefRenderProcessHandler {
   DISALLOW_COPY_AND_ASSIGN(QCefRendererHandler);
 
   QCefSyncMethodMap sync_methods_;
+  QList<QCefUserScript> register_scripts_;
 };
 
 #endif  // QCEF_CORE_QCEF_RENDERER_HANDLER_H

@@ -1,3 +1,8 @@
+
+"use strict";
+
+console.log("LOADING script.js");
+
 function testCrossDomain() {
     var xhr = new XMLHttpRequest();
     xhr.open('get', 'http://music.163.com');

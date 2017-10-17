@@ -71,6 +71,11 @@ int main(int argc, char* argv[]) {
 
   // Register echoMessage in web page.
   settings.registerSyncMethod("echoMessage", EchoMessage);
+
+  // Register user script.
+  settings.registerUserScript(":/resources/user_script.js",
+                              QUrl("qrc://resources/user_script.js"));
+
   const int exit_code = QCefInit(argc, argv, settings);
   if (exit_code >= 0) {
     return exit_code;

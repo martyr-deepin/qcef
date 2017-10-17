@@ -29,6 +29,12 @@
 
 struct QCefGlobalSettingsPrivate;
 
+struct QCefUserScript {
+  QString path;
+  QUrl url;
+};
+typedef QList<QCefUserScript> QCefUserScriptList;
+
 // Setup cef switches during initialization.
 class QCEF_CORE_EXPORT QCefGlobalSettings {
  public:
@@ -127,8 +133,15 @@ class QCEF_CORE_EXPORT QCefGlobalSettings {
   void setCustomSchemeHandler(QCefSchemeHandler handler);
   const QCefSchemeHandler& getCustomSchemeHandler() const;
 
+  // Register methods into v8 context.
+  // Note that these methods are called in renderer process.
   void registerSyncMethod(const QString& name, QCefSyncMethod handler);
   const QCefSyncMethodMap& getSyncMethods() const;
+
+  // Register javascript files into v8 context.
+  // These scripts are executed as soon as v8 context is initialized.
+  void registerUserScript(const QString& path, const QUrl& url);
+  const QCefUserScriptList& getUserScripts() const;
 
   // Disable proxy.
   void setNoProxy();

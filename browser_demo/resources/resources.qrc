@@ -5,5 +5,6 @@
         <file>redirect.html</file>
         <file>script.js</file>
         <file>style.css</file>
+        <file>user_script.js</file>
     </qresource>
 </RCC>

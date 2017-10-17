@@ -58,6 +58,8 @@ struct QCefGlobalSettingsPrivate {
   QCefSchemeHandler custom_scheme_handler = nullptr;
   QCefSyncMethodMap sync_method_handlers;
 
+  QCefUserScriptList register_scripts;
+
   QCefGlobalSettings::ProxyType proxy_type =
       QCefGlobalSettings::ProxyType::Default;
   QString proxy_info;
@@ -265,4 +267,13 @@ QCefGlobalSettings::ProxyType QCefGlobalSettings::proxyType() const {
 
 const QString& QCefGlobalSettings::proxyInfo() const {
   return p_->proxy_info;
+}
+
+void QCefGlobalSettings::registerUserScript(const QString& path,
+                                            const QUrl& url) {
+  p_->register_scripts.append({path, url});
+}
+
+const QCefUserScriptList& QCefGlobalSettings::getUserScripts() const {
+  return p_->register_scripts;
 }

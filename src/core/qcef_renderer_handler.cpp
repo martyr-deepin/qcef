@@ -29,6 +29,9 @@
 
 namespace {
 
+const char kWebChannelScriptFile[] = ":/qtwebchannel/qwebchannel.js";
+const char kWebChannelScriptUrl[] = "qrc://qtwebchannel/qwebchannel.js";
+
 void RegisterRendererTransport(CefRefPtr<CefFrame> frame,
                                CefRefPtr<CefV8Context> context) {
   context->Enter();
@@ -49,16 +52,18 @@ void RegisterRendererTransport(CefRefPtr<CefFrame> frame,
   qDebug() << "RegisterRendererTransport()";
 
   // Register QWebChannel class to global context.
-  const QString content = ReadFile(":/qtwebchannel/qwebchannel.js");
+  const QString content = ReadFile(kWebChannelScriptFile);
   Q_ASSERT(!content.isEmpty());
-  const CefString code = content.toStdWString();
-  frame->ExecuteJavaScript(code, "qrc://qtwebchannel/qwebchannel.js", 0);
+  const std::string code = content.toStdString();
+  frame->ExecuteJavaScript(code, kWebChannelScriptUrl, 0);
 }
 
 }  // namespace
 
-QCefRendererHandler::QCefRendererHandler(const QCefSyncMethodMap& map)
-    : sync_methods_(map) {
+QCefRendererHandler::QCefRendererHandler(const QCefSyncMethodMap& map,
+                                         const QCefUserScriptList& scripts)
+    : sync_methods_(map),
+      register_scripts_(scripts) {
 }
 
 void QCefRendererHandler::OnContextCreated(CefRefPtr<CefBrowser> browser,
@@ -104,6 +109,17 @@ void QCefRendererHandler::OnContextCreated(CefRefPtr<CefBrowser> browser,
     return;
   }
   RegisterRendererTransport(frame, context);
+
+  // Register user scripts.
+  for (const QCefUserScript& script : register_scripts_) {
+    const QString content = ReadFile(script.path);
+    Q_ASSERT(!content.isEmpty());
+    if (!content.isEmpty()) {
+      const std::string code = content.toStdString();
+      const std::string url = script.url.toString().toStdString();
+      frame->ExecuteJavaScript(code, url, 0);
+    }
+  }
 
   CefRefPtr<CefProcessMessage> msg =
       CefProcessMessage::Create(kQCefRenderContextCreated);
