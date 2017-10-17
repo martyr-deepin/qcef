@@ -17,7 +17,6 @@
 
 #include "core/qcef_renderer_handler.h"
 
-#include <QDebug>
 #include <string>
 
 #include "base/file_util.h"
@@ -48,8 +47,6 @@ void RegisterRendererTransport(CefRefPtr<CefFrame> frame,
   context->GetGlobal()->SetValue("qt", qt, V8_PROPERTY_ATTRIBUTE_NONE);
 
   context->Exit();
-
-  qDebug() << "RegisterRendererTransport()";
 
   // Register QWebChannel class to global context.
   const QString content = ReadFile(kWebChannelScriptFile);

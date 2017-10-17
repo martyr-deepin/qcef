@@ -159,8 +159,6 @@ void QCefClientHandler::OnBeforeContextMenu(
     CefRefPtr<CefMenuModel> model) {
   CEF_REQUIRE_UI_THREAD();
 
-  qDebug() << "OnBeforeContextMenu()";
-
   if (delegate_ != nullptr) {
     delegate_->OnBeforeContextMenu(browser, frame, params, model);
   }
