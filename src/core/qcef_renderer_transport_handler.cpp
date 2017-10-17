@@ -18,7 +18,6 @@
 #include "core/qcef_renderer_transport_handler.h"
 
 #include <string>
-#include <QDebug>
 
 #include "core/qcef_web_channel_consts.h"
 #include "include/wrapper/cef_helpers.h"
@@ -42,12 +41,6 @@ bool QCefRendererTransportHandler::Execute(const CefString& name,
 
   CefRefPtr<CefListValue> args = msg->GetArgumentList();
   args->SetString(0, arguments[0]->GetStringValue());
-
-#ifdef N_DEBUG
-  qDebug() << "QCefRendererTransportHandler:Execute() "
-           << "render send normal qt message:"
-           << std::string(arguments[0]->GetStringValue()).c_str();
-#endif
 
   browser_->SendProcessMessage(PID_BROWSER, msg);
 

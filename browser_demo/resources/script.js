@@ -13,9 +13,6 @@ function channelCount() {
 function execSql() {
     var id = "query-1";
     var statement = "statement-1";
-    qWebChannel.objects.channel.onExecSqlDone.connect(function(id, state, result) {
-        console.log("id: ", id, ", state: ", state, ", result:", result);
-    });
     qWebChannel.objects.channel.execSql(id, statement);
 }
 
@@ -70,6 +67,10 @@ function onNotificationButtonClicked() {
 }
 
 function bootstrap() {
+    qWebChannel.objects.channel.onExecSqlDone.connect(function(id, state, result) {
+        console.log("id: ", id, ", state: ", state, ", result:", result);
+    });
+
     document.getElementById("send").onclick = function () {
         var msg = document.getElementById("msg").value;
         printMessage(msg);

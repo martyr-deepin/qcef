@@ -169,6 +169,7 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
   }
 
   const QString name(message->GetName().ToString().c_str());
+  qDebug() << Q_FUNC_INFO << name;
   if (name == kQCefRenderContextCreated) {
     web_page_->createTransportChannel();
     emit web_page_->renderContextCreated();
@@ -186,7 +187,9 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
       return false;
     }
     const QString msg = QString::fromStdString(args->GetString(0));
+    qDebug() << "msg:" << msg;
     const QJsonDocument doc(QJsonDocument::fromJson(msg.toUtf8()));
+    qDebug() << "doc: " << doc;
     if (doc.isObject()) {
       web_page_->handleWebMessage(doc.object());
     } else {

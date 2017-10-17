@@ -404,6 +404,7 @@ void QCefWebPage::updateBrowserGeometry() {
 }
 
 void QCefWebPage::createTransportChannel() {
+  qDebug() << Q_FUNC_INFO;
   Q_ASSERT(p_->transport == nullptr);
   if (p_->transport != nullptr) {
     delete p_->transport;
@@ -415,6 +416,7 @@ void QCefWebPage::createTransportChannel() {
 }
 
 void QCefWebPage::releaseTransportChannel() {
+  qDebug() << Q_FUNC_INFO;
   Q_ASSERT(p_->transport != nullptr);
   if (p_->transport != nullptr) {
     p_->channel_connected = false;
@@ -426,6 +428,7 @@ void QCefWebPage::releaseTransportChannel() {
 
 void QCefWebPage::handleWebMessage(const QJsonObject& message) {
   if (p_->transport != nullptr && p_->channel_connected) {
+    qDebug() << Q_FUNC_INFO << message;
     emit p_->transport->messageReceived(message, p_->transport);
   } else {
     qCritical() << __FUNCTION__ << "transport is null!";
