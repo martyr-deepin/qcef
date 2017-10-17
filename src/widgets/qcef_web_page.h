@@ -187,8 +187,8 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void updateBrowserGeometry();
 
   // Handle messages received from renderer process.
-  void createTransportChannel();
-  void releaseTransportChannel();
+  void connectTransportChannel();
+  void disconnectTransportChannel();
   void handleWebMessage(const QJsonObject& message);
 
   void updateFavicon(const QUrl& url, const QIcon& icon);

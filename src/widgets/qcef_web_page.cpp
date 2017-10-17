@@ -184,6 +184,9 @@ void QCefWebPagePrivate::createBrowserWidget() {
                    browser_window, &QWindow::setWidth);
   QObject::connect(wrapper_window, &QWindow::heightChanged,
                    browser_window, &QWindow::setHeight);
+
+  // Create transport object when browser is ready.
+  transport = new QCefBrowserTransport(browser_);
 }
 
 QCefWebPage::QCefWebPage(QObject* parent)
@@ -402,27 +405,18 @@ void QCefWebPage::updateBrowserGeometry() {
   }
 }
 
-void QCefWebPage::createTransportChannel() {
-  qDebug() << Q_FUNC_INFO;
-  Q_ASSERT(p_->transport == nullptr);
-  if (p_->transport != nullptr) {
-    delete p_->transport;
-    p_->transport = nullptr;
-  }
-  p_->transport = new QCefBrowserTransport(p_->browser());
+void QCefWebPage::connectTransportChannel() {
+  Q_ASSERT(p_->transport != nullptr);
+  Q_ASSERT(p_->channel != nullptr);
   p_->channel->connectTo(p_->transport);
   p_->channel_connected = true;
 }
 
-void QCefWebPage::releaseTransportChannel() {
-  qDebug() << Q_FUNC_INFO;
+void QCefWebPage::disconnectTransportChannel() {
   Q_ASSERT(p_->transport != nullptr);
-  if (p_->transport != nullptr) {
-    p_->channel_connected = false;
-    p_->channel->disconnectFrom(p_->transport);
-    delete p_->transport;
-    p_->transport = nullptr;
-  }
+  Q_ASSERT(p_->channel != nullptr);
+  p_->channel_connected = false;
+  p_->channel->disconnectFrom(p_->transport);
 }
 
 void QCefWebPage::handleWebMessage(const QJsonObject& message) {

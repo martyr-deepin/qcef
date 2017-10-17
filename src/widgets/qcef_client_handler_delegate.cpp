@@ -171,12 +171,12 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
   const QString name(message->GetName().ToString().c_str());
   qDebug() << Q_FUNC_INFO << name;
   if (name == kQCefRenderContextCreated) {
-    web_page_->createTransportChannel();
+    web_page_->connectTransportChannel();
     emit web_page_->renderContextCreated();
     return true;
   }
   if (name == kQCefRenderContextReleased) {
-    web_page_->releaseTransportChannel();
+    web_page_->disconnectTransportChannel();
     return true;
   }
 
