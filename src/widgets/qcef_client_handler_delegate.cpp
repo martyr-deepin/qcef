@@ -179,6 +179,7 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
     web_page_->releaseTransportChannel();
     return true;
   }
+
   if (name == kQCefRenderQtMessage) {
     CefRefPtr<CefListValue> args = message->GetArgumentList();
     if (args->GetSize() != 1) {
@@ -189,7 +190,6 @@ bool QCefClientHandlerDelegate::OnProcessMessageReceived(
     const QString msg = QString::fromStdString(args->GetString(0));
     qDebug() << "msg:" << msg;
     const QJsonDocument doc(QJsonDocument::fromJson(msg.toUtf8()));
-    qDebug() << "doc: " << doc;
     if (doc.isObject()) {
       web_page_->handleWebMessage(doc.object());
     } else {

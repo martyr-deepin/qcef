@@ -66,6 +66,10 @@ function onNotificationButtonClicked() {
     // want to be respectful there is no need to bother them any more.
 }
 
+function redirectPage() {
+    window.location.href = "qrc://resources/redirect.html";
+}
+
 function bootstrap() {
     qWebChannel.objects.channel.onExecSqlDone.connect(function(id, state, result) {
         console.log("id: ", id, ", state: ", state, ", result:", result);

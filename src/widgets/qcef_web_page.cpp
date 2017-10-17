@@ -392,7 +392,6 @@ void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
 void QCefWebPage::closeBrowser() {
   qDebug() << "Web page close browser";
   p_->browser()->GetHost()->CloseBrowser(true);
-//  p_->browser()->GetHost()->TryCloseBrowser();
 }
 
 void QCefWebPage::updateBrowserGeometry() {
