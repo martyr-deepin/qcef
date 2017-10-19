@@ -18,7 +18,6 @@
 #include "core/qcef_browser_transport.h"
 
 #include <string>
-#include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
 
@@ -32,12 +31,10 @@ QCefBrowserTransport::QCefBrowserTransport(CefRefPtr<CefBrowser> browser,
 
 void QCefBrowserTransport::sendMessage(const QJsonObject& message) {
   // Send message from browser process to renderer process.
-  qDebug() << "Browser sendMessage()" << message;
   CefRefPtr<CefProcessMessage> msg =
       CefProcessMessage::Create(kQCefRenderQtMessage);
   CefRefPtr<CefListValue> args = msg->GetArgumentList();
   const std::string data = QJsonDocument(message).toJson().toStdString();
-  qDebug() << "data: " << data.c_str();
   args->SetString(0, data);
   browser_->SendProcessMessage(PID_RENDERER, msg);
 }
