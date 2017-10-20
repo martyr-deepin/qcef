@@ -63,6 +63,8 @@ struct QCefGlobalSettingsPrivate {
   QCefGlobalSettings::ProxyType proxy_type =
       QCefGlobalSettings::ProxyType::Default;
   QString proxy_info;
+
+  QCefCommandLineSwitchList switch_list;
 };
 
 QCefGlobalSettings::QCefGlobalSettings()
@@ -276,4 +278,14 @@ void QCefGlobalSettings::registerUserScript(const QString& path,
 
 const QCefUserScriptList& QCefGlobalSettings::getUserScripts() const {
   return p_->register_scripts;
+}
+
+void QCefGlobalSettings::addCommandLineSwitch(const QString& key,
+                                              const QString& value) {
+  p_->switch_list.append({key, value});
+}
+
+const QCefCommandLineSwitchList&
+QCefGlobalSettings::getCommandLineSwitches() const {
+  return p_->switch_list;
 }

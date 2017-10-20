@@ -53,7 +53,7 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   CefRefPtr<QCefApp> client_app(new QCefApp());
 
   // Add flash plugin parameters.
-  QCefApp::AppendedArguments arguments;
+  QCefCommandLineSwitchList arguments(settings.getCommandLineSwitches());
   if (settings.pepperFlash()) {
     arguments.push_back({"ppapi-flash-path",
                          settings.getPepperFlashPath()});

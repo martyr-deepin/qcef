@@ -76,6 +76,9 @@ int main(int argc, char* argv[]) {
   settings.registerUserScript(":/resources/user_script.js",
                               QUrl("qrc://resources/user_script.js"));
 
+  // Disable GPU process.
+  settings.addCommandLineSwitch("--disable-gpu", "");
+
   const int exit_code = QCefInit(argc, argv, settings);
   if (exit_code >= 0) {
     return exit_code;

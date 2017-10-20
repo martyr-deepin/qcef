@@ -35,6 +35,12 @@ struct QCefUserScript {
 };
 typedef QList<QCefUserScript> QCefUserScriptList;
 
+struct QCefCommandLineSwitch {
+  QString key;
+  QString value;
+};
+typedef QList<QCefCommandLineSwitch> QCefCommandLineSwitchList;
+
 // Setup cef switches during initialization.
 class QCEF_CORE_EXPORT QCefGlobalSettings {
  public:
@@ -166,6 +172,13 @@ class QCEF_CORE_EXPORT QCefGlobalSettings {
   };
   ProxyType proxyType() const;
   const QString& proxyInfo() const;
+
+  // Append command line argument to chromium subprocess.
+  // |value| might be empty.
+  // * ("--url", "http://z.cn") to open default url.
+  // * ("--disable-gpu", "") to disable hardware accelerator.
+  void addCommandLineSwitch(const QString& key, const QString& value);
+  const QCefCommandLineSwitchList& getCommandLineSwitches() const;
 
  private:
   QCefGlobalSettingsPrivate* p_ = nullptr;

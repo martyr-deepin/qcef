@@ -37,9 +37,7 @@ class QCefApp : public CefApp,
   CefRefPtr<CefPrintHandler> GetPrintHandler() override;
 
   // Open API used to customize cef app.
-  typedef QVector<QPair<QString, QString>> AppendedArguments;
-  // Append |args| to command line.
-  void appendCommandLineSwitches(const AppendedArguments& args);
+  void appendCommandLineSwitches(const QCefCommandLineSwitchList& args);
 
   void addCustomSchemes(const QList<QUrl>& list);
 
@@ -54,7 +52,7 @@ class QCefApp : public CefApp,
   IMPLEMENT_REFCOUNTING(QCefApp);
   DISALLOW_COPY_AND_ASSIGN(QCefApp);
 
-  AppendedArguments appended_args_;
+  QCefCommandLineSwitchList appended_args_;
   QList<QUrl> custom_scheme_list_;
   QCefSchemeHandler custom_scheme_handler_ = nullptr;
   QCefSyncMethodMap sync_methods_;
