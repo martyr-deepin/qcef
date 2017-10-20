@@ -44,6 +44,7 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 
   int cef_argc = argc;
   char** cef_argv = nullptr;
+  // TODO(LiuLang): Free memory block.
   cef_argv = static_cast<char**>(calloc(static_cast<size_t>(cef_argc),
                                         sizeof(argv[0])));
   memcpy(cef_argv, argv, argc * sizeof(argv[0]));
