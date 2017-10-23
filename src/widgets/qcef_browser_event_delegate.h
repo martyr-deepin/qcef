@@ -238,24 +238,37 @@ class QCEF_WIDGETS_EXPORT QCefBrowserEventDelegate {
  public:
   // Return true to cancel the navigation or false to allow the navigation
   // to proceed. |url| is the target url to be navigated to.
-  virtual bool onBeforeBrowse(const QUrl& url, bool is_redirect) = 0;
+  virtual bool onBeforeBrowse(const QUrl& url, bool is_redirect) {
+    Q_UNUSED(url);
+    Q_UNUSED(is_redirect);
+    return false;
+  }
 
   // Construct and popup a QMenu as context menu of browser window.
   virtual void onBeforeContextMenu(QCefWebPage* web_page,
                                    QCefContextMenu* menu,
-                                   const QCefContextMenuParams& params) = 0;
+                                   const QCefContextMenuParams& params) {
+    Q_UNUSED(web_page);
+    Q_UNUSED(menu);
+    Q_UNUSED(params);
+  };
 
   // This method is called before a new popup browser is created.
   // |url| is the position new popup window should navigate.
-  // Returns true to popup default popup window.
+  // Returns false to popup default popup window.
   virtual bool onBeforePopup(const QUrl& url,
-                             QCefWindowOpenDisposition disposition) = 0;
+                             QCefWindowOpenDisposition disposition) {
+    Q_UNUSED(url);
+    Q_UNUSED(disposition);
+    return true;
+  }
 
   // Triggered before a key event is sent to renderer process.
   // NOTE(LiuLang): Current |event| does not map to Qt Key event, only native
   // key code is available.
-  virtual void onPreKeyEvent(const QKeyEvent& event) = 0;
+  virtual void onPreKeyEvent(const QKeyEvent& event) {
+    Q_UNUSED(event);
+  }
 };
-
 
 #endif  // QCEF_WIDGETS_QCEF_BROWSER_EVENT_DELEGATE_H
