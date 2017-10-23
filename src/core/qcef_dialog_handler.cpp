@@ -73,30 +73,51 @@ bool QCefDialogHandler::OnFileDialog(
   dialog->setWindowTitle(title_str);
   dialog->setConfirmOverwrite(mode & FILE_DIALOG_OVERWRITEPROMPT_FLAG);
   const QString path = default_file_path.ToString().c_str();
-  qDebug() << "default path:" << path;
-  QFileInfo info(path);
+  QFileInfo info;
+  if (path.isEmpty()) {
+    info = QDir::homePath();
+  } else {
+    info = path;
+  }
   switch (mode_type) {
     case FILE_DIALOG_OPEN: {
       dialog->setAcceptMode(QFileDialog::AcceptOpen);
-      dialog->setDirectory(info.absolutePath());
+      if (info.isFile()) {
+        dialog->selectFile(info.absoluteFilePath());
+      } else {
+        dialog->setDirectory(info.absoluteFilePath());
+      }
       dialog->setFileMode(QFileDialog::ExistingFile);
       break;
     }
     case FILE_DIALOG_OPEN_FOLDER: {
       dialog->setAcceptMode(QFileDialog::AcceptOpen);
-      dialog->setDirectory(info.absolutePath());
+      if (info.isFile()) {
+        dialog->selectFile(info.absoluteFilePath());
+      } else {
+        dialog->setDirectory(info.absoluteFilePath());
+      }
       dialog->setFileMode(QFileDialog::Directory);
       break;
     }
     case FILE_DIALOG_OPEN_MULTIPLE: {
       dialog->setAcceptMode(QFileDialog::AcceptOpen);
+      if (info.isFile()) {
+        dialog->selectFile(info.absoluteFilePath());
+      } else {
+        dialog->setDirectory(info.absoluteFilePath());
+      }
       dialog->setFileMode(QFileDialog::ExistingFile);
       break;
     }
     case FILE_DIALOG_SAVE: {
       dialog->setAcceptMode(QFileDialog::AcceptSave);
       dialog->setFileMode(QFileDialog::AnyFile);
-      dialog->setDirectory(info.absolutePath());
+      if (info.isFile()) {
+        dialog->selectFile(info.absoluteFilePath());
+      } else {
+        dialog->setDirectory(info.absoluteFilePath());
+      }
       dialog->selectFile(info.fileName());
       break;
     }
