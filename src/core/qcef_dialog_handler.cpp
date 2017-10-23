@@ -21,8 +21,43 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QMimeDatabase>
 
 #include "include/cef_parser.h"
+
+namespace {
+
+QString NameFilterForMime(const QString& mime_type) {
+  QMimeDatabase db;
+  if (mime_type.endsWith("/*")) {
+    const int slash_index = mime_type.indexOf('/');
+    const QString prefix(mime_type.left(slash_index));
+
+    QStringList patterns;
+    // Match all file formats of this type, like image/*, audio/*
+    for (const QMimeType& mime : db.allMimeTypes()) {
+      if (mime.name().startsWith(prefix)) {
+        patterns += mime.globPatterns();
+      }
+    }
+    return QLatin1String("* (") + patterns.join(QLatin1Char(' ')) + ')';
+
+  } else {
+    // Match exact file type.
+    QMimeType mime(db.mimeTypeForName(mime_type));
+    if (mime.isValid()) {
+      if (mime.isDefault()) {
+        return QObject::tr("All files (*)");
+      } else {
+        const QString patterns = mime.globPatterns().join(QLatin1Char(' '));
+        return mime.comment() + " (" + patterns + ')';
+      }
+    }
+  }
+  return QString();
+}
+
+}  // namespace
 
 QCefDialogHandler::QCefDialogHandler() {
 
@@ -124,6 +159,20 @@ bool QCefDialogHandler::OnFileDialog(
     default: {
       break;
     }
+  }
+
+  QStringList name_filter;
+  for (const CefString& filter : accept_filters) {
+    const QString f(filter.ToString().c_str());
+    // Raw file name filter starts with '.'
+    if (f.startsWith('.')) {
+      name_filter.append(QString("*") + f);
+    } else {
+      name_filter.append(NameFilterForMime(f));
+    }
+  }
+  if (!name_filter.isEmpty()) {
+    dialog->setNameFilters(name_filter);
   }
 
   dialog->show();
