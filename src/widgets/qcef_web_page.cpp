@@ -392,11 +392,6 @@ void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
   p_->event_delegate = delegate;
 }
 
-void QCefWebPage::closeBrowser() {
-  qDebug() << "Web page close browser";
-  p_->browser()->GetHost()->CloseBrowser(true);
-}
-
 void QCefWebPage::updateBrowserGeometry() {
   const QSize old_size = p_->browser_window->size();
   if (p_->browser_window != nullptr) {
@@ -421,9 +416,6 @@ void QCefWebPage::disconnectTransportChannel() {
 
 void QCefWebPage::handleWebMessage(const QJsonObject& message) {
   if (p_->transport != nullptr && p_->channel_connected) {
-#ifndef N_DEBUG
-    qDebug() << "handleWebMessage()" << message;
-#endif
     emit p_->transport->messageReceived(message, p_->transport);
   } else {
     qCritical() << __FUNCTION__ << "transport is null!";

@@ -49,9 +49,8 @@ class QCEF_WIDGETS_EXPORT QCefWebView : public QWidget {
 
   QCefWebPage* page() const;
 
- protected:
   // Refresh geometry of web content to fix browser window focus issue.
-  bool event(QEvent* event) override;
+  bool eventFilter(QObject* watched, QEvent* event) override;
 
  private:
   QCefWebViewPrivate* p_ = nullptr;

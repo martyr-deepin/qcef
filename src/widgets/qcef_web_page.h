@@ -183,7 +183,6 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   friend class QCefWebView;
   friend class QCefClientHandlerDelegate;
 
-  void closeBrowser();
   void updateBrowserGeometry();
 
   // Handle messages received from renderer process.

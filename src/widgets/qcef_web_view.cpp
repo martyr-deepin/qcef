@@ -17,16 +17,22 @@
 
 #include "widgets/qcef_web_view.h"
 
-#include <QDebug>
-#include <QEvent>
+#include <QApplication>
 #include <QResizeEvent>
 #include <QStackedLayout>
 #include <QTimer>
 
 #include "widgets/qcef_web_page.h"
 
+namespace {
+
+const int kMoveEventInterval = 500;
+
+}  // namespace
+
 struct QCefWebViewPrivate {
   QCefWebPage* page = nullptr;
+  QTimer* move_event_timer = nullptr;
 };
 
 QCefWebView::QCefWebView(QWidget* parent)
@@ -40,11 +46,24 @@ QCefWebView::QCefWebView(QWidget* parent)
   this->setLayout(layout);
   this->setContentsMargins(0, 0, 0, 0);
 
-  this->installEventFilter(this);
+  p_->move_event_timer = new QTimer();
+  p_->move_event_timer->setInterval(kMoveEventInterval);
+  connect(p_->move_event_timer, &QTimer::timeout, [this]() {
+    if (this->p_->page != nullptr) {
+      this->p_->page->updateBrowserGeometry();
+    }
+  });
+  qApp->installEventFilter(this);
 }
 
 QCefWebView::~QCefWebView() {
   if (p_ != nullptr) {
+    if (p_->move_event_timer != nullptr) {
+      p_->move_event_timer->stop();
+      delete p_->move_event_timer;
+      p_->move_event_timer = nullptr;
+    }
+
     if (p_->page != nullptr) {
       delete p_->page;
       p_->page = nullptr;
@@ -75,9 +94,12 @@ QCefWebPage* QCefWebView::page() const {
   return p_->page;
 }
 
-bool QCefWebView::event(QEvent* event) {
-  if (event->type() == QEvent::WindowActivate) {
-    this->page()->updateBrowserGeometry();
+bool QCefWebView::eventFilter(QObject* watched, QEvent* event) {
+  if (event->type() == QEvent::Move) {
+    if (p_->move_event_timer->isActive()) {
+      p_->move_event_timer->stop();
+    }
+    p_->move_event_timer->start();
   }
-  return QWidget::event(event);
+  return QObject::eventFilter(watched, event);
 }
