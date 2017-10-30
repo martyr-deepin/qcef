@@ -55,23 +55,7 @@ BrowserTabWidget::BrowserTabWidget(QWidget* parent)
   this->setMovable(true);
   this->setContentsMargins(0, 0, 0, 0);
 
-  connect(this, &BrowserTabWidget::currentChanged,
-          this, &BrowserTabWidget::onCurrentChanged);
-  connect(this, &BrowserTabWidget::tabCloseRequested,
-          this, &BrowserTabWidget::onTabCloseRequested);
-  connect(this, &BrowserTabWidget::fullscreenRequested,
-          this, &BrowserTabWidget::onFullscreenRequested);
-
-  connect(p_->event_delegate, &BrowserEventDelegate::refreshRequested,
-          this, &BrowserTabWidget::onRefreshRequested);
-  connect(p_->event_delegate, &BrowserEventDelegate::popupRequested,
-          this, &BrowserTabWidget::onPopupRequested);
-  connect(p_->event_delegate, &BrowserEventDelegate::copyLinkToClipboard,
-          [=](const QUrl& url) {
-            QApplication::clipboard()->setText(url.toString());
-          });
-  connect(p_->event_delegate, &BrowserEventDelegate::toggleFullscreen,
-          this, &BrowserTabWidget::onToggleFullscreen);
+  this->initConnections();
 }
 
 BrowserTabWidget::~BrowserTabWidget() {
@@ -173,6 +157,26 @@ void BrowserTabWidget::mouseDoubleClickEvent(QMouseEvent* event) {
   if (this->childAt(event->pos()) == nullptr) {
     this->createNewBrowser(false);
   }
+}
+
+void BrowserTabWidget::initConnections() {
+  connect(this, &BrowserTabWidget::currentChanged,
+          this, &BrowserTabWidget::onCurrentChanged);
+  connect(this, &BrowserTabWidget::tabCloseRequested,
+          this, &BrowserTabWidget::onTabCloseRequested);
+  connect(this, &BrowserTabWidget::fullscreenRequested,
+          this, &BrowserTabWidget::onFullscreenRequested);
+
+  connect(p_->event_delegate, &BrowserEventDelegate::refreshRequested,
+          this, &BrowserTabWidget::onRefreshRequested);
+  connect(p_->event_delegate, &BrowserEventDelegate::popupRequested,
+          this, &BrowserTabWidget::onPopupRequested);
+  connect(p_->event_delegate, &BrowserEventDelegate::copyLinkToClipboard,
+          [=](const QUrl& url) {
+            QApplication::clipboard()->setText(url.toString());
+          });
+  connect(p_->event_delegate, &BrowserEventDelegate::toggleFullscreen,
+          this, &BrowserTabWidget::onToggleFullscreen);
 }
 
 void BrowserTabWidget::onCurrentChanged(int index) {

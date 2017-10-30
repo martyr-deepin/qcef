@@ -65,6 +65,8 @@ class BrowserTabWidget : public QTabWidget {
   void mouseDoubleClickEvent(QMouseEvent* event) override;
 
  private:
+  void initConnections();
+
   BrowserTabWidgetPrivate* p_ = nullptr;
 
  private slots:
