@@ -31,13 +31,4 @@ QCEF_CORE_EXPORT int QCefInit(int argc,
 // Bind cef message loop to Qt main message loop.
 QCEF_CORE_EXPORT void QCefBindApp(QCoreApplication* app);
 
-// Run cef message loop when every thing is ready.
-// Deprecated.
-QCEF_CORE_EXPORT void QCefRunLoop();
-
-// Quit cef message loop. Call this method when, like main window of app is
-// closed or "Quit" menu item is activated.
-// Deprecated.
-QCEF_CORE_EXPORT void QCefQuitLoop();
-
 #endif  // QCEF_CORE_QCEF_CONTEXT_H

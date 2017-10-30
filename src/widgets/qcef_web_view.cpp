@@ -18,6 +18,7 @@
 #include "widgets/qcef_web_view.h"
 
 #include <QApplication>
+#include <QDebug>
 #include <QResizeEvent>
 #include <QStackedLayout>
 #include <QTimer>
@@ -57,6 +58,7 @@ QCefWebView::QCefWebView(QWidget* parent)
 }
 
 QCefWebView::~QCefWebView() {
+  qDebug() << Q_FUNC_INFO;
   if (p_ != nullptr) {
     if (p_->move_event_timer != nullptr) {
       p_->move_event_timer->stop();

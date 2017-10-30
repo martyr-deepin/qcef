@@ -32,9 +32,11 @@ QCefClientHandlerDelegate::QCefClientHandlerDelegate(QCefWebPage* web_page)
 }
 
 QCefClientHandlerDelegate::~QCefClientHandlerDelegate() {
+  qDebug() << Q_FUNC_INFO;
   if (cef_browser_ != nullptr) {
     auto host = cef_browser_->GetHost();
     cef_browser_ = nullptr;
+    qDebug() << Q_FUNC_INFO << "CloseBrowser(true);";
     host->CloseBrowser(true);
   }
 

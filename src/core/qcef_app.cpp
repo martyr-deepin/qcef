@@ -19,15 +19,16 @@ void QCefApp::OnContextInitialized() {
   CEF_REQUIRE_UI_THREAD();
 
   // Register custom scheme handler factory.
-  const auto factory = new QCefSchemeHandlerFactory();
+  CefRefPtr<QCefSchemeHandlerFactory> factory(new QCefSchemeHandlerFactory());
   factory->setCustomSchemeHandler(custom_scheme_handler_);
-
   CefRegisterSchemeHandlerFactory("qrc", "", factory);
 
   for (const QUrl& entry : custom_scheme_list_) {
+    CefRefPtr<QCefSchemeHandlerFactory> custom_factory(new QCefSchemeHandlerFactory());
+    custom_factory->setCustomSchemeHandler(custom_scheme_handler_);
     CefRegisterSchemeHandlerFactory(entry.scheme().toStdString(),
                                     entry.host().toStdString(),
-                                    factory);
+                                    custom_factory);
   }
 }
 
