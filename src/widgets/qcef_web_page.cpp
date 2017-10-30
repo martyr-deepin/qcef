@@ -393,8 +393,8 @@ void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
 }
 
 void QCefWebPage::updateBrowserGeometry() {
-  const QSize old_size = p_->browser_window->size();
   if (p_->browser_window != nullptr) {
+    const QSize old_size = p_->browser_window->size();
     p_->browser_window->setHeight(400);
     p_->browser_window->setHeight(old_size.height());
   }
