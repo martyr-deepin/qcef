@@ -172,9 +172,7 @@ void BrowserTabWidget::initConnections() {
   connect(p_->event_delegate, &BrowserEventDelegate::popupRequested,
           this, &BrowserTabWidget::onPopupRequested);
   connect(p_->event_delegate, &BrowserEventDelegate::copyLinkToClipboard,
-          [=](const QUrl& url) {
-            QApplication::clipboard()->setText(url.toString());
-          });
+          this, &BrowserTabWidget::setClipboardUrl);
   connect(p_->event_delegate, &BrowserEventDelegate::toggleFullscreen,
           this, &BrowserTabWidget::onToggleFullscreen);
 }
@@ -250,4 +248,8 @@ void BrowserTabWidget::onPopupRequested(const QUrl& url,
 
 void BrowserTabWidget::onToggleFullscreen() {
 //  p_->tab_bar->setVisible(!p_->tab_bar->isVisible());
+}
+
+void BrowserTabWidget::setClipboardUrl(const QUrl& url) {
+  QApplication::clipboard()->setText(url.toString());
 }

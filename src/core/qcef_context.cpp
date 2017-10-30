@@ -160,12 +160,12 @@ void QCefBindApp(QCoreApplication* app) {
   QObject::connect(app, &QCoreApplication::destroyed, [timer]() {
     qDebug() << Q_FUNC_INFO << "destroyed()";
     qDebug() << "Flush cef cookie";
+    timer->stop();
     QCefFlushCookies();
     QThread::msleep(300);
     qDebug() << "CefShutdown()";
     CefShutdown();
-//    timer->stop();
-//    timer->deleteLater();
+    timer->deleteLater();
   });
   QObject::connect(timer, &QTimer::timeout, []() {
     CefDoMessageLoopWork();

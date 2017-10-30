@@ -84,6 +84,8 @@ class BrowserTabWidget : public QTabWidget {
   void onPopupRequested(const QUrl& url,
                         QCefWindowOpenDisposition disposition);
   void onToggleFullscreen();
+
+  void setClipboardUrl(const QUrl& url);
 };
 
 

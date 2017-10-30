@@ -93,7 +93,4 @@ int main(int argc, char* argv[]) {
 
   QCefBindApp(&app);
   return app.exec();
-//  QCefRunLoop();
-//
-//  return 0;
 }
