@@ -31,4 +31,8 @@ QCEF_CORE_EXPORT int QCefInit(int argc,
 // Bind cef message loop to Qt main message loop.
 QCEF_CORE_EXPORT void QCefBindApp(QCoreApplication* app);
 
+// Stop internal timer explicitly.
+// Normally no need to call this method to stop cef worker.
+QCEF_CORE_EXPORT void QCefStopTimer();
+
 #endif  // QCEF_CORE_QCEF_CONTEXT_H

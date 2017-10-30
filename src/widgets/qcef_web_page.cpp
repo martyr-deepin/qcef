@@ -130,17 +130,22 @@ QCefWebPagePrivate::~QCefWebPagePrivate() {
     delete settings;
     settings = nullptr;
   }
+
+  if (delegate != nullptr) {
+    delete delegate;
+    delegate = nullptr;
+  }
+
   if (channel != nullptr) {
+    if (transport != nullptr) {
+      channel->disconnectFrom(transport);
+    }
     delete channel;
     channel = nullptr;
   }
   if (transport != nullptr) {
     delete transport;
     transport = nullptr;
-  }
-  if (delegate != nullptr) {
-    delete delegate;
-    delegate = nullptr;
   }
   if (client_handler != nullptr) {
     client_handler = nullptr;

@@ -53,7 +53,6 @@ void QCefClientHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser) {
 }
 
 bool QCefClientHandler::DoClose(CefRefPtr<CefBrowser> browser) {
-  (void)browser;
   CEF_REQUIRE_UI_THREAD();
   if (delegate_ != nullptr) {
     delegate_->DoClose(browser);

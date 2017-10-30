@@ -27,6 +27,12 @@
 #include "core/qcef_cookie_store.h"
 #include "include/cef_path_util.h"
 
+namespace {
+
+QTimer* g_cef_timer = nullptr;
+
+}  // namespace
+
 int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   SetXErrorHandler();
 
@@ -156,20 +162,23 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 }
 
 void QCefBindApp(QCoreApplication* app) {
-  auto timer = new QTimer();
-  QObject::connect(app, &QCoreApplication::destroyed, [timer]() {
-    qDebug() << Q_FUNC_INFO << "destroyed()";
-    qDebug() << "Flush cef cookie";
-    timer->stop();
-    QCefFlushCookies();
+  g_cef_timer = new QTimer();
+  QObject::connect(app, &QCoreApplication::aboutToQuit,
+                   QCefStopTimer);
+  QObject::connect(app, &QCoreApplication::destroyed, []() {
     QThread::msleep(300);
-    qDebug() << "CefShutdown()";
     CefShutdown();
-    timer->deleteLater();
   });
-  QObject::connect(timer, &QTimer::timeout, []() {
-    CefDoMessageLoopWork();
-  });
-  timer->setInterval(1);
-  timer->start();
+  QObject::connect(g_cef_timer, &QTimer::timeout, CefDoMessageLoopWork);
+  g_cef_timer->setInterval(1);
+  g_cef_timer->start();
+}
+
+void QCefStopTimer() {
+  QCefFlushCookies();
+  if (g_cef_timer != nullptr) {
+    g_cef_timer->stop();
+    g_cef_timer->deleteLater();
+    g_cef_timer = nullptr;
+  }
 }
