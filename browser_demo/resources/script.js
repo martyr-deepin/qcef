@@ -75,6 +75,18 @@ function redirectPage() {
     window.location.href = "qrc://resources/redirect.html";
 }
 
+function selectImageFiles() {
+    const file = document.querySelector("input.avatar-file");
+    if (file) {
+        const event = new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+        });
+        file.dispatchEvent(event);
+    }
+}
+
 function bootstrap() {
     qWebChannel.objects.channel.onExecSqlDone.connect(function(id, state, result) {
         console.log("id: ", id, ", state: ", state, ", result:", result);

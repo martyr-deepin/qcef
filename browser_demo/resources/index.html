@@ -90,7 +90,15 @@
 
 <div>
     <h2>Check redirect</h2>
-    <input type="button" onclick="redirectPage()" value="Redirect Page">
+    <input type="button" onclick="redirectPage(event)" value="Redirect Page">
+</div>
+
+<div>
+    <h2>Dispatch Event</h2>
+    <div>
+        <button onclick="selectImageFiles()">Change Avatar</button>
+    </div>
+    <input type="file" accept="image/*" class="avatar-file" name="avatar-file">
 </div>
 
 <script src="qrc://resources/script.js"></script>
