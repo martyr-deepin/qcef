@@ -163,16 +163,15 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 
 void QCefBindApp(QCoreApplication* app) {
   g_cef_timer = new QTimer();
-  QObject::connect(app, &QCoreApplication::aboutToQuit,
-                   QCefStopTimer);
-  QObject::connect(app, &QCoreApplication::destroyed,
-                   CefShutdown);
+  QObject::connect(app, &QCoreApplication::aboutToQuit, QCefStopTimer);
+  QObject::connect(app, &QCoreApplication::destroyed, CefShutdown);
   QObject::connect(g_cef_timer, &QTimer::timeout, CefDoMessageLoopWork);
   g_cef_timer->setInterval(1);
   g_cef_timer->start();
 }
 
 void QCefStopTimer() {
+  qDebug() << Q_FUNC_INFO;
   QCefFlushCookies();
   QThread::msleep(800);
   if (g_cef_timer != nullptr) {

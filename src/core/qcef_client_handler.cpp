@@ -98,13 +98,12 @@ void QCefClientHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
     string = delegate_->OnLoadError(browser, frame, errorCode);
   }
   if (string.isEmpty()) {
-    QTextStream stream;
+    QTextStream stream(&string);
     stream << "<html><body bgcolor=\"white\">"
            << "<h2>Failed to load URL "
            << failedUrl.ToString().c_str() << " with error "
            << errorText.ToString().c_str()
            << " (" << errorCode << ").</h2></body></html>";
-    string = stream.readAll();
   }
 
   frame->LoadString(string.toStdString(), failedUrl);
