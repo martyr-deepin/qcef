@@ -24,15 +24,9 @@
 #include <include/wrapper/cef_helpers.h>
 
 #include "core/qcef_app.h"
-#include "core/qcef_x11_util.h"
 #include "core/qcef_cookie_store.h"
+#include "core/qcef_x11_util.h"
 #include "include/cef_path_util.h"
-
-namespace {
-
-QTimer* g_cef_timer = nullptr;
-
-}  // namespace
 
 int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   SetXErrorHandler();
@@ -168,21 +162,12 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 void QCefBindApp(QCoreApplication* app) {
   CEF_REQUIRE_UI_THREAD();
 
-  g_cef_timer = new QTimer();
   QObject::connect(app, &QCoreApplication::aboutToQuit, QCefStopTimer);
   QObject::connect(app, &QCoreApplication::destroyed, CefShutdown);
-  QObject::connect(g_cef_timer, &QTimer::timeout, CefDoMessageLoopWork);
-  g_cef_timer->setInterval(5);
-  g_cef_timer->start();
 }
 
 void QCefStopTimer() {
   qDebug() << Q_FUNC_INFO;
   QCefFlushCookies();
   QThread::msleep(800);
-  if (g_cef_timer != nullptr) {
-    g_cef_timer->stop();
-    g_cef_timer->deleteLater();
-    g_cef_timer = nullptr;
-  }
 }

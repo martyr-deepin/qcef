@@ -8,6 +8,7 @@
 #include <QVector>
 
 #include "core/qcef_global_settings.h"
+#include "core/qcef_message_pump_handler.h"
 #include "core/qcef_scheme_handler.h"
 #include "core/qcef_sync_method.h"
 #include "include/cef_app.h"
@@ -17,6 +18,7 @@ class QCefApp : public CefApp,
                 public CefBrowserProcessHandler {
  public:
   QCefApp();
+  ~QCefApp() override;
 
   // CefApp methods:
   CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() override {
@@ -36,7 +38,7 @@ class QCefApp : public CefApp,
 
   CefRefPtr<CefPrintHandler> GetPrintHandler() override;
 
-//  void OnScheduleMessagePumpWork(int64 delay_ms) override;
+  void OnScheduleMessagePumpWork(int64 delay_ms) override;
 
   // Open API used to customize cef app.
   void appendCommandLineSwitches(const QCefCommandLineSwitchList& args);
@@ -59,6 +61,7 @@ class QCefApp : public CefApp,
   QCefSchemeHandler custom_scheme_handler_ = nullptr;
   QCefSyncMethodMap sync_methods_;
   QCefUserScriptList register_scripts_;
+  QCefMessagePumpHandler* message_handler_ = nullptr;
 };
 
 #endif  // QCEF_CORE_QCEF_APP_H
