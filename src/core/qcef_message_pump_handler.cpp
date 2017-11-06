@@ -17,12 +17,12 @@
 
 #include "core/qcef_message_pump_handler.h"
 
-#include <QtCore/QCoreApplication>
+#include <QCoreApplication>
 
 #include "include/cef_app.h"
 
 QCefMessagePumpHandler::QCefMessagePumpHandler(QObject* parent)
-    : QObject(parent) {
+    : QObject(parent), timer_id_(0) {
 }
 
 void QCefMessagePumpHandler::scheduleWork(qint64 delayed_ms) {
@@ -30,7 +30,9 @@ void QCefMessagePumpHandler::scheduleWork(qint64 delayed_ms) {
     QCoreApplication::postEvent(this, new QEvent(QEvent::User));
   } else {
     killTimer(timer_id_);
-    timer_id_ = startTimer(delayed_ms);
+    // Limit delayed time to 50ms.
+    const int delay = qMin(static_cast<int>(delayed_ms), 50);
+    timer_id_ = startTimer(delay);
   }
 }
 
