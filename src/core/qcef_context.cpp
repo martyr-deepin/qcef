@@ -171,3 +171,7 @@ void QCefStopTimer() {
   QCefFlushCookies();
   QThread::msleep(800);
 }
+
+void QCefShutdown() {
+  CefShutdown();
+}

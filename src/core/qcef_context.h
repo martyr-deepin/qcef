@@ -35,4 +35,8 @@ QCEF_CORE_EXPORT void QCefBindApp(QCoreApplication* app);
 // Normally no need to call this method to stop cef worker.
 QCEF_CORE_EXPORT void QCefStopTimer();
 
+// Stop renderer processes.
+// Normally no need to call this method to cleanup sub-processes.
+QCEF_CORE_EXPORT void QCefShutdown();
+
 #endif  // QCEF_CORE_QCEF_CONTEXT_H
