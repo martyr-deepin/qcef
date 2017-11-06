@@ -21,6 +21,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <QtCore/QThread>
+#include <include/wrapper/cef_helpers.h>
 
 #include "core/qcef_app.h"
 #include "core/qcef_x11_util.h"
@@ -153,6 +154,9 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   CefString(&cef_settings.accept_language_list) =
       settings.acceptLanguageList().toStdString();
 
+  // Integrate CEF message with Qt Message Loop.
+  cef_settings.external_message_pump = 1;
+
   // Initialize CEF for the browser process.
   if (!CefInitialize(main_args, cef_settings, client_app.get(), nullptr)) {
     qCritical() << "CefInitialize() failed!";
@@ -162,11 +166,13 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 }
 
 void QCefBindApp(QCoreApplication* app) {
+  CEF_REQUIRE_UI_THREAD();
+
   g_cef_timer = new QTimer();
   QObject::connect(app, &QCoreApplication::aboutToQuit, QCefStopTimer);
   QObject::connect(app, &QCoreApplication::destroyed, CefShutdown);
   QObject::connect(g_cef_timer, &QTimer::timeout, CefDoMessageLoopWork);
-  g_cef_timer->setInterval(1);
+  g_cef_timer->setInterval(5);
   g_cef_timer->start();
 }
 
