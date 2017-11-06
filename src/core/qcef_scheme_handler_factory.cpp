@@ -21,6 +21,7 @@
 #include <QFile>
 #include <QMimeDatabase>
 #include <QUrl>
+#include <include/wrapper/cef_helpers.h>
 
 namespace {
 
@@ -55,8 +56,8 @@ QString Ext2Mime(const QString& fileName) {
   return "";
 }
 
-CefStreamResourceHandler* CreateQFileStreamResourceHandler(
-    const QString& path) {
+CefStreamResourceHandler*
+CreateQFileStreamResourceHandler(const QString& path) {
   if (!QFile::exists(path)) {
     qWarning() << __FUNCTION__ << "File not found:" << path;
     return nullptr;
@@ -92,6 +93,7 @@ CefRefPtr<CefResourceHandler> QCefSchemeHandlerFactory::Create(
     CefRefPtr<CefRequest> request) {
   (void) browser;
   (void) frame;
+  CEF_REQUIRE_IO_THREAD();
 
   const QString url(QString::fromStdString(request->GetURL().ToString()));
   if (scheme_name == "qrc") {
@@ -104,9 +106,4 @@ CefRefPtr<CefResourceHandler> QCefSchemeHandlerFactory::Create(
     return CreateQFileStreamResourceHandler(filepath);
   }
   return nullptr;
-}
-
-void QCefSchemeHandlerFactory::setCustomSchemeHandler(
-    QCefSchemeHandler handler) {
-  custom_scheme_handler_ = handler;
 }

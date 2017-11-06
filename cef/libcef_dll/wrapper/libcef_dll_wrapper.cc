@@ -319,6 +319,7 @@ CEF_GLOBAL void CefShutdown() {
       base::AtomicRefCountIsZero(&CefRunFileDialogCallbackCppToC::DebugObjCt));
   DCHECK(base::AtomicRefCountIsZero(&CefSSLInfoCToCpp::DebugObjCt));
   DCHECK(base::AtomicRefCountIsZero(&CefSSLStatusCToCpp::DebugObjCt));
+  // TODO(LiuLang): Fix ref error
   DCHECK(
       base::AtomicRefCountIsZero(&CefSchemeHandlerFactoryCppToC::DebugObjCt));
   DCHECK(base::AtomicRefCountIsZero(&CefSchemeRegistrarCToCpp::DebugObjCt));

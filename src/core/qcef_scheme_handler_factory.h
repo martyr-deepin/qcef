@@ -25,12 +25,13 @@
 // Handle custom scheme requests.
 class QCefSchemeHandlerFactory : public CefSchemeHandlerFactory {
  public:
+  explicit QCefSchemeHandlerFactory(QCefSchemeHandler handler)
+      : custom_scheme_handler_(handler) { }
+
   CefRefPtr<CefResourceHandler> Create(CefRefPtr<CefBrowser> browser,
                                        CefRefPtr<CefFrame> frame,
                                        const CefString& scheme_name,
                                        CefRefPtr<CefRequest> request) override;
-
-  void setCustomSchemeHandler(QCefSchemeHandler handler);
 
  private:
   IMPLEMENT_REFCOUNTING(QCefSchemeHandlerFactory);

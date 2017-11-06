@@ -12,23 +12,20 @@
 #include "include/wrapper/cef_helpers.h"
 
 QCefApp::QCefApp() {
-
 }
 
 void QCefApp::OnContextInitialized() {
   CEF_REQUIRE_UI_THREAD();
 
   // Register custom scheme handler factory.
-  CefRefPtr<QCefSchemeHandlerFactory> factory(new QCefSchemeHandlerFactory());
-  factory->setCustomSchemeHandler(custom_scheme_handler_);
+  CefRefPtr<QCefSchemeHandlerFactory> factory =
+      new QCefSchemeHandlerFactory(custom_scheme_handler_);
   CefRegisterSchemeHandlerFactory("qrc", "", factory);
 
   for (const QUrl& entry : custom_scheme_list_) {
-    CefRefPtr<QCefSchemeHandlerFactory> custom_factory(new QCefSchemeHandlerFactory());
-    custom_factory->setCustomSchemeHandler(custom_scheme_handler_);
     CefRegisterSchemeHandlerFactory(entry.scheme().toStdString(),
                                     entry.host().toStdString(),
-                                    custom_factory);
+                                    factory);
   }
 }
 
