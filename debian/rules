@@ -21,6 +21,3 @@ override_dh_auto_build:
 # chrome-sandbox requires SUID attribute.
 override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
-
-override_dh_strip:
-	dh_strip -Xcef

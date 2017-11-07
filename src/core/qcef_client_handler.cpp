@@ -31,7 +31,7 @@ class QCefClientDownloadImageCallback : public CefDownloadImageCallback {
  private:
   CefRefPtr<QCefClientHandler> client_handler_;
 
- IMPLEMENT_REFCOUNTING(QCefClientDownloadImageCallback);
+  IMPLEMENT_REFCOUNTING(QCefClientDownloadImageCallback);
   DISALLOW_COPY_AND_ASSIGN(QCefClientDownloadImageCallback);
 };
 
