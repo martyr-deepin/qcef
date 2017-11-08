@@ -219,7 +219,7 @@ macro(EXTRACT_CEF_TARBALL target)
     PRE_BUILD
     COMMAND rm -rvf qcef/
     COMMAND mkdir -pv qcef/
-    COMMAND tar xvf "${CMAKE_SOURCE_DIR}/cef/cef.${PROJECT_ARCH}.tar.gz"
+    COMMAND tar xvf "${CMAKE_CURRENT_SOURCE_DIR}/../cef/cef.${PROJECT_ARCH}.tar.gz"
     COMMAND mv -vf Release/libcef.so .
     COMMAND mv -vf Release/chrome-sandbox Release/natives_blob.bin Release/snapshot_blob.bin qcef/
     COMMAND rm -rf Release/
