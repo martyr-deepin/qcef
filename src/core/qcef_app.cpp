@@ -9,14 +9,10 @@
 #include "core/qcef_scheme_handler_factory.h"
 #include "include/wrapper/cef_helpers.h"
 
-QCefApp::QCefApp() : message_handler_(new QCefMessagePumpHandler()) {
+QCefApp::QCefApp() {
 }
 
 QCefApp::~QCefApp() {
-  if (message_handler_ != nullptr) {
-    delete message_handler_;
-    message_handler_ = nullptr;
-  }
 }
 
 void QCefApp::OnContextInitialized() {
@@ -90,14 +86,15 @@ void QCefApp::setRegisterScripts(const QCefUserScriptList& scripts) {
   register_scripts_ = scripts;
 }
 
-void QCefApp::OnScheduleMessagePumpWork(int64 delay_ms) {
+//void QCefApp::OnScheduleMessagePumpWork(int64 delay_ms) {
   // Called from any thread when work has been scheduled for the browser
   // process main (UI) thread.
   // If |delay_ms| is <= 0 then the call should happen reasonably soon.
   // If |delay_ms| is > 0 then the call should be scheduled to happen after the
   // specified delay and any currently pending scheduled call should be
   // cancelled.
-  if (message_handler_ != nullptr) {
-    message_handler_->scheduleWork(delay_ms);
-  }
-}
+//  if (message_handler_ != nullptr) {
+//    message_handler_->scheduleWork(delay_ms);
+//  }
+// FIXME(LiuLang): dragstart event in Web will fail!
+//}
