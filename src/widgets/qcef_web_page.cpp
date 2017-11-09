@@ -27,9 +27,6 @@
 #include "core/qcef_browser_transport.h"
 #include "core/qcef_client_handler.h"
 #include "core/qcef_string_visitor.h"
-#include "core/qcef_x11_util.h"
-#include "include/cef_app.h"
-#include "include/cef_ssl_status.h"
 #include "widgets/qcef_client_handler_delegate.h"
 #include "widgets/qcef_web_settings.h"
 

@@ -44,7 +44,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QJsonValue>
 
-#include <QtWebChannel/qwebchannelglobal.h>
+#include <qwebchannelglobal.h>
 
 QT_BEGIN_NAMESPACE
 

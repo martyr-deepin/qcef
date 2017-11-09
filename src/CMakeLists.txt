@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 project(qcef CXX C)
 
+option(EMBED_WEBCHANNEL "Embed webchannel library" OFF)
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 11)
@@ -51,7 +53,6 @@ find_package(Qt5Core REQUIRED)
 find_package(Qt5DBus REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Network REQUIRED)
-find_package(Qt5WebChannel REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5X11Extras REQUIRED)
 find_package(Qt5LinguistTools)
@@ -64,10 +65,24 @@ set(QT_LIBS
     Qt5::DBus
     Qt5::Gui
     Qt5::Network
-    Qt5::WebChannel
     Qt5::Widgets
     Qt5::X11Extras
     )
+
+message("EMBED_WEBCHANNEL: ${EMBED_WEBCHANNEL}")
+if (EMBED_WEBCHANNEL)
+  include_directories(third_party/webchannel)
+  add_subdirectory(third_party/webchannel)
+  set(QT_LIBS
+      ${QT_LIBS}
+      webchannel)
+else()
+  find_package(Qt5WebChannel REQUIRED)
+  set(QT_LIBS
+      ${QT_LIBS}
+      Qt5::WebChannel
+      )
+endif ()
 
 set(LINK_LIBS
     ${QT_LIBS}
