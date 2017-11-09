@@ -17,10 +17,6 @@ add_definitions("-DQT_NO_JSVALUE")
 set(SOURCE_FILES
     qmetaobjectpublisher.cpp
     qmetaobjectpublisher_p.h
-    qqmlwebchannel.cpp
-    qqmlwebchannel.h
-    qqmlwebchannelattached.cpp
-    qqmlwebchannelattached_p.h
     qwebchannel.cpp
     qwebchannel.h
     qwebchannel_p.h
@@ -30,6 +26,8 @@ set(SOURCE_FILES
     signalhandler_p.h
     variantargument_p.h
 
+    QWebChannel
+    QWebChannelAbstractTransport
     private/qobject_p.h
 
     resources.qrc
