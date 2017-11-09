@@ -226,17 +226,17 @@ void BrowserTabWidget::onRefreshRequested() {
 void BrowserTabWidget::onPopupRequested(const QUrl& url,
                                         QCefWindowOpenDisposition disposition) {
   switch (disposition) {
-    case QCefWindowOpenDisposition::NEW_BACKGROUND_TAB: {
+    case QCEF_WOD_NEW_BACKGROUND_TAB: {
       this->createNewBrowser(true, url);
       break;
     }
-    case QCefWindowOpenDisposition::NEW_FOREGROUND_TAB:  // fall through
-    case QCefWindowOpenDisposition::NEW_WINDOW:  // fall through
-    case QCefWindowOpenDisposition::NEW_POPUP: {
+    case QCEF_WOD_NEW_FOREGROUND_TAB:  // fall through
+    case QCEF_WOD_NEW_WINDOW:  // fall through
+    case QCEF_WOD_NEW_POPUP: {
       this->createNewBrowser(false, url);
       break;
     }
-    case QCefWindowOpenDisposition::SAVE_TO_DISK: {
+    case QCEF_WOD_SAVE_TO_DISK: {
       qDebug() << "save file to disk:" << url;
       break;
     }
