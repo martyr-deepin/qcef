@@ -48,7 +48,7 @@ QCefWebView::QCefWebView(QWidget* parent)
   this->setContentsMargins(0, 0, 0, 0);
 
   p_->move_event_timer = new QTimer();
-  p_->move_event_timer->setInterval(kMoveEventInterval);
+  p_->move_event_timer->setSingleShot(true);
   connect(p_->move_event_timer, &QTimer::timeout, [this]() {
     if (this->p_->page != nullptr) {
       this->p_->page->updateBrowserGeometry();
@@ -98,10 +98,7 @@ QCefWebPage* QCefWebView::page() const {
 
 bool QCefWebView::eventFilter(QObject* watched, QEvent* event) {
   if (event->type() == QEvent::Move) {
-    if (p_->move_event_timer->isActive()) {
-      p_->move_event_timer->stop();
-    }
-    p_->move_event_timer->start();
+    p_->move_event_timer->start(kMoveEventInterval);
   }
   return QObject::eventFilter(watched, event);
 }

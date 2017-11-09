@@ -395,6 +395,7 @@ void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
 }
 
 void QCefWebPage::updateBrowserGeometry() {
+  qDebug() << Q_FUNC_INFO;
   if (p_->browser_window != nullptr) {
     const QSize old_size = p_->browser_window->size();
     p_->browser_window->setHeight(400);
