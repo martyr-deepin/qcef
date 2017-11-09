@@ -1,0 +1,22 @@
+2017-11-09 1.1.0 LiuLang <gsushzhsosgsu@gmail.com>
+
+	* Add event filter to web view
+	* Add iframe demo
+	* Add internal MessagePumpHandler
+	* Add localstorage demo
+	* Add redirect page demo
+	* Add web notification API
+	* Support appending command line arguments
+	* Support embed qwebchannel library
+	* Support filetype filter in file-chooser-dialog
+	* Support network proxy
+	* Support refreshing web page
+	* Support zoom-in / zoom-out web page
+	* Fix double free pointer in debug mode
+	* Fix iconChanged() signal
+	* Fix segfault in updateBrowserGeometry()
+	* Fix WindowOpenDisposition invalid in GCC5
+
+2017-09-05 1.0.0 LiuLang <gsushzhsosgsu@gmail.com>
+
+	* Initial release
