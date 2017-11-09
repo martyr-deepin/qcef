@@ -224,7 +224,7 @@ set_target_properties(${CEF_TARGET} PROPERTIES INSTALL_RPATH "$ORIGIN")
 set_target_properties(${CEF_TARGET} PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
 set_target_properties(${CEF_TARGET} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
 set_target_properties(${CEF_TARGET}
-                      PROPERTIES VERSION 1.0
+                      PROPERTIES VERSION 1.1.1
                       SOVERSION 1)
 
 # Extract CEF binary files
