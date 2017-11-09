@@ -141,6 +141,11 @@ set(CORE_FILES
     core/qcef_x11_util.cpp
     core/qcef_x11_util.h
     )
+if (EMBED_WEBCHANNEL)
+  set(CORE_FILES
+      ${CORE_FILES}
+      third_party/webchannel/resources.qrc)
+endif()
 
 set(CORE_EXPORT_FILES
     core/qcef_context.h
