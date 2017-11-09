@@ -30,80 +30,80 @@ class QCefWebPage;
 // The manner in which a link click should be opened. These constants match
 // their equivalents in Chromium's window_open_disposition.h and should not be
 // renumbered.
-enum class QCEF_WIDGETS_EXPORT QCefWindowOpenDisposition {
-  UNKNOWN,
-  CURRENT_TAB,
-  SINGLETON_TAB,
-  NEW_FOREGROUND_TAB,
-  NEW_BACKGROUND_TAB,
-  NEW_POPUP,
-  NEW_WINDOW,
-  SAVE_TO_DISK,
-  OFF_THE_RECORD,
-  IGNORE_ACTION
+enum QCEF_WIDGETS_EXPORT QCefWindowOpenDisposition {
+  QCEF_WOD_UNKNOWN,
+  QCEF_WOD_CURRENT_TAB,
+  QCEF_WOD_SINGLETON_TAB,
+  QCEF_WOD_NEW_FOREGROUND_TAB,
+  QCEF_WOD_NEW_BACKGROUND_TAB,
+  QCEF_WOD_NEW_POPUP,
+  QCEF_WOD_NEW_WINDOW,
+  QCEF_WOD_SAVE_TO_DISK,
+  QCEF_WOD_OFF_THE_RECORD,
+  QCEF_WOD_IGNORE_ACTION
 };
 
 // Supported context menu type flags.
 enum QCefContextMenuFlags {
   // No node is selected.
-  QCM_FLAG_NONE = 0,
+  QCEF_CM_FLAG_NONE = 0,
   // The top page is selected.
-  QCM_FLAG_PAGE = 1 << 0,
+  QCEF_CM_FLAG_PAGE = 1 << 0,
   // A subframe page is selected.
-  QCM_FLAG_FRAME = 1 << 1,
+  QCEF_CM_FLAG_FRAME = 1 << 1,
   // A link is selected.
-  QCM_FLAG_LINK = 1 << 2,
+  QCEF_CM_FLAG_LINK = 1 << 2,
   // A media node is selected.
-  QCM_FLAG_MEDIA = 1 << 3,
+  QCEF_CM_FLAG_MEDIA = 1 << 3,
   // There is a textual or mixed selection that is selected.
-  QCM_FLAG_SELECTION = 1 << 4,
+  QCEF_CM_FLAG_SELECTION = 1 << 4,
   // An editable element is selected.
-  QCM_FLAG_EDITABLE = 1 << 5,
+  QCEF_CM_FLAG_EDITABLE = 1 << 5,
 };
 
 
 // Supported context menu media types.
 enum QCefContextMenuMediaTypeFlags {
   // No special node is in context.
-  QCM_MEDIATYPE_NONE,
+  QCEF_CM_MEDIATYPE_NONE,
   // An image node is selected.
-  QCM_MEDIATYPE_IMAGE,
+  QCEF_CM_MEDIATYPE_IMAGE,
   // A video node is selected.
-  QCM_MEDIATYPE_VIDEO,
+  QCEF_CM_MEDIATYPE_VIDEO,
   // An audio node is selected.
-  QCM_MEDIATYPE_AUDIO,
+  QCEF_CM_MEDIATYPE_AUDIO,
   // A file node is selected.
-  QCM_MEDIATYPE_FILE,
+  QCEF_CM_MEDIATYPE_FILE,
   // A plugin node is selected.
-  QCM_MEDIATYPE_PLUGIN,
+  QCEF_CM_MEDIATYPE_PLUGIN,
 };
 
 // Supported context menu media state bit flags.
 enum QCefContextMenuMediaFlags {
-  QCM_MEDIAFLAG_NONE = 0,
-  QCM_MEDIAFLAG_ERROR = 1 << 0,
-  QCM_MEDIAFLAG_PAUSED = 1 << 1,
-  QCM_MEDIAFLAG_MUTED = 1 << 2,
-  QCM_MEDIAFLAG_LOOP = 1 << 3,
-  QCM_MEDIAFLAG_CAN_SAVE = 1 << 4,
-  QCM_MEDIAFLAG_HAS_AUDIO = 1 << 5,
-  QCM_MEDIAFLAG_HAS_VIDEO = 1 << 6,
-  QCM_MEDIAFLAG_CONTROL_ROOT_ELEMENT = 1 << 7,
-  QCM_MEDIAFLAG_CAN_PRINT = 1 << 8,
-  QCM_MEDIAFLAG_CAN_ROTATE = 1 << 9,
+  QCEF_CM_MEDIAFLAG_NONE = 0,
+  QCEF_CM_MEDIAFLAG_ERROR = 1 << 0,
+  QCEF_CM_MEDIAFLAG_PAUSED = 1 << 1,
+  QCEF_CM_MEDIAFLAG_MUTED = 1 << 2,
+  QCEF_CM_MEDIAFLAG_LOOP = 1 << 3,
+  QCEF_CM_MEDIAFLAG_CAN_SAVE = 1 << 4,
+  QCEF_CM_MEDIAFLAG_HAS_AUDIO = 1 << 5,
+  QCEF_CM_MEDIAFLAG_HAS_VIDEO = 1 << 6,
+  QCEF_CM_MEDIAFLAG_CONTROL_ROOT_ELEMENT = 1 << 7,
+  QCEF_CM_MEDIAFLAG_CAN_PRINT = 1 << 8,
+  QCEF_CM_MEDIAFLAG_CAN_ROTATE = 1 << 9,
 };
 
 // Supported context menu edit state bit flags.
 enum QCefContextMenuEditFlags {
-  QCM_EDITFLAG_NONE = 0,
-  QCM_EDITFLAG_CAN_UNDO = 1 << 0,
-  QCM_EDITFLAG_CAN_REDO = 1 << 1,
-  QCM_EDITFLAG_CAN_CUT = 1 << 2,
-  QCM_EDITFLAG_CAN_COPY = 1 << 3,
-  QCM_EDITFLAG_CAN_PASTE = 1 << 4,
-  QCM_EDITFLAG_CAN_DELETE = 1 << 5,
-  QCM_EDITFLAG_CAN_SELECT_ALL = 1 << 6,
-  QCM_EDITFLAG_CAN_TRANSLATE = 1 << 7,
+  QCEF_CM_EDITFLAG_NONE = 0,
+  QCEF_CM_EDITFLAG_CAN_UNDO = 1 << 0,
+  QCEF_CM_EDITFLAG_CAN_REDO = 1 << 1,
+  QCEF_CM_EDITFLAG_CAN_CUT = 1 << 2,
+  QCEF_CM_EDITFLAG_CAN_COPY = 1 << 3,
+  QCEF_CM_EDITFLAG_CAN_PASTE = 1 << 4,
+  QCEF_CM_EDITFLAG_CAN_DELETE = 1 << 5,
+  QCEF_CM_EDITFLAG_CAN_SELECT_ALL = 1 << 6,
+  QCEF_CM_EDITFLAG_CAN_TRANSLATE = 1 << 7,
 };
 
 struct QCefContextMenuParamsPrivate;

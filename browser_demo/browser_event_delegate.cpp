@@ -109,39 +109,39 @@ void BrowserEventDelegate::onBeforeContextMenu(
     // Editable menu.
     auto state = params.getEditStateFlags();
     menu->addItem(MenuIds::MenuUndo, "Undo",
-                  state & QCefContextMenuEditFlags::QCM_EDITFLAG_CAN_UNDO,
+                  state & QCEF_CM_EDITFLAG_CAN_UNDO,
                   [](QCefWebPage* page) {
                     page->undo();
                   });
     menu->addItem(MenuIds::MenuRedo, "Redo",
-                  state & QCefContextMenuEditFlags::QCM_EDITFLAG_CAN_REDO,
+                  state & QCEF_CM_EDITFLAG_CAN_REDO,
                   [](QCefWebPage* page) {
                     page->redo();
                   });
     menu->addSeparator();
     menu->addItem(MenuIds::MenuCut, "Cut",
-                  state & QCefContextMenuEditFlags::QCM_EDITFLAG_CAN_CUT,
+                  state & QCEF_CM_EDITFLAG_CAN_CUT,
                   [](QCefWebPage* page) {
                     page->cut();
                   });
     menu->addItem(MenuIds::MenuCopy, "Copy",
-                  state & QCefContextMenuEditFlags::QCM_EDITFLAG_CAN_COPY,
+                  state & QCEF_CM_EDITFLAG_CAN_COPY,
                   [](QCefWebPage* page) {
                     page->copy();
                   });
     menu->addItem(MenuIds::MenuPaste, "Paste",
-                  state & QCefContextMenuEditFlags::QCM_EDITFLAG_CAN_PASTE,
+                  state & QCEF_CM_EDITFLAG_CAN_PASTE,
                   [](QCefWebPage* page) {
                     page->paste();
                   });
     menu->addItem(MenuIds::MenuDelete, "Delete",
-                  state & QCefContextMenuEditFlags::QCM_EDITFLAG_CAN_DELETE,
+                  state & QCEF_CM_EDITFLAG_CAN_DELETE,
                   [](QCefWebPage* page) {
                     page->doDelete();
                   });
     menu->addSeparator();
     menu->addItem(MenuIds::MenuSelectAll, "Select all",
-                  state & QCefContextMenuEditFlags::QCM_EDITFLAG_CAN_SELECT_ALL,
+                  state & QCEF_CM_EDITFLAG_CAN_SELECT_ALL,
                   [](QCefWebPage* page) {
                     page->selectAll();
                   });
@@ -149,14 +149,14 @@ void BrowserEventDelegate::onBeforeContextMenu(
   }
 
   const QCefContextMenuFlags flags = params.getTypeFlags();
-  if (flags & QCefContextMenuFlags::QCM_FLAG_LINK) {
+  if (flags & QCEF_CM_FLAG_LINK) {
     // Link is selected.
     const QUrl url(params.getLinkUrl());
     menu->addItem(MenuIds::MenuOpenLinkInNewTab, "Open link in new tab", true,
                   [this, url](QCefWebPage* page) {
                     emit this->popupRequested(
                             url,
-                            QCefWindowOpenDisposition::NEW_FOREGROUND_TAB);
+                            QCEF_WOD_NEW_FOREGROUND_TAB);
 
                   });
     menu->addItem(MenuIds::MenuCopyLinkAddress, "Copy link address", true,

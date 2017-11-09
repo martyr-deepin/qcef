@@ -22,7 +22,7 @@
 
 // Supported SSL content status flags. See content/public/common/ssl_status.h
 // for more information.
-enum class QCEF_WIDGETS_EXPORT QCefSSLContentStatus {
+enum QCEF_WIDGETS_EXPORT QCefSSLContentStatus {
   NORMAL_CONTENT = 0,
   DISPLAYED_INSECURE_CONTENT = 1 << 0,
   RAN_INSECURE_CONTENT = 1 << 1,
