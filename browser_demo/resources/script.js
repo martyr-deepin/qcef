@@ -81,9 +81,31 @@ function selectImageFiles() {
         const event = new MouseEvent("click", {
             bubbles: true,
             cancelable: true,
-            view: window,
+            view: window
         });
         file.dispatchEvent(event);
+    }
+}
+
+function updateButtonClickCount() {
+    const key = "button-click";
+    const val = getButtonClickCount();
+    window.localStorage.setItem(key, val + 1);
+    updateButtonClickLabel();
+}
+
+function updateButtonClickLabel() {
+    const span = document.querySelector(".local-storage-label");
+    span.innerHTML = getButtonClickCount();
+}
+
+function getButtonClickCount() {
+    const key = "button-click";
+    var val = window.localStorage.getItem(key);
+    if (val !== null) {
+        return parseInt(val);
+    } else {
+        return 0;
     }
 }
 
@@ -96,6 +118,8 @@ function bootstrap() {
         var msg = document.getElementById("msg").value;
         printMessage(msg);
     };
+
+    updateButtonClickLabel();
 }
 
 new QWebChannel(qt.webChannelTransport, function (channel) {

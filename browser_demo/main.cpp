@@ -79,6 +79,10 @@ int main(int argc, char* argv[]) {
   // Disable GPU process.
   settings.addCommandLineSwitch("--disable-gpu", "");
 
+  // Enable aggressive storage commit to minimize data loss.
+  // See public/common/content_switches.cc.
+  settings.addCommandLineSwitch("--enable-aggressive-domstorage-flushing", "");
+
   const int exit_code = QCefInit(argc, argv, settings);
   if (exit_code >= 0) {
     return exit_code;
