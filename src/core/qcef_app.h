@@ -12,6 +12,8 @@
 #include "core/qcef_sync_method.h"
 #include "include/cef_app.h"
 
+class QCefMessagePumpHandler;
+
 // Implement application-level callbacks for the browser process.
 class QCefApp : public CefApp,
                 public CefBrowserProcessHandler {
@@ -37,7 +39,7 @@ class QCefApp : public CefApp,
 
   CefRefPtr<CefPrintHandler> GetPrintHandler() override;
 
-//  void OnScheduleMessagePumpWork(int64 delay_ms) override;
+  void OnScheduleMessagePumpWork(int64 delay_ms) override;
 
   // Open API used to customize cef app.
   void appendCommandLineSwitches(const QCefCommandLineSwitchList& args);
@@ -60,6 +62,7 @@ class QCefApp : public CefApp,
   QCefSchemeHandler custom_scheme_handler_ = nullptr;
   QCefSyncMethodMap sync_methods_;
   QCefUserScriptList register_scripts_;
+  QCefMessagePumpHandler* message_handler_ = nullptr;
 };
 
 #endif  // QCEF_CORE_QCEF_APP_H
