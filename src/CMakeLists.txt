@@ -1,9 +1,13 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.0)
 project(qcef CXX C)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 11)
+
+set(QCEF_VERSION_MAJOR 1)
+set(QCEF_VERSION_MINOR 1)
+set(QCEF_VERSION_MICRO 2)
 
 option(QCEF_EXTERNAL_MESSAGE_PUMP "Use external message pump" OFF)
 if (QCEF_EXTERNAL_MESSAGE_PUMP)
@@ -46,8 +50,8 @@ else()
   # -Wl, -O2 Enable linker optimizations
   #-Wl, --gc-sections Remove unused code resulting from -fdsta-sections and -ffunction-sections
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2 -Wl,-O1 -Wl,--gc-sections")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -Wl,-O1 -Wl,--gc-sections -fno-rtti -Wno-unused-result")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -Wl,-O1 -Wl,--gc-sections")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fno-rtti -Wno-unused-result -fPIC")
 endif()
 
 find_package(PkgConfig REQUIRED)
@@ -79,9 +83,6 @@ set(LINK_LIBS
     -lX11
     )
 
-set(DATA_FILES
-    data/libqcef.pc
-    )
 
 set(BASE_FILES
     base/file_util.cpp
@@ -216,10 +217,18 @@ target_link_libraries(${CEF_TARGET}
 # Set rpath so that libraries can be placed next to the executable.
 set_target_properties(${CEF_TARGET} PROPERTIES INSTALL_RPATH "$ORIGIN")
 set_target_properties(${CEF_TARGET} PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
-set_target_properties(${CEF_TARGET} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
+set_target_properties(${CEF_TARGET} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+                      ${CEF_TARGET_OUT_DIR})
 set_target_properties(${CEF_TARGET}
-                      PROPERTIES VERSION 1.1.1
-                      SOVERSION 1)
+                      PROPERTIES
+                      VERSION
+                      "${QCEF_VERSION_MAJOR}.${QCEF_VERSION_MINOR}.${QCEF_VERSION_MICRO}"
+                      SOVERSION
+                      ${QCEF_VERSION_MAJOR})
+
+# PkgConfig file.
+set(QCEF_PKG_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/libqcef.pc)
+configure_file(data/libqcef.pc.in ${QCEF_PKG_CONFIG_FILE})
 
 # Extract CEF binary files
 macro(EXTRACT_CEF_TARBALL target)
@@ -230,7 +239,9 @@ macro(EXTRACT_CEF_TARBALL target)
     COMMAND mkdir -pv qcef/
     COMMAND tar xvf "${CMAKE_CURRENT_SOURCE_DIR}/../cef/cef.${PROJECT_ARCH}.tar.gz"
     COMMAND mv -vf Release/libcef.so .
-    COMMAND mv -vf Release/chrome-sandbox Release/natives_blob.bin Release/snapshot_blob.bin qcef/
+    COMMAND mv -vf Release/chrome-sandbox Release/natives_blob.bin
+        Release/snapshot_blob.bin
+        qcef/
     COMMAND rm -rf Release/
     COMMAND rm -rf locales/
     COMMAND mv -vf Resources/locales Resources/cef.pak
@@ -268,7 +279,7 @@ install(FILES ${WIDGETS_EXPORT_FILES}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/include/qcef)
 
 # Install pkgconfig files.
-install(FILES ${DATA_FILES}
+install(FILES ${QCEF_PKG_CONFIG_FILE}
         DESTINATION ${QCEF_LIB_INSTALL_DIR}/pkgconfig/)
 
 # Install cef binary files.

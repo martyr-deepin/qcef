@@ -1,8 +1,0 @@
-prefix=/usr
-includedir=${prefix}/include/qcef
-
-Name: QCEF
-Description: Qt5 binding of CEF3
-Version: 1.0
-Libs: -lqcef
-Cflags: -I${includedir}
