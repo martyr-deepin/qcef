@@ -25,7 +25,7 @@ if (NOT DEFINED QCEF_LIB_INSTALL_DIR)
 endif ()
 # Define absolute path to qcef module, i.e. /usr/lib/qcef.
 # See https://github.com/chromiumembedded/cef/pull/4.
-set(QCEF_OVERRIDE_PATH "${CMAKE_CURRENT_BINARY_DIR}/qcef")
+set(QCEF_OVERRIDE_PATH "${QCEF_LIB_INSTALL_DIR}/qcef")
 add_definitions("-DQCEF_OVERRIDE_PATH=\"${QCEF_OVERRIDE_PATH}\"")
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
