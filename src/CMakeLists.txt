@@ -20,12 +20,14 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-if (NOT DEFINED QCEF_LIB_INSTALL_DIR)
-  set(QCEF_LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+if (NOT DEFINED QCEF_INSTALL_PATH)
+  set(QCEF_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/lib")
+  set(QCEF_OVERRIDE_PATH "${CMAKE_CURRENT_BINARY_DIR}/qcef")
+else()
+  set(QCEF_OVERRIDE_PATH "${QCEF_INSTALL_PATH}/qcef")
 endif ()
 # Define absolute path to qcef module, i.e. /usr/lib/qcef.
 # See https://github.com/chromiumembedded/cef/pull/4.
-set(QCEF_OVERRIDE_PATH "${QCEF_LIB_INSTALL_DIR}/qcef")
 add_definitions("-DQCEF_OVERRIDE_PATH=\"${QCEF_OVERRIDE_PATH}\"")
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -268,9 +270,9 @@ endif()
 
 ## Installation
 install(TARGETS "${CEF_TARGET}"
-        DESTINATION "${QCEF_LIB_INSTALL_DIR}")
+        DESTINATION "${QCEF_INSTALL_PATH}")
 install(FILES "${CEF_TARGET_OUT_DIR}/libcef.so"
-        DESTINATION "${QCEF_LIB_INSTALL_DIR}")
+        DESTINATION "${QCEF_INSTALL_PATH}")
 
 # Install header files.
 install(FILES ${CORE_EXPORT_FILES}
@@ -280,11 +282,11 @@ install(FILES ${WIDGETS_EXPORT_FILES}
 
 # Install pkgconfig files.
 install(FILES ${QCEF_PKG_CONFIG_FILE}
-        DESTINATION ${QCEF_LIB_INSTALL_DIR}/pkgconfig/)
+        DESTINATION ${QCEF_INSTALL_PATH}/pkgconfig/)
 
 # Install cef binary files.
 install(DIRECTORY "${CEF_TARGET_OUT_DIR}/qcef"
-        DESTINATION "${QCEF_LIB_INSTALL_DIR}")
+        DESTINATION "${QCEF_INSTALL_PATH}")
 
 # Fix sandbox permission.
 install(FILES "${CEF_TARGET_OUT_DIR}/qcef/chrome-sandbox"

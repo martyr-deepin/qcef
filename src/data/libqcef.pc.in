@@ -1,10 +1,10 @@
 prefix=${CMAKE_INSTALL_PREFIX}
 exec_prefix=${CMAKE_INSTALL_PREFIX}
-libdir=${QCEF_LIB_INSTALL_DIR}
+libdir=${QCEF_INSTALL_PATH}
 includedir=${CMAKE_INSTALL_PREFIX}/include
 
 Name: QCEF
 Description: Qt5 binding of CEF3
 Version: ${QCEF_VERSION_MAJOR}.${QCEF_VERSION_MINOR}.${QCEF_VERSION_MICRO}
-Libs: -L${QCEF_LIB_INSTALL_DIR} -lqcef
+Libs: -L${QCEF_INSTALL_PATH} -lqcef
 Cflags: -I${CMAKE_INSTALL_PREFIX}/include/qcef

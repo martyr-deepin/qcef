@@ -13,7 +13,7 @@ override_dh_auto_configure:
 	  -DCMAKE_BUILD_TYPE=Release \
 	  -DPROJECT_ARCH=${DEB_TARGET_GNU_CPU} \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
-	  -DQCEF_LIB_INSTALL_DIR=/usr/lib/${DEB_HOST_MULTIARCH}
+	  -DQCEF_INSTALL_PATH=/usr/lib/${DEB_HOST_MULTIARCH}
 
 override_dh_auto_build:
 	dh_auto_build -- qcef
