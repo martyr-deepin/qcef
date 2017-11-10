@@ -98,7 +98,7 @@ void QCefApp::OnScheduleMessagePumpWork(int64 delay_ms) {
   // If |delay_ms| is > 0 then the call should be scheduled to happen after the
   // specified delay and any currently pending scheduled call should be
   // cancelled.
-  if (message_handler_ != nullptr) {
-    message_handler_->scheduleWork(delay_ms);
-  }
+  //if (message_handler_ != nullptr) {
+  //  message_handler_->scheduleWork(delay_ms);
+  //}
 }

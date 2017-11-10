@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 project(qcef CXX C)
 
-option(EMBED_WEBCHANNEL "Embed webchannel library" OFF)
-
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 11)
@@ -31,6 +29,7 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
   # -fsanitize=address Enable memory sanitize plugin
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Werror -Wextra")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -fno-rtti -fno-exceptions")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
   # -fsanitize=address, Enable memory address sanitizer.
   #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
   # -fsanitize=leak, Enable memory leak sanitizer.
@@ -46,6 +45,7 @@ else()
   #-Wl, --gc-sections Remove unused code resulting from -fdsta-sections and -ffunction-sections
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2 -Wl,-O1 -Wl,--gc-sections")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -Wl,-O1 -Wl,--gc-sections -fno-rtti -Wno-unused-result")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 find_package(PkgConfig REQUIRED)
@@ -53,6 +53,7 @@ find_package(Qt5Core REQUIRED)
 find_package(Qt5DBus REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Network REQUIRED)
+find_package(Qt5WebChannel REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5X11Extras REQUIRED)
 find_package(Qt5LinguistTools)
@@ -65,24 +66,10 @@ set(QT_LIBS
     Qt5::DBus
     Qt5::Gui
     Qt5::Network
+    Qt5::WebChannel
     Qt5::Widgets
     Qt5::X11Extras
     )
-
-message("EMBED_WEBCHANNEL: ${EMBED_WEBCHANNEL}")
-if (EMBED_WEBCHANNEL)
-  include_directories(third_party/webchannel)
-  add_subdirectory(third_party/webchannel)
-  set(QT_LIBS
-      ${QT_LIBS}
-      webchannel)
-else()
-  find_package(Qt5WebChannel REQUIRED)
-  set(QT_LIBS
-      ${QT_LIBS}
-      Qt5::WebChannel
-      )
-endif ()
 
 set(LINK_LIBS
     ${QT_LIBS}
@@ -259,6 +246,12 @@ add_library(CEF_TARBALL base/macros.h)
 add_dependencies(${CEF_TARGET} CEF_TARBALL)
 # Copy binary and resource files to the target output directory.
 EXTRACT_CEF_TARBALL("CEF_TARBALL")
+
+
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+  add_executable(qt-version tests/qt_version_test.cpp)
+  target_link_libraries(qt-version ${QT_LIBS})
+endif()
 
 ## Installation
 install(TARGETS "${CEF_TARGET}"
