@@ -5,6 +5,11 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 11)
 
+option(QCEF_EXTERNAL_MESSAGE_PUMP "Use external message pump" OFF)
+if (QCEF_EXTERNAL_MESSAGE_PUMP)
+  add_definitions("-DQCEF_EXTERNAL_MESSAGE_PUMP")
+endif ()
+
 # Only generate Debug and Release configuration types.
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 if (NOT CMAKE_BUILD_TYPE)

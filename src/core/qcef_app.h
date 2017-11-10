@@ -39,7 +39,9 @@ class QCefApp : public CefApp,
 
   CefRefPtr<CefPrintHandler> GetPrintHandler() override;
 
+#ifdef QCEF_EXTERNAL_MESSAGE_PUMP
   void OnScheduleMessagePumpWork(int64 delay_ms) override;
+#endif  // QCEF_EXTERNAL_MESSAGE_PUMP
 
   // Open API used to customize cef app.
   void appendCommandLineSwitches(const QCefCommandLineSwitchList& args);

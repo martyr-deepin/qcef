@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
   app.setWindowIcon(QIcon(":/images/firefox.png"));
 
-  qCritical() "Qt:" << QT_VERSION << QT_VERSION_MAJOR << QT_VERSION_MINOR;
+  qCritical() << "Qt:" << QT_VERSION << QT_VERSION_MAJOR << QT_VERSION_MINOR;
 
   BrowserWindow browser_window;
   browser_window.resize(860, 640);

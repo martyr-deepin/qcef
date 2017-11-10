@@ -91,6 +91,7 @@ void QCefApp::setRegisterScripts(const QCefUserScriptList& scripts) {
   register_scripts_ = scripts;
 }
 
+#ifdef QCEF_EXTERNAL_MESSAGE_PUMP
 void QCefApp::OnScheduleMessagePumpWork(int64 delay_ms) {
   // Called from any thread when work has been scheduled for the browser
   // process main (UI) thread.
@@ -98,7 +99,8 @@ void QCefApp::OnScheduleMessagePumpWork(int64 delay_ms) {
   // If |delay_ms| is > 0 then the call should be scheduled to happen after the
   // specified delay and any currently pending scheduled call should be
   // cancelled.
-  //if (message_handler_ != nullptr) {
-  //  message_handler_->scheduleWork(delay_ms);
-  //}
+  if (message_handler_ != nullptr) {
+    message_handler_->scheduleWork(delay_ms);
+  }
 }
+#endif  // QCEF_EXTERNAL_MESSAGE_PUMP
