@@ -1,3 +1,9 @@
+2017-11-10 1.1.2 LiuLang <gsushzhsosgsu@gmail.com>
+  * WebView: set update-geometry-timer as single shot
+  * Add QCEF_EXTERNAL_MESSAGE_PUMP option
+  * Remove EMBED_WEBCHANNEL option
+  * Remove QCEF_OVERRIDE_PATH option
+
 2017-11-09 1.1.1 LiuLang <gsushzhsosgsu@gmail.com>
 	* Update so version
 

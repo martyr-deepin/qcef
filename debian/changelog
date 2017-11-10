@@ -1,3 +1,33 @@
+qcef (1.1.2) stable; urgency=medium
+
+  * WebView: set update-geometry-timer as single shot
+  * Add QCEF_EXTERNAL_MESSAGE_PUMP option
+  * Remove EMBED_WEBCHANNEL option
+  * Remove QCEF_OVERRIDE_PATH option
+
+ -- LiuLang <gsushzhsosgsu@gmail.com>  Wed, 10 Nov  2017 17:01:31 +0800
+
+qcef (1.1.0) stable; urgency=medium
+
+  * Add event filter to web view
+  * Add iframe demo
+  * Add internal MessagePumpHandler
+  * Add localstorage demo
+  * Add redirect page demo
+  * Add web notification API
+  * Support appending command line arguments
+  * Support embed qwebchannel library
+  * Support filetype filter in file-chooser-dialog
+  * Support network proxy
+  * Support refreshing web page
+  * Support zoom-in / zoom-out web page
+  * Fix double free pointer in debug mode
+  * Fix iconChanged() signal
+  * Fix segfault in updateBrowserGeometry()
+  * Fix WindowOpenDisposition invalid in GCC5
+
+ -- LiuLang <gsushzhsosgsu@gmail.com>  Wed, 09 Nov  2017 16:55:31 +0800
+
 qcef (1.0.0) stable; urgency=medium
 
   * Initial release
