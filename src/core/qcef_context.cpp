@@ -21,12 +21,12 @@
 #include <QDebug>
 #include <QTimer>
 #include <QtCore/QThread>
-#include <include/wrapper/cef_helpers.h>
 
 #include "core/qcef_app.h"
 #include "core/qcef_cookie_store.h"
 #include "core/qcef_x11_util.h"
 #include "include/cef_path_util.h"
+#include "include/wrapper/cef_helpers.h"
 
 int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   SetXErrorHandler();
