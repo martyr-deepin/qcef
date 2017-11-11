@@ -180,6 +180,10 @@ class QCEF_CORE_EXPORT QCefGlobalSettings {
   void addCommandLineSwitch(const QString& key, const QString& value);
   const QCefCommandLineSwitchList& getCommandLineSwitches() const;
 
+  // Get/set QCEF_OVERRIDE_PATH at runtime.
+  void setOverridePath(const QString& path);
+  const QString& getOverridePath() const;
+
  private:
   QCefGlobalSettingsPrivate* p_ = nullptr;
 };

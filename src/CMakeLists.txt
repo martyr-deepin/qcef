@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(qcef CXX C)
 
+option(QCEF_EXTERNAL_MESSAGE_PUMP "Use external message pump" OFF)
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 11)
@@ -9,7 +11,6 @@ set(QCEF_VERSION_MAJOR 1)
 set(QCEF_VERSION_MINOR 1)
 set(QCEF_VERSION_MICRO 2)
 
-option(QCEF_EXTERNAL_MESSAGE_PUMP "Use external message pump" OFF)
 if (QCEF_EXTERNAL_MESSAGE_PUMP)
   add_definitions("-DQCEF_EXTERNAL_MESSAGE_PUMP")
 endif ()

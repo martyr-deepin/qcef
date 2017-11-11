@@ -89,14 +89,23 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 
   client_app->setRegisterScripts(settings.getUserScripts());
 
+  // First, check runtime override path.
+  QString runtime_override_path = settings.getOverridePath();
+  if (runtime_override_path.isEmpty()) {
+    // Then check compile-time override path.
 #ifdef QCEF_OVERRIDE_PATH
-  if (!CefOverridePath(PK_DIR_EXE, QCEF_OVERRIDE_PATH)) {
-    qCritical() << "Failed to override PK_DIR_EXE";
-  }
-  if (!CefOverridePath(PK_DIR_MODULE, QCEF_OVERRIDE_PATH)) {
-    qCritical() << "Failed to override PK_DIR_MODULE";
-  }
+    runtime_override_path = QCEF_OVERRIDE_PATH;
 #endif
+  }
+  if (!runtime_override_path.isEmpty()) {
+    const std::string p = runtime_override_path.toStdString();
+    if (!CefOverridePath(PK_DIR_EXE, p)) {
+      qCritical() << "Failed to override PK_DIR_EXE";
+    }
+    if (!CefOverridePath(PK_DIR_MODULE, p)) {
+      qCritical() << "Failed to override PK_DIR_MODULE";
+    }
+  }
 
   // CEF applications have multiple sub-processes (render, plugin, GPU, etc)
   // that share the same executable. This function checks the command-line and,

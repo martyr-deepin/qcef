@@ -65,6 +65,8 @@ struct QCefGlobalSettingsPrivate {
   QString proxy_info;
 
   QCefCommandLineSwitchList switch_list;
+
+  QString override_path{};
 };
 
 QCefGlobalSettings::QCefGlobalSettings()
@@ -288,4 +290,12 @@ void QCefGlobalSettings::addCommandLineSwitch(const QString& key,
 const QCefCommandLineSwitchList&
 QCefGlobalSettings::getCommandLineSwitches() const {
   return p_->switch_list;
+}
+
+void QCefGlobalSettings::setOverridePath(const QString& path) {
+  p_->override_path = path;
+}
+
+const QString& QCefGlobalSettings::getOverridePath() const {
+  return p_->override_path;
 }
