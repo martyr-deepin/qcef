@@ -15,6 +15,8 @@ if (QCEF_EXTERNAL_MESSAGE_PUMP)
   add_definitions("-DQCEF_EXTERNAL_MESSAGE_PUMP")
 endif ()
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-rpath,'\$ORIGIN'/qcef")
+
 # Only generate Debug and Release configuration types.
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
 if (NOT CMAKE_BUILD_TYPE)
@@ -23,10 +25,15 @@ endif()
 
 if (NOT DEFINED QCEF_INSTALL_PATH)
   set(QCEF_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/lib")
-  set(QCEF_OVERRIDE_PATH "${CMAKE_CURRENT_BINARY_DIR}/qcef")
+  if (CMAKE_BUILD_TYPE MATCHES Debug)
+    set(QCEF_OVERRIDE_PATH "${CMAKE_CURRENT_BINARY_DIR}/qcef")
+  else()
+    set(QCEF_OVERRIDE_PATH "${QCEF_INSTALL_PATH}/qcef")
+  endif()
 else()
   set(QCEF_OVERRIDE_PATH "${QCEF_INSTALL_PATH}/qcef")
 endif ()
+
 # Define absolute path to qcef module, i.e. /usr/lib/qcef.
 # See https://github.com/chromiumembedded/cef/pull/4.
 add_definitions("-DQCEF_OVERRIDE_PATH=\"${QCEF_OVERRIDE_PATH}\"")
@@ -186,8 +193,8 @@ set(CEF_TARGET_OUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 
 # Logical target used to link the libcef library.
 ADD_LOGICAL_TARGET("libcef_lib"
-                   "${CEF_TARGET_OUT_DIR}/libcef.so"
-                   "${CEF_TARGET_OUT_DIR}/libcef.so")
+                   "${CEF_TARGET_OUT_DIR}/qcef/libcef.so"
+                   "${CEF_TARGET_OUT_DIR}/qcef/libcef.so")
 
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -241,9 +248,8 @@ macro(EXTRACT_CEF_TARBALL target)
     COMMAND rm -rvf qcef/
     COMMAND mkdir -pv qcef/
     COMMAND tar xvf "${CMAKE_CURRENT_SOURCE_DIR}/../cef/cef.${PROJECT_ARCH}.tar.gz"
-    COMMAND mv -vf Release/libcef.so .
     COMMAND mv -vf Release/chrome-sandbox Release/natives_blob.bin
-        Release/snapshot_blob.bin
+        Release/snapshot_blob.bin Release/libcef.so
         qcef/
     COMMAND rm -rf Release/
     COMMAND rm -rf locales/
@@ -271,8 +277,6 @@ endif()
 
 ## Installation
 install(TARGETS "${CEF_TARGET}"
-        DESTINATION "${QCEF_INSTALL_PATH}")
-install(FILES "${CEF_TARGET_OUT_DIR}/libcef.so"
         DESTINATION "${QCEF_INSTALL_PATH}")
 
 # Install header files.
