@@ -224,13 +224,16 @@ void QCefWebPage::setUrl(const QUrl& url) {
 void QCefWebPage::setHtml(const QString& html, const QUrl& url) {
   p_->html = html;
   if (url.isEmpty()) {
+    qWarning() << Q_FUNC_INFO << "url is empty";
     p_->url = kBlankUrl;
   } else {
     p_->url = url;
   }
 
-  p_->browser()->GetMainFrame()->LoadString(html.toStdString(),
-                                            url.toString().toStdString());
+  // FIXME(Shaohua): Call LoadURL() before LoadString()
+  const std::string l = url.toString().toStdString();
+  p_->browser()->GetMainFrame()->LoadURL(l);
+  p_->browser()->GetMainFrame()->LoadString(html.toStdString(), l);
 }
 
 void QCefWebPage::setZoomFactor(qreal factor) {

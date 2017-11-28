@@ -72,7 +72,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   // |url| should have a standard scheme (for example, http scheme)
   // or behaviors like link clicks and web security restrictions
   // may not behave as expected.
-  void setHtml(const QString& html, const QUrl& url = QUrl());
+  void setHtml(const QString& html, const QUrl& url);
 
   QIcon icon() const;
   QUrl iconUrl() const;
