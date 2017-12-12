@@ -102,6 +102,11 @@ class CefCToCppRefCounted : public BaseName {
   DISALLOW_COPY_AND_ASSIGN(CefCToCppRefCounted);
 };
 
+#ifdef __clang__
+    template <class ClassName, class BaseName, class StructName>
+    CefWrapperType CefCToCppRefCounted<ClassName, BaseName, StructName>::kWrapperType;
+#endif
+
 template <class ClassName, class BaseName, class StructName>
 struct CefCToCppRefCounted<ClassName, BaseName, StructName>::WrapperStruct {
   CefWrapperType type_;

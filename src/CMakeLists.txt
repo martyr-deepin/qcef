@@ -15,7 +15,9 @@ if (QCEF_EXTERNAL_MESSAGE_PUMP)
   add_definitions("-DQCEF_EXTERNAL_MESSAGE_PUMP")
 endif ()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-rpath,'\$ORIGIN'/qcef")
+if (CMAKE_COMPILER_IS_GNUCC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-rpath,'\$ORIGIN'/qcef")
+endif ()
 
 # Only generate Debug and Release configuration types.
 set(CMAKE_CONFIGURATION_TYPES Debug Release)
@@ -59,8 +61,12 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 else()
   # -Wl, -O2 Enable linker optimizations
   #-Wl, --gc-sections Remove unused code resulting from -fdsta-sections and -ffunction-sections
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2 -Wl,-O1 -Wl,--gc-sections")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2 -Wl,-O1 -Wl,--gc-sections")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2")
+  if (CMAKE_COMPILER_IS_GNUCC)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,-O1 -Wl,--gc-sections")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-O1 -Wl,--gc-sections")
+  endif ()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fno-rtti -Wno-unused-result -fPIC")
 endif()
 

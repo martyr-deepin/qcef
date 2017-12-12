@@ -348,6 +348,7 @@ static const unsigned int KeyTbl[] = {
 
     0, 0
 };
+
 //
 //int KeysymToQtKey(quint32 key) {
 //  int code = 0;
@@ -391,6 +392,8 @@ static const unsigned int KeyTbl[] = {
 }  // namespace
 
 QKeyEvent XEvent2QtKeyEvent(CefEventHandle event) {
+  // avoid unused warnings.
+  (void)KeyTbl;
   const XKeyEvent& x_key_event = event->xkey;
 
   const unsigned int native_scan_code = x_key_event.keycode;

@@ -78,32 +78,7 @@ class CefCppToCScoped : public CefBaseScoped {
   //   CefOwnPtr<MyType> MyTypePtr = MyTypeCppToC::UnwrapOwn(struct);
   //   // |struct| has been deleted and should no longer be accessed.
   // }
-  static CefOwnPtr<BaseName> UnwrapOwn(StructName* s) {
-    if (!s)
-      return CefOwnPtr<BaseName>();
-
-    // Cast our structure to the wrapper structure type.
-    WrapperStruct* wrapperStruct = GetWrapperStruct(s);
-
-    // If the type does not match this object then we need to unwrap as the
-    // derived type.
-    if (wrapperStruct->type_ != kWrapperType)
-      return UnwrapDerivedOwn(wrapperStruct->type_, s);
-
-    // We should own the underlying object currently.
-    DCHECK(wrapperStruct->wrapper_->owned_);
-    DCHECK(wrapperStruct->object_);
-
-    // We're giving up ownership of the underlying object. Clear the pointer so
-    // it doesn't get deleted.
-    BaseName* object = wrapperStruct->object_;
-    wrapperStruct->object_ = NULL;
-
-    delete wrapperStruct->wrapper_;
-
-    // Return the underlying object instance.
-    return CefOwnPtr<BaseName>(object);
-  }
+  static CefOwnPtr<BaseName> UnwrapOwn(StructName* s);
 
   // Retrieve the underlying object instance for a structure reference passed
   // back from the other side. Ownership does not change. For example:
@@ -237,5 +212,38 @@ class CefCppToCScoped : public CefBaseScoped {
 
   DISALLOW_COPY_AND_ASSIGN(CefCppToCScoped);
 };
+
+#ifdef __clang__
+    template <class ClassName, class BaseName, class StructName>
+    CefWrapperType CefCppToCScoped<ClassName, BaseName, StructName>::kWrapperType;
+#endif
+
+template <class ClassName, class BaseName, class StructName>
+CefOwnPtr<BaseName> CefCppToCScoped<ClassName, BaseName, StructName>::UnwrapOwn(StructName* s) {
+  if (!s)
+    return CefOwnPtr<BaseName>();
+
+  // Cast our structure to the wrapper structure type.
+  WrapperStruct* wrapperStruct = GetWrapperStruct(s);
+
+  // If the type does not match this object then we need to unwrap as the
+  // derived type.
+  if (wrapperStruct->type_ != kWrapperType)
+    return UnwrapDerivedOwn(wrapperStruct->type_, s);
+
+  // We should own the underlying object currently.
+  DCHECK(wrapperStruct->wrapper_->owned_);
+  DCHECK(wrapperStruct->object_);
+
+  // We're giving up ownership of the underlying object. Clear the pointer so
+  // it doesn't get deleted.
+  BaseName* object = wrapperStruct->object_;
+  wrapperStruct->object_ = NULL;
+
+  delete wrapperStruct->wrapper_;
+
+  // Return the underlying object instance.
+  return CefOwnPtr<BaseName>(object);
+}
 
 #endif  // CEF_LIBCEF_DLL_CPPTOC_CPPTOC_SCOPED_H_

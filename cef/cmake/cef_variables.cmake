@@ -120,11 +120,16 @@ if(OS_LINUX)
     -Wl,-z,now                      # Resolve symbols on program start instead of on first use (security feature)
     -Wl,-z,relro                    # Mark relocation sections as read-only (security feature)
     )
+
   list(APPEND CEF_LINKER_FLAGS_RELEASE
     -Wl,-O1                         # Enable linker optimizations
-    -Wl,--as-needed                 # Only link libraries that export symbols used by the binary
-    -Wl,--gc-sections               # Remove unused code resulting from -fdata-sections and -function-sections
+  )
+  if (CMAKE_COMPILER_IS_GNUCC)
+    list(APPEND CEF_LINKER_FLAGS_RELEASE
+      -Wl,--as-needed                 # Only link libraries that export symbols used by the binary
+      -Wl,--gc-sections               # Remove unused code resulting from -fdata-sections and -function-sections
     )
+  endif()
   list(APPEND CEF_COMPILER_DEFINES
     _FILE_OFFSET_BITS=64            # Allow the Large File Support (LFS) interface to replace the old interface
     )

@@ -12,6 +12,7 @@
 #include "include/cef_base.h"
 #include "libcef_dll/wrapper_types.h"
 
+
 // Wrap a C++ class with a C structure.  This is used when the class
 // implementation exists on this side of the DLL boundary but will have methods
 // called from the other side of the DLL boundary.
@@ -36,26 +37,7 @@ class CefCppToCRefCounted : public CefBaseRefCounted {
 
   // Retrieve the underlying object instance for a structure reference passed
   // back from the other side.
-  static CefRefPtr<BaseName> Unwrap(StructName* s) {
-    if (!s)
-      return NULL;
-
-    // Cast our structure to the wrapper structure type.
-    WrapperStruct* wrapperStruct = GetWrapperStruct(s);
-
-    // If the type does not match this object then we need to unwrap as the
-    // derived type.
-    if (wrapperStruct->type_ != kWrapperType)
-      return UnwrapDerived(wrapperStruct->type_, s);
-
-    // Add the underlying object instance to a smart pointer.
-    CefRefPtr<BaseName> objectPtr(wrapperStruct->object_);
-    // Release the reference to our wrapper object that was added before the
-    // structure was passed back to us.
-    wrapperStruct->wrapper_->Release();
-    // Return the underlying object instance.
-    return objectPtr;
-  }
+  static CefRefPtr<BaseName> Unwrap(StructName* s);
 
   // Retrieve the underlying object instance from our own structure reference
   // when the reference is passed as the required first parameter of a C API
@@ -193,5 +175,32 @@ class CefCppToCRefCounted : public CefBaseRefCounted {
 
   DISALLOW_COPY_AND_ASSIGN(CefCppToCRefCounted);
 };
+
+#ifdef __clang__
+    template <class ClassName, class BaseName, class StructName>
+    CefWrapperType CefCppToCRefCounted<ClassName, BaseName, StructName>::kWrapperType;
+#endif
+
+template <class ClassName, class BaseName, class StructName>
+CefRefPtr<BaseName> CefCppToCRefCounted<ClassName, BaseName, StructName>::Unwrap(StructName* s) {
+  if (!s)
+    return NULL;
+
+  // Cast our structure to the wrapper structure type.
+  WrapperStruct* wrapperStruct = GetWrapperStruct(s);
+
+  // If the type does not match this object then we need to unwrap as the
+  // derived type.
+  if (wrapperStruct->type_ != kWrapperType)
+    return UnwrapDerived(wrapperStruct->type_, s);
+
+  // Add the underlying object instance to a smart pointer.
+  CefRefPtr<BaseName> objectPtr(wrapperStruct->object_);
+  // Release the reference to our wrapper object that was added before the
+  // structure was passed back to us.
+  wrapperStruct->wrapper_->Release();
+  // Return the underlying object instance.
+  return objectPtr;
+}
 
 #endif  // CEF_LIBCEF_DLL_CPPTOC_CPPTOC_REF_COUNTED_H_
