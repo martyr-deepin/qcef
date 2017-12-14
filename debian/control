@@ -23,7 +23,7 @@ Build-Depends: debhelper (>= 9),
  mesa-common-dev,
  pkg-config,
  qttools5-dev-tools,
-Standards-Version: 3.9.6
+Standards-Version: 3.9.8
 Homepage: https://www.deepin.org
 
 Package: libqcef1
