@@ -27,9 +27,11 @@
 
 class QCefWebPage;
 
-// The manner in which a link click should be opened. These constants match
-// their equivalents in Chromium's window_open_disposition.h and should not be
-// renumbered.
+/**
+ * The manner in which a link click should be opened. These constants match
+ * their equivalents in Chromium's window_open_disposition.h and should not be
+ * renumbered.
+ */
 enum QCEF_WIDGETS_EXPORT QCefWindowOpenDisposition {
   QCEF_WOD_UNKNOWN,
   QCEF_WOD_CURRENT_TAB,
@@ -43,43 +45,85 @@ enum QCEF_WIDGETS_EXPORT QCefWindowOpenDisposition {
   QCEF_WOD_IGNORE_ACTION
 };
 
-// Supported context menu type flags.
-enum QCefContextMenuFlags {
-  // No node is selected.
+/**
+ * Supported context menu type flags.
+ */
+enum QCEF_WIDGETS_EXPORT QCefContextMenuFlags {
+  /**
+   * No node is selected.
+   */
   QCEF_CM_FLAG_NONE = 0,
-  // The top page is selected.
+
+  /**
+   * The top page is selected.
+   */
   QCEF_CM_FLAG_PAGE = 1 << 0,
-  // A subframe page is selected.
+
+  /**
+   * A subframe page is selected.
+   */
   QCEF_CM_FLAG_FRAME = 1 << 1,
-  // A link is selected.
+
+  /**
+   * A link is selected.
+   */
   QCEF_CM_FLAG_LINK = 1 << 2,
-  // A media node is selected.
+
+  /**
+   * A media node is selected.
+   */
   QCEF_CM_FLAG_MEDIA = 1 << 3,
-  // There is a textual or mixed selection that is selected.
+
+  /**
+   * There is a textual or mixed selection that is selected.
+   */
   QCEF_CM_FLAG_SELECTION = 1 << 4,
-  // An editable element is selected.
+
+  /**
+   * An editable element is selected.
+   */
   QCEF_CM_FLAG_EDITABLE = 1 << 5,
 };
 
-
-// Supported context menu media types.
-enum QCefContextMenuMediaTypeFlags {
-  // No special node is in context.
+/**
+ * Supported context menu media types.
+ */
+enum QCEF_WIDGETS_EXPORT QCefContextMenuMediaTypeFlags {
+  /**
+   * No special node is in context.
+   */
   QCEF_CM_MEDIATYPE_NONE,
-  // An image node is selected.
+
+  /**
+   * An image node is selected.
+   */
   QCEF_CM_MEDIATYPE_IMAGE,
-  // A video node is selected.
+
+  /**
+   * A video node is selected.
+   */
   QCEF_CM_MEDIATYPE_VIDEO,
-  // An audio node is selected.
+
+  /**
+   * An audio node is selected.
+   */
   QCEF_CM_MEDIATYPE_AUDIO,
-  // A file node is selected.
+
+  /**
+   * A file node is selected.
+   */
   QCEF_CM_MEDIATYPE_FILE,
-  // A plugin node is selected.
+
+  /**
+   * A plugin node is selected.
+   */
   QCEF_CM_MEDIATYPE_PLUGIN,
 };
 
-// Supported context menu media state bit flags.
-enum QCefContextMenuMediaFlags {
+/**
+ * Supported context menu media state bit flags.
+ */
+enum QCEF_WIDGETS_EXPORT QCefContextMenuMediaFlags {
   QCEF_CM_MEDIAFLAG_NONE = 0,
   QCEF_CM_MEDIAFLAG_ERROR = 1 << 0,
   QCEF_CM_MEDIAFLAG_PAUSED = 1 << 1,
@@ -93,8 +137,10 @@ enum QCefContextMenuMediaFlags {
   QCEF_CM_MEDIAFLAG_CAN_ROTATE = 1 << 9,
 };
 
-// Supported context menu edit state bit flags.
-enum QCefContextMenuEditFlags {
+/**
+ * Supported context menu edit state bit flags.
+ */
+enum QCEF_WIDGETS_EXPORT QCefContextMenuEditFlags {
   QCEF_CM_EDITFLAG_NONE = 0,
   QCEF_CM_EDITFLAG_CAN_UNDO = 1 << 0,
   QCEF_CM_EDITFLAG_CAN_REDO = 1 << 1,
@@ -108,7 +154,9 @@ enum QCefContextMenuEditFlags {
 
 struct QCefContextMenuParamsPrivate;
 
-// Provides information about the context menu state.
+/**
+ * Provides information about the context menu state.
+ */
 class QCEF_WIDGETS_EXPORT QCefContextMenuParams {
  public:
   QCefContextMenuParams();
@@ -120,64 +168,113 @@ class QCEF_WIDGETS_EXPORT QCefContextMenuParams {
   typedef QCefContextMenuMediaFlags MediaStateFlags;
   typedef QCefContextMenuEditFlags EditStateFlags;
 
-  // Returns the X coordinate of the mouse where the context menu was invoked.
-  // Coords are relative to the associated RenderView's origin.
+  /**
+   * Returns the X coordinate of the mouse where the context menu was invoked.
+   * Coords are relative to the associated RenderView's origin.
+   * @return X coordinate of the mouse
+   */
   int getXCoord() const;
 
-  // Returns the Y coordinate of the mouse where the context menu was invoked.
-  // Coords are relative to the associated RenderView's origin.
+  /**
+   * Returns the Y coordinate of the mouse where the context menu was invoked.
+   * Coords are relative to the associated RenderView's origin.
+   * @return Y coordinate of the mouse
+   */
   int getYCoord() const;
 
-  // Returns flags representing the type of node that the context menu was
-  // invoked on.
+  /**
+   * Returns flags representing the type of node that the context menu was
+   * invoked on.
+   * @return node flags
+   */
   TypeFlags getTypeFlags() const;
 
-  // Returns the URL of the link, if any, that encloses the node that the
-  // context menu was invoked on.
+  /**
+   * Returns the URL of the link, if any, that encloses the node that the
+   * context menu was invoked on.
+   * @return URL of the link
+   */
   QString getLinkUrl() const;
 
-  // Returns the link URL, if any, to be used ONLY for "copy link address". We
-  // don't validate this field in the frontend process.
+  /**
+   * Returns the link URL, if any, to be used ONLY for "copy link address". We
+   * don't validate this field in the frontend process.
+   * @return Raw URL of the link
+   */
   QString getUnfilteredLinkUrl() const;
 
-  // Returns the source URL, if any, for the element that the context menu was
-  // invoked on. Example of elements with source URLs are img, audio, and video.
+  /**
+   * Returns the source URL, if any, for the element that the context menu was
+   * invoked on. Example of elements with source URLs are img, audio, and video.
+   * @return source URL
+   */
   QString getSourceUrl() const;
 
-  // Returns true if the context menu was invoked on an image which has
-  // non-empty contents.
+
+  /**
+   * Returns true if the context menu was invoked on an image which has
+   * non-empty contents.
+   * @return
+   */
   bool hasImageContents() const;
 
-  // Returns the title text or the alt text if the context menu was invoked on
-  // an image.
+  /**
+   * Returns the title text or the alt text if the context menu was invoked on
+   * an image.
+   * @return
+   */
   QString getTitleText() const;
 
-  // Returns the URL of the top level page that the context menu was invoked on.
+  /**
+   * Returns the URL of the top level page that the context menu was invoked on.
+   * @return
+   */
   QString getPageUrl() const;
 
-  // Returns the URL of the subframe that the context menu was invoked on.
+  /**
+   * Returns the URL of the subframe that the context menu was invoked on.
+   * @return
+   */
   QString getFrameUrl() const;
 
-  // Returns the character encoding of the subframe that the context menu was
-  // invoked on.
+  /**
+   * Returns the character encoding of the subframe that the context menu was
+   * invoked on.
+   * @return
+   */
   QString getFrameCharset() const;
 
-  // Returns the type of context node that the context menu was invoked on.
+  /**
+   * Returns the type of context node that the context menu was invoked on.
+   * @return
+   */
   MediaType getMediaType() const;
 
-  // Returns flags representing the actions supported by the media element, if
-  // any, that the context menu was invoked on.
+  /**
+   * Returns flags representing the actions supported by the media element, if
+   * any, that the context menu was invoked on.
+   * @return
+   */
   MediaStateFlags getMediaStateFlags() const;
 
-  // Returns the text of the selection, if any, that the context menu was
-  // invoked on.
+  /**
+   * Returns the text of the selection, if any, that the context menu was
+   * invoked on.
+   * @return
+   */
   QString getSelectionText() const;
 
-  // Returns true if the context menu was invoked on an editable node.
+  /**
+   * Returns true if the context menu was invoked on an editable node.
+   * @return
+   */
   bool isEditable() const;
 
-  // Returns flags representing the actions supported by the editable node, if
-  // any, that the context menu was invoked on.
+  /**
+   * Returns flags representing the actions supported by the editable node, if
+   * any, that the context menu was invoked on.
+   * @return
+   */
   EditStateFlags getEditStateFlags() const;
 
  private:
@@ -185,7 +282,9 @@ class QCEF_WIDGETS_EXPORT QCefContextMenuParams {
   QCefContextMenuParamsPrivate* p_ = nullptr;
 };
 
-// A wrapper of Cef context menu.
+/**
+ * Wrapper of Cef context menu.
+ */
 class QCEF_WIDGETS_EXPORT QCefContextMenu {
  public:
   QCefContextMenu();
@@ -204,24 +303,34 @@ class QCEF_WIDGETS_EXPORT QCefContextMenu {
   };
 
   enum MenuIdRange {
-    // All user-defined menu IDs should come between MENU_ID_USER_FIRST and
-    // MENU_ID_USER_LAST to avoid overlapping the Chromium and CEF ID ranges
-    // defined in the tools/gritsettings/resource_ids file.
-        MENU_ID_USER_FIRST = 26500,
+    /**
+     * All user-defined menu IDs should come between MENU_ID_USER_FIRST and
+     * MENU_ID_USER_LAST to avoid overlapping the Chromium and CEF ID ranges
+     * defined in the tools/gritsettings/resource_ids file.
+     */
+    MENU_ID_USER_FIRST = 26500,
+
     MENU_ID_USER_LAST = 28500,
   };
 
-  // Add a new menu item.
-  // |id| shall be between MENU_ID_USER_FIRST and MENU_ID_USER_LAST.
-  // |label| can be localized string.
-  // |enabled| set menu item activated or not.
-  // |callback| is triggered when this menu item is activated.
+  /**
+   * Add a new menu item.
+   * @param id New menu id, Shall be between MENU_ID_USER_FIRST and MENU_ID_USER_LAST.
+   * @param label Menu label, can be localized string.
+   * @param enabled Set menu item activated or not.
+   * @param callback Action to be triggered when this menu item is activated.
+   */
+
   void addItem(int id, const QString& label, bool enabled, Callback callback);
 
-  // Add a menu separator.
+  /**
+   * Add a menu separator.
+   */
   void addSeparator();
 
-  // Clear all menu items.
+  /**
+   * Clear all menu items.
+   */
   void clear();
 
   const QVector<MenuItem> items() const;
@@ -233,18 +342,30 @@ class QCEF_WIDGETS_EXPORT QCefContextMenu {
   QMap<int, Callback> callbacks_;
 };
 
-// Implement this class to handle mouse/keyboard events in cef browser window.
+/**
+ * Implement this class to handle mouse/keyboard events in cef browser window.
+ */
 class QCEF_WIDGETS_EXPORT QCefBrowserEventDelegate {
  public:
-  // Return true to cancel the navigation or false to allow the navigation
-  // to proceed. |url| is the target url to be navigated to.
+
+  /**
+   * Called on before new url is about to be navigated to.
+   * @param url The target url to be navigated to.
+   * @param is_redirect
+   * @return Return true to cancel the navigation or false to allow the navigation to proceed.
+   */
   virtual bool onBeforeBrowse(const QUrl& url, bool is_redirect) {
     Q_UNUSED(url);
     Q_UNUSED(is_redirect);
     return false;
   }
 
-  // Construct and popup a QMenu as context menu of browser window.
+  /**
+   * Construct and popup a QMenu as context menu of browser window.
+   * @param web_page The web page context menu is bound to.
+   * @param menu
+   * @param params
+   */
   virtual void onBeforeContextMenu(QCefWebPage* web_page,
                                    QCefContextMenu* menu,
                                    const QCefContextMenuParams& params) {
@@ -253,9 +374,12 @@ class QCEF_WIDGETS_EXPORT QCefBrowserEventDelegate {
     Q_UNUSED(params);
   };
 
-  // This method is called before a new popup browser is created.
-  // |url| is the position new popup window should navigate.
-  // Returns false to popup default popup window.
+  /**
+   * This method is called before a new popup browser is created.
+   * @param url The position new popup window should navigate.
+   * @param disposition
+   * @return false to popup default popup window.
+   */
   virtual bool onBeforePopup(const QUrl& url,
                              QCefWindowOpenDisposition disposition) {
     Q_UNUSED(url);
@@ -263,9 +387,10 @@ class QCEF_WIDGETS_EXPORT QCefBrowserEventDelegate {
     return true;
   }
 
-  // Triggered before a key event is sent to renderer process.
-  // NOTE(LiuLang): Current |event| does not map to Qt Key event, only native
-  // key code is available.
+  /**
+   * Triggered before a key event is sent to renderer process.
+   * @param event
+   */
   virtual void onPreKeyEvent(const QKeyEvent& event) {
     Q_UNUSED(event);
   }

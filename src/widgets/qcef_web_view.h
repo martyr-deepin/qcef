@@ -28,10 +28,12 @@ struct QCefWebViewPrivate;
 class QCefWebPage;
 class QCefWebSettings;
 
-// This widget class is used to view web document.
-// When inheriting from QCefWebView, remember to disable rtti feature
-// by appending -fno-rtti to compiler flag list, or else an error like
-// "undefined reference to `typeinfo for QCefWebView'" will occur.
+/**
+ * This widget class is used to view web document.
+ * When inheriting from QCefWebView, remember to disable rtti feature
+ * by appending -fno-rtti to compiler flag list, or else an error like
+ * "undefined reference to `typeinfo for QCefWebView'" will occur.
+ */
 class QCEF_WIDGETS_EXPORT QCefWebView : public QWidget {
   Q_OBJECT
   Q_PROPERTY(QUrl url READ url WRITE setUrl)
@@ -40,16 +42,28 @@ class QCEF_WIDGETS_EXPORT QCefWebView : public QWidget {
   explicit QCefWebView(QWidget* parent = nullptr);
   ~QCefWebView() override;
 
-  // Loads the specified |url| and displays it.
+  /**
+   * Loads the specified |url| and displays it.
+   * @param url
+   */
   void load(const QUrl& url);
 
-  // Get/set url of web page.
+  /**
+   * Set url of web page.
+   * @param url
+   */
   void setUrl(const QUrl& url);
+
   QUrl url() const;
 
   QCefWebPage* page() const;
 
-  // Refresh geometry of web content to fix browser window focus issue.
+  /**
+   * Refresh geometry of web content to fix browser window focus issue.
+   * @param watched
+   * @param event
+   * @return
+   */
   bool eventFilter(QObject* watched, QEvent* event) override;
 
  private:

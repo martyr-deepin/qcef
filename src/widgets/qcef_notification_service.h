@@ -22,7 +22,9 @@
 
 #include "qcef_widgets_export.h"
 
-// Binding of freedesktop notifications dbus service.
+/**
+ * Binding of freedesktop notifications dbus service.
+ */
 class QCEF_WIDGETS_EXPORT QCefNotificationService
     : public QDBusAbstractInterface {
   Q_OBJECT
@@ -30,7 +32,12 @@ class QCEF_WIDGETS_EXPORT QCefNotificationService
   explicit QCefNotificationService(QObject* parent = nullptr);
 
  public slots:
-  // Popup a new notification.
+  /**
+   * Popup a new notification.
+   * @param title Notification title.
+   * @param body Notification content.
+   * @param icon Notification icon.
+   */
   void notify(const QString& title, const QString& body, const QIcon& icon);
 };
 

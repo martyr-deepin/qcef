@@ -20,7 +20,10 @@
 
 #include "qcef_core_export.h"
 
-// Returns true if current cpu type is x86 or x86_64.
+/**
+ * Check whether current cpu architecture is x86 serials.
+ * @return Returns true if current cpu type is x86 or x86_64.
+ */
 QCEF_CORE_EXPORT bool IsX86Architecture();
 
 #endif  // QCEF_CORE_QCEF_UTIL_H

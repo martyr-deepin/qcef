@@ -32,33 +32,45 @@ struct QCefWebPagePrivate;
 class QCefWebSettings;
 class QCefBrowserEventDelegate;
 
-// A QCefWebPage object holds web document, history, actions, and provides
-// access to cef browser internal states.
+/**
+ * A QCefWebPage object holds web document, history, actions, and provides
+ * access to cef browser internal states.
+ */
 class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   Q_OBJECT
 
-  // This property holds the title of the web page currently viewed
-  // By default, this property contains an empty string.
+  /**
+   * This property holds the title of the web page currently viewed
+   * By default, this property contains an empty string.
+   */
   Q_PROPERTY(QString title READ title NOTIFY titleChanged)
 
-  // This property holds the URL of the web page currently viewed
-  // Setting this property clears the view and loads the URL.*
-  // By default, this property contains an empty, invalid URL.
+  /**
+   * This property holds the URL of the web page currently viewed
+   * Setting this property clears the view and loads the URL.*
+   * By default, this property contains an empty, invalid URL.
+   */
   Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
 
-  // This property holds the icon associated with the page currently viewed
-  // By default, this property contains a null icon.
+  /**
+   * This property holds the icon associated with the page currently viewed
+   * By default, this property contains a null icon.
+   */
   Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
 
-  // This property holds the URL of the icon associated with the page currently
-  // viewed. By default, this property contains an empty URL.
+  /**
+   * This property holds the URL of the icon associated with the page currently
+   * viewed. By default, this property contains an empty URL.
+   */
   Q_PROPERTY(QUrl iconUrl READ iconUrl NOTIFY iconUrlChanged)
 
   Q_PROPERTY(QString page_error_content
              READ pageErrorContent
              WRITE setPageErrorContent)
 
-  // This property holds the zoom factor for the page content.
+  /**
+   * This property holds the zoom factor for the page content.
+   */
   Q_PROPERTY(qreal zoomFactor READ zoomFactor WRITE setZoomFactor)
 
  public:
@@ -68,10 +80,14 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void load(const QUrl& url);
   void setUrl(const QUrl& url);
 
-  // Load the contents of |html| with the specified dummy |url|.
-  // |url| should have a standard scheme (for example, http scheme)
-  // or behaviors like link clicks and web security restrictions
-  // may not behave as expected.
+  /**
+   * Load the contents of |html| with the specified dummy |url|.
+   * |url| should have a standard scheme (for example, http scheme)
+   * or behaviors like link clicks and web security restrictions
+   * may not behave as expected.
+   * @param html Page content.
+   * @param url Link of page to be bounded to.
+   */
   void setHtml(const QString& html, const QUrl& url);
 
   QIcon icon() const;
@@ -83,23 +99,40 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void setPageErrorContent(const QString& page_error_content);
   const QString& pageErrorContent() const;
 
-  // Returns a pointer to the page's settings object.
-  // Update browser settings before loading any url or html content or any
-  // other methods which will initialize cef window.
+  /**
+   * Returns a pointer to the page's settings object.
+   * Update browser settings before loading any url or html content or any
+   * other methods which will initialize cef window.
+   * @return
+   */
   QCefWebSettings* settings() const;
 
-  // Returns a pointer to the web channel instance used by this page.
-  // Might be null pointer if it has not been initialized.
+  /**
+   * Returns a pointer to the web channel instance used by this page.
+   * Might be null pointer if it has not been initialized.
+   * @return
+   */
   QWebChannel* webChannel() const;
 
-  // Returns the view widget that is associated with the web page.
+  /**
+   * Returns the view widget that is associated with the web page.
+   * @return
+   */
   QWidget* view() const;
 
-  // Runs the JavaScript code contained in |script_source|.
+  /**
+   * Runs the JavaScript code contained in |script_source|.
+   * @param script_source
+   */
   void runJavaScript(const QString& script_source);
-  // Runs the JavaScript code contained in |script_source|.
-  // |script_url| is reference of |script_source| which can be identified
-  // in web development console.
+
+  /**
+   * Runs the JavaScript code contained in |script_source|.
+   * |script_url| is reference of |script_source| which can be identified
+   * in web development console.
+   * @param script_source
+   * @param script_url
+   */
   void runJavaScript(const QString& script_source, const QString& script_url);
 
   bool canGoBack() const;
@@ -108,21 +141,30 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
 
   typedef std::function<void(const QString& html)> Callback;
 
-  // Asynchronous method to retrieve the page's content as HTML,
-  // enclosed in HTML and BODY tags. Upon successful completion,
-  // resultCallback is called with the page's content.
+  /**
+   * Asynchronous method to retrieve the page's content as HTML,
+   * enclosed in HTML and BODY tags. Upon successful completion,
+   * resultCallback is called with the page's content.
+   * @param callback
+   */
   void toHtml(Callback callback) const;
 
-  // Asynchronous method to retrieve the page's content converted
-  // to plain text, completely stripped of all HTML formatting.
-  // Upon successful completion, resultCallback is called
-  // with the page's content.
+  /**
+   * Asynchronous method to retrieve the page's content converted
+   * to plain text, completely stripped of all HTML formatting.
+   * Upon successful completion, resultCallback is called
+   * with the page's content.
+   * @param callback
+   */
   void toPlainText(Callback callback) const;
 
-  // Change the zoom level to the specified value. Specify 0.0 to reset the
-  // zoom level. If called on the UI thread the change will be applied
-  // immediately. Otherwise, the change will be applied asynchronously on the
-  // UI thread.
+  /**
+   * Change the zoom level to the specified value. Specify 0.0 to reset the
+   * zoom level. If called on the UI thread the change will be applied
+   * immediately. Otherwise, the change will be applied asynchronously on the
+   * UI thread.
+   * @param factor
+   */
   void setZoomFactor(qreal factor);
   void resetZoomFactor();
   void zoomIn();
@@ -137,11 +179,16 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void doDelete();
   void selectAll();
 
-  // Returns ssl status of current page.
+  /**
+   * Returns ssl status of current page.
+   */
   QCefSSLStatus getSSLStatus() const;
 
-  // Get current event delegate, default is nullptr.
-  // Note that QCefWebPage does not take ownership of event delegate.
+  /**
+   * Get current event delegate, default is nullptr.
+   * Note that QCefWebPage does not take ownership of event delegate.
+   * @return
+   */
   QCefBrowserEventDelegate* getEventDelegate() const;
   void setEventDelegate(QCefBrowserEventDelegate* delegate);
 
@@ -159,17 +206,28 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void titleChanged(const QString& title);
   void urlChanged(const QUrl& url);
 
-  // Notified when page icon is updated.
+  /**
+   * Notified when page icon is updated.
+   */
   void iconChanged(const QIcon& icon);
 
-  // Notified when page icon is changed.
+  /**
+   * Notified when page icon is changed.
+   * @param icon_url
+   */
   void iconUrlChanged(const QUrl& icon_url);
 
-  // Emit this signal when web notification received from cef browser.
+  /**
+   * Emit this signal when web notification received from cef browser.
+   * @param summary
+   * @param title
+   */
   void notificationReceived(const QString& summary, const QString& title);
 
-  // Emitted when cef browser window is closed by javascript.
-  // This requires QWebSettings::setJavascriptCloseWindow().
+  /**
+   * Emitted when cef browser window is closed by javascript.
+   * This requires QWebSettings::setJavascriptCloseWindow().
+   */
   void windowClosed();
 
  public slots:
@@ -185,7 +243,9 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
 
   void updateBrowserGeometry();
 
-  // Handle messages received from renderer process.
+  /**
+   * Handle messages received from renderer process.
+   */
   void connectTransportChannel();
   void disconnectTransportChannel();
   void handleWebMessage(const QJsonObject& message);

@@ -23,30 +23,56 @@
 
 #include "qcef_core_export.h"
 
-// Flush the backing store (if any) to disk.
+/**
+ * Flush the backing store (if any) to disk.
+ */
 void QCEF_CORE_EXPORT QCefFlushCookies();
 
-// Get browser cookie with |name| as cookie name and |domain| as cookie path.
-// This method is used to bypass browser security restriction.
-// Returns cookie value on success, or "" on error.
+/**
+ * Get browser cookie with |name| as cookie name and |domain| as cookie path.
+ * This method is used to bypass browser security restriction.
+ * Returns cookie value on success, or "" on error.
+ * @param domain Domain name of cookie.
+ * @param name Cookie name.
+ * @return Cookie value on success or an empty string on error.
+ */
 QString QCEF_CORE_EXPORT QCefGetCookie(const QString& domain,
                                        const QString& name);
 
-// Get all cookies associated with |domain|.
-// Returns a map of (cookie-name, cookie-value) pair.
+/**
+ * Get all cookies associated with |domain|.
+ * Returns a map of (cookie-name, cookie-value) pair.
+ * @param domain Domain name of cookies.
+ * @return A map of cookie-name => cookie-value pair.
+ */
 QVariantMap QCEF_CORE_EXPORT QCefGetCookies(const QString& domain);
 
-// Movie cookie with |name| from domain |old_domain| to domain |new_domain|.
+/**
+ * Movie cookie with |name| from domain |old_domain| to domain |new_domain|.
+ * @param old_domain Name of old cookie domain.
+ * @param new_domain Name of new cookie domain.
+ * @param name Cookie name.
+ */
 void QCEF_CORE_EXPORT QCefMoveCookie(const QString& old_domain,
                                      const QString& new_domain,
                                      const QString& name);
 
-// Remove cookie with |name| at |domain|.
-// Returns true if this cookie exists and is removed, else false.
+/**
+ * Remove cookie item.
+ * @param domain Domain name of cookies.
+ * @param name Cookie name to be removed.
+ * @return true if this cookie exists and is removed, else false.
+ */
+
 bool QCEF_CORE_EXPORT QCefRemoveCookie(const QString& domain,
                                        const QString& name);
 
-// Set browser cookie at |domain| with |name| and cookie value |value|.
+/**
+ * Set browser cookie at |domain| with |name| and cookie value |value|.
+ * @param domain Domain name of cookies.
+ * @param name Cookie name to be inserted.
+ * @param value Value of cookie.
+ */
 void QCEF_CORE_EXPORT QCefSetCookie(const QString& domain,
                                     const QString& name,
                                     const QString& value);
