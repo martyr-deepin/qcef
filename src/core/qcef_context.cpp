@@ -89,21 +89,30 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 
   client_app->setRegisterScripts(settings.getUserScripts());
 
-  // First, check runtime override path.
-  QString runtime_override_path = settings.getOverridePath();
-  if (runtime_override_path.isEmpty()) {
-    // Then check compile-time override path.
+  QString runtime_override_path;
+  const QByteArray kQcefInstallPathEnv = qgetenv("QCEF_INSTALL_PATH");
+  if (!kQcefInstallPathEnv.isEmpty()) {
+    // If QCEF_INSTALL_PATH environment is set, by pass all other options.
+    runtime_override_path = kQcefInstallPathEnv;
+  } else {
+    // First, check runtime override path.
+    runtime_override_path = settings.getOverridePath();
+    if (runtime_override_path.isEmpty()) {
+      // Then check compile-time override path.
 #ifdef QCEF_OVERRIDE_PATH
-    runtime_override_path = QCEF_OVERRIDE_PATH;
+      runtime_override_path = QCEF_OVERRIDE_PATH;
 #endif
+    }
   }
+
   if (!runtime_override_path.isEmpty()) {
     const std::string p = runtime_override_path.toStdString();
     if (!CefOverridePath(PK_DIR_EXE, p)) {
-      qCritical() << "Failed to override PK_DIR_EXE";
+      qCritical() << "Failed to override PK_DIR_EXE" << runtime_override_path;
     }
     if (!CefOverridePath(PK_DIR_MODULE, p)) {
-      qCritical() << "Failed to override PK_DIR_MODULE";
+      qCritical() << "Failed to override PK_DIR_MODULE"
+                  << runtime_override_path;
     }
   }
 
