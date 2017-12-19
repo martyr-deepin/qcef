@@ -84,6 +84,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# Add the include directories for the Qt 5 Gui module private components to
+# the compile lines.
+include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
+
 set(QT_LIBS
     Qt5::DBus
     Qt5::Gui
@@ -274,7 +278,6 @@ add_library(CEF_TARBALL base/macros.h)
 add_dependencies(${CEF_TARGET} CEF_TARBALL)
 # Copy binary and resource files to the target output directory.
 EXTRACT_CEF_TARBALL("CEF_TARBALL")
-
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
   add_executable(qt-version tests/qt_version_test.cpp)

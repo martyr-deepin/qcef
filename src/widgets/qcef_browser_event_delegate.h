@@ -386,14 +386,6 @@ class QCEF_WIDGETS_EXPORT QCefBrowserEventDelegate {
     Q_UNUSED(disposition);
     return true;
   }
-
-  /**
-   * Triggered before a key event is sent to renderer process.
-   * @param event
-   */
-  virtual void onPreKeyEvent(const QKeyEvent& event) {
-    Q_UNUSED(event);
-  }
 };
 
 #endif  // QCEF_WIDGETS_QCEF_BROWSER_EVENT_DELEGATE_H

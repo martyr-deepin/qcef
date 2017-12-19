@@ -83,7 +83,8 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
 
   void OnUrlChanged(const CefString& url) override;
 
-  void OnPreKeyEvent(const QKeyEvent& event) override;
+  // Returns true if this key event is grabbed and handled by Qt Application.
+  bool OnPreKeyEvent(QKeyEvent* event) override;
 
  private:
   CefRefPtr<CefBrowser> cef_browser_ = nullptr;

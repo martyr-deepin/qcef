@@ -67,7 +67,7 @@ class QCefClientHandler : public CefClient,
 
     virtual void OnTitleChanged(const CefString& title) = 0;
 
-    virtual void OnPreKeyEvent(const QKeyEvent& event) = 0;
+    virtual bool OnPreKeyEvent(QKeyEvent* event) = 0;
 
     virtual bool OnBeforeBrowse(const CefString& url, bool is_redirect) = 0;
 

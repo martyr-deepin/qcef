@@ -276,12 +276,13 @@ bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
 
   if (delegate_ != nullptr) {
     // TODO(LiuLang): Filters shortcuts in QApplication.
-    const QKeyEvent key_event(QEvent::KeyPress, 0, Qt::NoModifier,
+    QKeyEvent key_event(QEvent::KeyPress, 0, Qt::NoModifier,
                               static_cast<quint32>(event.native_key_code),
                               0, event.modifiers);
-    delegate_->OnPreKeyEvent(key_event);
+    return delegate_->OnPreKeyEvent(&key_event);
+  } else {
+    return false;
   }
-  return false;
 }
 
 void QCefClientHandler::OnBeforeDownload(

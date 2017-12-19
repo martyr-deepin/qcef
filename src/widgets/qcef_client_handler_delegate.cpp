@@ -20,6 +20,7 @@
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QtGui/private/qguiapplication_p.h>
 
 #include "core/qcef_web_channel_consts.h"
 #include "include/cef_origin_whitelist.h"
@@ -247,11 +248,8 @@ void QCefClientHandlerDelegate::OnUrlChanged(const CefString& url) {
   web_page_->updateUrl(QUrl(QString::fromStdString(url)));
 }
 
-void QCefClientHandlerDelegate::OnPreKeyEvent(const QKeyEvent& event) {
-  auto event_delegate = web_page_->getEventDelegate();
-  if (event_delegate != nullptr) {
-    event_delegate->onPreKeyEvent(event);
-  }
+bool QCefClientHandlerDelegate::OnPreKeyEvent(QKeyEvent* event) {
+  return QGuiApplicationPrivate::instance()->shortcutMap.tryShortcut(event);
 }
 
 bool QCefClientHandlerDelegate::OnBeforeBrowse(const CefString& url,
