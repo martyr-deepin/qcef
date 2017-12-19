@@ -16,3 +16,4 @@ debian/.debhelper/
 build/
 *.user
 .idea/
+docs/qcef/
