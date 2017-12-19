@@ -13,6 +13,7 @@
 #include "include/cef_app.h"
 #include "include/views/cef_browser_view.h"
 #include "include/wrapper/cef_helpers.h"
+#include "qcef_x11_util.h"
 
 class QCefClientDownloadImageCallback : public CefDownloadImageCallback {
  public:
@@ -275,10 +276,12 @@ bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
   CEF_REQUIRE_UI_THREAD();
 
   if (delegate_ != nullptr) {
-    // TODO(LiuLang): Filters shortcuts in QApplication.
-    QKeyEvent key_event(QEvent::KeyPress, 0, Qt::NoModifier,
-                              static_cast<quint32>(event.native_key_code),
-                              0, event.modifiers);
+    // Filters shortcuts in QApplication.
+    QKeyEvent key_event(event.type == 0 ? QEvent::KeyPress : QEvent::KeyRelease,
+                        event.native_key_code,
+                        NativeToQtKeyboardModifiers(event.modifiers),
+                        static_cast<quint32>(event.native_key_code),
+                        0, event.modifiers);
     return delegate_->OnPreKeyEvent(&key_event);
   } else {
     return false;

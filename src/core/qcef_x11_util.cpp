@@ -55,6 +55,23 @@ void ReparentWindow(CefWindowHandle parent, CefWindowHandle child) {
   XReparentWindow(xdisplay, child, parent, 0, 0);
 }
 
+Qt::KeyboardModifiers NativeToQtKeyboardModifiers(uint32 native) {
+  Qt::KeyboardModifiers qt_mask = Qt::NoModifier;
+  if (native & ShiftMask) {
+    qt_mask |= Qt::ShiftModifier;
+  }
+  if (native & ControlMask) {
+    qt_mask |= Qt::ControlModifier;
+  }
+  if (native & Mod1Mask) {
+    qt_mask |= Qt::AltModifier;
+  }
+  if (native & Mod4Mask) {
+    qt_mask |= Qt::MetaModifier;
+  }
+  return qt_mask;
+}
+
 //unsigned long InitCefBrowserWindow(int width, int height) {
 //  auto gtk_window = gtk_window_new(GTK_WINDOW_POPUP);
 //  gtk_window_resize(GTK_WINDOW(gtk_window), width, height);

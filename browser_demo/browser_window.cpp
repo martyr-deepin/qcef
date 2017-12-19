@@ -20,17 +20,15 @@
 #include <QtWidgets/QAction>
 #include <QApplication>
 #include <QDebug>
-#include <QFile>
 #include <QMenu>
 #include <QPushButton>
+#include <QShortcut>
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QWebChannel>
 
 #include <qcef_context.h>
 #include <qcef_web_page.h>
-#include <qcef_web_settings.h>
-#include <qcef_web_view.h>
 
 #include "browser_tab_bar.h"
 #include "browser_tab_widget.h"
@@ -93,6 +91,11 @@ BrowserWindow::BrowserWindow(QWidget* parent)
   this->setObjectName("BrowserWindow");
   this->initUI();
   this->initConnections();
+
+  QShortcut* t = new QShortcut(QKeySequence("Ctrl+Alt+A"), this);
+  connect(t, &QShortcut::activated, []() {
+    qDebug() << "Ctrl+Alt+A activated";
+  });
   
   p_->address_edit->setFocus();
 }

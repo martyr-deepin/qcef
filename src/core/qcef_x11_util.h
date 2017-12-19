@@ -18,9 +18,14 @@
 #ifndef QCEF_CORE_QCEF_X11_UTIL_H
 #define QCEF_CORE_QCEF_X11_UTIL_H
 
+#include <QtCore/Qt>
+
 #include "include/internal/cef_linux.h"
 
 void SetXErrorHandler();
+
+// Convert native keyboard event modifiers to Qt.
+Qt::KeyboardModifiers NativeToQtKeyboardModifiers(uint32 native);
 
 // Wraps XReparentWindow().
 void ReparentWindow(CefWindowHandle parent, CefWindowHandle child);
