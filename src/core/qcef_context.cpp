@@ -173,6 +173,7 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
       settings.ignoresCertificateErrors() ? 1 : 0;
   CefString(&cef_settings.accept_language_list) =
       settings.acceptLanguageList().toStdString();
+  CefString(&cef_settings.locale) = settings.locale().toStdString();
 
 #ifndef QCEF_EXTERNAL_MESSAGE_PUMP
   // Integrate CEF message with Qt Message Loop.

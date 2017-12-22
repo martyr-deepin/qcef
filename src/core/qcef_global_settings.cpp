@@ -67,6 +67,9 @@ struct QCefGlobalSettingsPrivate {
   QCefCommandLineSwitchList switch_list;
 
   QString override_path{};
+
+  // Read current locale.
+  QString locale = QLocale().name();
 };
 
 QCefGlobalSettings::QCefGlobalSettings()
@@ -298,4 +301,28 @@ void QCefGlobalSettings::setOverridePath(const QString& path) {
 
 const QString& QCefGlobalSettings::getOverridePath() const {
   return p_->override_path;
+}
+
+void QCefGlobalSettings::setLocale(const QString& locale) {
+  p_->locale = locale;
+}
+
+QString QCefGlobalSettings::locale() const {
+  const QStringList kReveredLocales = {
+      "en_GB",
+      "en_US",
+      "es_419",
+      "pt_BR",
+      "pt_PT",
+      "zh_CN",
+      "zh_TW",
+  };
+  if (kReveredLocales.indexOf(p_->locale) > -1) {
+    // Remap locale names to match with chromium's
+    return p_->locale.replace('_', '-');
+  } else {
+    // Remove suffix of locale.
+    const int index = p_->locale.indexOf('_');
+    return p_->locale.left(index);
+  }
 }

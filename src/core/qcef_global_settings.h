@@ -257,6 +257,15 @@ class QCEF_CORE_EXPORT QCefGlobalSettings {
   void setOverridePath(const QString& path);
   const QString& getOverridePath() const;
 
+  /**
+   * Set browser context locale.
+   * Default locale is based on current system locale.
+   * @param locale Current locale name. Locale resource packages are
+   *               placed in /usr/lib/xxx/qcef/locales/
+   */
+  void setLocale(const QString& locale);
+  QString locale() const;
+
  private:
   QCefGlobalSettingsPrivate* p_ = nullptr;
 };
