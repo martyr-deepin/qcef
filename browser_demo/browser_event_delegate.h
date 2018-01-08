@@ -41,14 +41,9 @@ class BrowserEventDelegate : public QObject,
   bool onBeforePopup(const QUrl& url,
                      QCefWindowOpenDisposition disposition) override;
 
-  void onPreKeyEvent(const QKeyEvent& event) override;
-
  signals:
   void popupRequested(const QUrl& url, QCefWindowOpenDisposition disposition);
   void copyLinkToClipboard(const QUrl& url);
-
-  void refreshRequested();
-  void toggleFullscreen();
 
  private:
   BrowserEventDelegatePrivate* p_ = nullptr;

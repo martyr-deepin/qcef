@@ -110,6 +110,9 @@ function getButtonClickCount() {
 }
 
 function bootstrap() {
+    qWebChannel.objects.titleBar.onBackButtonClicked.connect(function() {
+      navigator.goBack();
+    });
     qWebChannel.objects.channel.onExecSqlDone.connect(function(id, state, result) {
         console.log("id: ", id, ", state: ", state, ", result:", result);
     });
@@ -121,6 +124,10 @@ function bootstrap() {
 
     updateButtonClickLabel();
 }
+
+global.open = function(appName) {
+  xxx.appName = appName;
+};
 
 new QWebChannel(qt.webChannelTransport, function (channel) {
     window.qWebChannel = channel;

@@ -76,22 +76,6 @@ bool BrowserEventDelegate::onBeforePopup(
   return true;
 }
 
-void BrowserEventDelegate::onPreKeyEvent(const QKeyEvent& event) {
-  switch (event.nativeScanCode()) {
-    case kF5Code: {
-      emit this->refreshRequested();
-      break;
-    }
-    case kF11Code: {
-      emit this->toggleFullscreen();
-      break;
-    }
-    default: {
-      break;
-    }
-  }
-}
-
 bool BrowserEventDelegate::onBeforeBrowse(const QUrl& url, bool is_redirect) {
   if (url.host() == "bing.com") {
     qDebug() << "Prevent browser from navigating to bing.com, " << is_redirect;

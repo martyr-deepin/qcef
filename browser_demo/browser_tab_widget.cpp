@@ -20,11 +20,10 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QDebug>
-#include <QMouseEvent>
+#include <QShortcut>
 #include <QWebChannel>
 #include <qcef_notification_service.h>
 #include <qcef_web_page.h>
-#include <qcef_web_settings.h>
 #include <qcef_web_view.h>
 
 #include "browser_event_delegate.h"
@@ -167,13 +166,15 @@ void BrowserTabWidget::initConnections() {
   connect(this, &BrowserTabWidget::fullscreenRequested,
           this, &BrowserTabWidget::onFullscreenRequested);
 
-  connect(p_->event_delegate, &BrowserEventDelegate::refreshRequested,
+  QShortcut* refresh_shortcut = new QShortcut(QKeySequence("F5"), this);
+  QShortcut* fullscreen_shortcut = new QShortcut(QKeySequence("F11"), this);
+  connect(refresh_shortcut, &QShortcut::activated,
           this, &BrowserTabWidget::onRefreshRequested);
   connect(p_->event_delegate, &BrowserEventDelegate::popupRequested,
           this, &BrowserTabWidget::onPopupRequested);
   connect(p_->event_delegate, &BrowserEventDelegate::copyLinkToClipboard,
           this, &BrowserTabWidget::setClipboardUrl);
-  connect(p_->event_delegate, &BrowserEventDelegate::toggleFullscreen,
+  connect(fullscreen_shortcut, &QShortcut::activated,
           this, &BrowserTabWidget::onToggleFullscreen);
 }
 
@@ -247,7 +248,7 @@ void BrowserTabWidget::onPopupRequested(const QUrl& url,
 }
 
 void BrowserTabWidget::onToggleFullscreen() {
-//  p_->tab_bar->setVisible(!p_->tab_bar->isVisible());
+  p_->tab_bar->setVisible(!p_->tab_bar->isVisible());
 }
 
 void BrowserTabWidget::setClipboardUrl(const QUrl& url) {
