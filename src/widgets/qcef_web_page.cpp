@@ -27,6 +27,7 @@
 #include "core/qcef_browser_transport.h"
 #include "core/qcef_client_handler.h"
 #include "core/qcef_string_visitor.h"
+#include "core/qcef_x11_util.h"
 #include "widgets/qcef_client_handler_delegate.h"
 #include "widgets/qcef_web_settings.h"
 
@@ -89,9 +90,8 @@ struct QCefWebPagePrivate {
   ~QCefWebPagePrivate();
 
   QWidget* view = nullptr;
-  QWidget* wrapper_widget = nullptr;
-  QWindow* browser_window = nullptr;
   WId browser_wid = 0;
+  WId parent_window = 0;
   QUrl url;
   QString html;
   QUrl iconUrl;
@@ -118,11 +118,6 @@ QCefWebPagePrivate::~QCefWebPagePrivate() {
   view = nullptr;
   // Cef Browser is released in delegate.
   browser_ = nullptr;
-  if (browser_window != nullptr) {
-    browser_window->destroy();
-    browser_window->deleteLater();
-    browser_window = nullptr;
-  }
   if (settings != nullptr) {
     delete settings;
     settings = nullptr;
@@ -159,18 +154,11 @@ CefRefPtr<CefBrowser> QCefWebPagePrivate::browser() {
 }
 
 void QCefWebPagePrivate::createBrowserWidget() {
-  // QCefWebView -> wrapper_widget -> window_x11_ -> web content widget
-  QWindow* wrapper_window = new QWindow();
-  wrapper_window->create();
-  // wrapper_widget takes ownership of wrapper_window.
-  wrapper_widget = QWidget::createWindowContainer(wrapper_window);
-  view->setFocusProxy(wrapper_widget);
-  // And now, wrapper_widget is child of view.
-  view->layout()->addWidget(wrapper_widget);
+  parent_window = InitCefBrowserWindow(100, 100);
 
   CefWindowInfo window_info;
-  const CefRect rect{0, 0, wrapper_window->width(), wrapper_window->height()};
-  window_info.SetAsChild(wrapper_window->winId(), rect);
+  const CefRect rect{0, 0, 100, 100};
+  window_info.SetAsChild(parent_window, rect);
   CefBrowserSettings cef_settings;
   MergeWebPageSettings(cef_settings, *settings);
 
@@ -180,13 +168,6 @@ void QCefWebPagePrivate::createBrowserWidget() {
                                                cef_settings,
                                                nullptr);
   browser_wid = browser_->GetHost()->GetWindowHandle();
-  browser_window = QWindow::fromWinId(browser_wid);
-  // Auto resize web content window.
-  QObject::connect(wrapper_window, &QWindow::widthChanged,
-                   browser_window, &QWindow::setWidth);
-  QObject::connect(wrapper_window, &QWindow::heightChanged,
-                   browser_window, &QWindow::setHeight);
-
   // Create transport object when browser is ready.
   transport = new QCefBrowserTransport(browser_);
 }
@@ -397,13 +378,22 @@ void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
   p_->event_delegate = delegate;
 }
 
+void QCefWebPage::remapBrowserWindow(WId parent_window) {
+  ReparentWindow(parent_window, p_->parent_window);
+}
+
 void QCefWebPage::updateBrowserGeometry() {
-  qDebug() << Q_FUNC_INFO;
-  if (p_->browser_window != nullptr) {
-    const QSize old_size = p_->browser_window->size();
-    p_->browser_window->setHeight(400);
-    p_->browser_window->setHeight(old_size.height());
-  }
+//  qDebug() << Q_FUNC_INFO;
+//  if (p_->browser_window != nullptr) {
+//    const QSize old_size = p_->browser_window->size();
+//    p_->browser_window->setHeight(400);
+//    p_->browser_window->setHeight(old_size.height());
+//  }
+}
+
+void QCefWebPage::updateBrowserGeometry(const QSize& size) {
+  SetXWindowBounds(p_->parent_window, 0, 0, size.width(), size.height());
+  SetXWindowBounds(p_->browser_wid, 0, 0, size.width(), size.height());
 }
 
 void QCefWebPage::connectTransportChannel() {

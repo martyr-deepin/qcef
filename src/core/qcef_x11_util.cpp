@@ -52,7 +52,10 @@ void SetXErrorHandler() {
 void ReparentWindow(CefWindowHandle parent, CefWindowHandle child) {
   ::Display* xdisplay = cef_get_xdisplay();
   DCHECK(xdisplay != nullptr);
+  XUnmapWindow(xdisplay, child);
   XReparentWindow(xdisplay, child, parent, 0, 0);
+  XMapWindow(xdisplay, child);
+  XFlush(xdisplay);
 }
 
 Qt::KeyboardModifiers NativeToQtKeyboardModifiers(uint32 native) {
@@ -72,6 +75,28 @@ Qt::KeyboardModifiers NativeToQtKeyboardModifiers(uint32 native) {
   return qt_mask;
 }
 
+unsigned long InitCefBrowserWindow(int width, int height) {
+  ::Display* xdisplay = cef_get_xdisplay();
+  Window root_window = XRootWindow(xdisplay, 0);
+  XSetWindowAttributes swa;
+  memset(&swa, 0, sizeof(swa));
+  swa.background_pixmap = None;
+  swa.override_redirect = false;
+  Window parent_window = XCreateWindow(xdisplay, root_window,
+                                       0, 0, width, height,  // geometry
+                                       0,  /* border width*/
+                                       CopyFromParent,  /* depth*/
+                                       InputOutput,
+                                       CopyFromParent,  /* visual */
+                                       CWBackPixmap | CWOverrideRedirect,
+                                       &swa);
+  long event_mask = FocusChangeMask | StructureNotifyMask | PropertyChangeMask;
+  XSelectInput(xdisplay, parent_window, event_mask);
+  XFlush(xdisplay);
+
+  return parent_window;
+}
+
 //unsigned long InitCefBrowserWindow(int width, int height) {
 //  auto gtk_window = gtk_window_new(GTK_WINDOW_POPUP);
 //  gtk_window_resize(GTK_WINDOW(gtk_window), width, height);
@@ -79,20 +104,20 @@ Qt::KeyboardModifiers NativeToQtKeyboardModifiers(uint32 native) {
 //  auto window_id = GDK_WINDOW_XID(gtk_widget_get_window(gtk_window));
 //  return window_id;
 //}
-//
-//void SetXWindowBounds(CefWindowHandle xwindow, int x, int y,
-//                      int width, int height) {
-//  ::Display* xdisplay = cef_get_xdisplay();
-//  XWindowChanges changes;
-//  changes.x = x;
-//  changes.y = y;
-//  changes.width = width;
-//  changes.height = height;
-//  XConfigureWindow(xdisplay, xwindow,
-//                   CWX | CWY | CWHeight | CWWidth,
-//                   &changes);
-//}
-//
+
+void SetXWindowBounds(CefWindowHandle xwindow, int x, int y,
+                      int width, int height) {
+  ::Display* xdisplay = cef_get_xdisplay();
+  XWindowChanges changes;
+  changes.x = x;
+  changes.y = y;
+  changes.width = width;
+  changes.height = height;
+  XConfigureWindow(xdisplay, xwindow,
+                   CWX | CWY | CWHeight | CWWidth,
+                   &changes);
+}
+
 //void SetXWindowTitle(CefWindowHandle window, const std::string& title) {
 //  // Retrieve the X11 display shared with Chromium.
 //  ::Display* display = cef_get_xdisplay();

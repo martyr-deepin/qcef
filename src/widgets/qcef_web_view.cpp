@@ -49,12 +49,12 @@ QCefWebView::QCefWebView(QWidget* parent)
 
   p_->move_event_timer = new QTimer();
   p_->move_event_timer->setSingleShot(true);
-  connect(p_->move_event_timer, &QTimer::timeout, [this]() {
-    if (this->p_->page != nullptr) {
-      this->p_->page->updateBrowserGeometry();
-    }
-  });
-  qApp->installEventFilter(this);
+//  connect(p_->move_event_timer, &QTimer::timeout, [this]() {
+//    if (this->p_->page != nullptr) {
+//      this->p_->page->updateBrowserGeometry();
+//    }
+//  });
+//  qApp->installEventFilter(this);
 }
 
 QCefWebView::~QCefWebView() {
@@ -101,4 +101,16 @@ bool QCefWebView::eventFilter(QObject* watched, QEvent* event) {
     p_->move_event_timer->start(kMoveEventInterval);
   }
   return QObject::eventFilter(watched, event);
+}
+
+void QCefWebView::showEvent(QShowEvent* event) {
+  QWidget::showEvent(event);
+  QTimer::singleShot(1, [=]() {
+    page()->remapBrowserWindow(this->winId());
+  });
+}
+
+void QCefWebView::resizeEvent(QResizeEvent* event) {
+  QWidget::resizeEvent(event);
+  page()->updateBrowserGeometry(event->size());
 }

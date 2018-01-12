@@ -30,12 +30,12 @@ Qt::KeyboardModifiers NativeToQtKeyboardModifiers(uint32 native);
 // Wraps XReparentWindow().
 void ReparentWindow(CefWindowHandle parent, CefWindowHandle child);
 
-//unsigned long InitCefBrowserWindow(int width, int height);
-//
-//void SetXWindowBounds(CefWindowHandle xwindow,
-//                      int x, int y,
-//                      int width, int height);
-//
+unsigned long InitCefBrowserWindow(int width, int height);
+
+void SetXWindowBounds(CefWindowHandle xwindow,
+                      int x, int y,
+                      int width, int height);
+
 //void SetXWindowTitle(CefWindowHandle window, const std::string& title);
 //
 //void SetXWindowVisible(CefWindowHandle xwindow, bool visible);

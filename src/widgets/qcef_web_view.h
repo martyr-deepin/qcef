@@ -66,6 +66,11 @@ class QCEF_WIDGETS_EXPORT QCefWebView : public QWidget {
    */
   bool eventFilter(QObject* watched, QEvent* event) override;
 
+ protected:
+  void showEvent(QShowEvent* event) override;
+
+  void resizeEvent(QResizeEvent* event) override;
+
  private:
   QCefWebViewPrivate* p_ = nullptr;
 };
