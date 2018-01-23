@@ -382,18 +382,9 @@ void QCefWebPage::remapBrowserWindow(WId parent_window) {
   ReparentWindow(parent_window, p_->parent_window);
 }
 
-void QCefWebPage::updateBrowserGeometry() {
-//  qDebug() << Q_FUNC_INFO;
-//  if (p_->browser_window != nullptr) {
-//    const QSize old_size = p_->browser_window->size();
-//    p_->browser_window->setHeight(400);
-//    p_->browser_window->setHeight(old_size.height());
-//  }
-}
-
 void QCefWebPage::updateBrowserGeometry(const QSize& size) {
-  SetXWindowBounds(p_->parent_window, 0, 0, size.width(), size.height());
   SetXWindowBounds(p_->browser_wid, 0, 0, size.width(), size.height());
+  SetXWindowBounds(p_->parent_window, 0, 0, size.width(), size.height());
 }
 
 void QCefWebPage::connectTransportChannel() {

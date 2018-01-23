@@ -241,9 +241,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   friend class QCefWebView;
   friend class QCefClientHandlerDelegate;
 
-  void updateBrowserGeometry();
   void updateBrowserGeometry(const QSize& size);
-
   void remapBrowserWindow(WId parent_window);
 
   /**

@@ -55,6 +55,7 @@ void ReparentWindow(CefWindowHandle parent, CefWindowHandle child) {
   XUnmapWindow(xdisplay, child);
   XReparentWindow(xdisplay, child, parent, 0, 0);
   XMapWindow(xdisplay, child);
+  XSetInputFocus(xdisplay, child, RevertToParent, CurrentTime);
   XFlush(xdisplay);
 }
 
@@ -82,19 +83,19 @@ unsigned long InitCefBrowserWindow(int width, int height) {
   memset(&swa, 0, sizeof(swa));
   swa.background_pixmap = None;
   swa.override_redirect = false;
-  Window parent_window = XCreateWindow(xdisplay, root_window,
-                                       0, 0, width, height,  // geometry
-                                       0,  /* border width*/
-                                       CopyFromParent,  /* depth*/
-                                       InputOutput,
-                                       CopyFromParent,  /* visual */
-                                       CWBackPixmap | CWOverrideRedirect,
-                                       &swa);
+  Window window = XCreateWindow(xdisplay, root_window,
+                                0, 0, width, height,  // geometry
+                                0,  /* border width*/
+                                CopyFromParent,  /* depth*/
+                                InputOutput,
+                                CopyFromParent,  /* visual */
+                                CWBackPixmap | CWOverrideRedirect,
+                                &swa);
   long event_mask = FocusChangeMask | StructureNotifyMask | PropertyChangeMask;
-  XSelectInput(xdisplay, parent_window, event_mask);
+  XSelectInput(xdisplay, window, event_mask);
   XFlush(xdisplay);
 
-  return parent_window;
+  return window;
 }
 
 //unsigned long InitCefBrowserWindow(int width, int height) {

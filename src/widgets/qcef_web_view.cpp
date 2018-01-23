@@ -20,51 +20,25 @@
 #include <QApplication>
 #include <QDebug>
 #include <QResizeEvent>
-#include <QStackedLayout>
 #include <QTimer>
 
 #include "widgets/qcef_web_page.h"
 
-namespace {
-
-const int kMoveEventInterval = 500;
-
-}  // namespace
-
 struct QCefWebViewPrivate {
   QCefWebPage* page = nullptr;
-  QTimer* move_event_timer = nullptr;
+  bool window_mapped = false;
 };
 
 QCefWebView::QCefWebView(QWidget* parent)
     : QWidget(parent),
       p_(new QCefWebViewPrivate()) {
-
-  // Child window will fill this widget.
-  QStackedLayout* layout = new QStackedLayout();
-  layout->setContentsMargins(0, 0, 0, 0);
-  layout->setSpacing(0);
-  this->setLayout(layout);
-  this->setContentsMargins(0, 0, 0, 0);
-
-  p_->move_event_timer = new QTimer();
-  p_->move_event_timer->setSingleShot(true);
-//  connect(p_->move_event_timer, &QTimer::timeout, [this]() {
-//    if (this->p_->page != nullptr) {
-//      this->p_->page->updateBrowserGeometry();
-//    }
-//  });
-//  qApp->installEventFilter(this);
+  this->setAttribute(Qt::WA_NativeWindow, true);
+  this->setAttribute(Qt::WA_DontCreateNativeAncestors, true);
 }
 
 QCefWebView::~QCefWebView() {
   qDebug() << Q_FUNC_INFO;
   if (p_ != nullptr) {
-    if (p_->move_event_timer != nullptr) {
-      p_->move_event_timer->stop();
-      delete p_->move_event_timer;
-      p_->move_event_timer = nullptr;
-    }
 
     if (p_->page != nullptr) {
       delete p_->page;
@@ -96,18 +70,14 @@ QCefWebPage* QCefWebView::page() const {
   return p_->page;
 }
 
-bool QCefWebView::eventFilter(QObject* watched, QEvent* event) {
-  if (event->type() == QEvent::Move) {
-    p_->move_event_timer->start(kMoveEventInterval);
-  }
-  return QObject::eventFilter(watched, event);
-}
-
 void QCefWebView::showEvent(QShowEvent* event) {
   QWidget::showEvent(event);
-  QTimer::singleShot(1, [=]() {
-    page()->remapBrowserWindow(this->winId());
-  });
+  if (!p_->window_mapped) {
+    p_->window_mapped = true;
+    QTimer::singleShot(1, [=]() {
+      page()->remapBrowserWindow(this->winId());
+    });
+  }
 }
 
 void QCefWebView::resizeEvent(QResizeEvent* event) {
