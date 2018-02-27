@@ -125,10 +125,6 @@ function bootstrap() {
     updateButtonClickLabel();
 }
 
-global.open = function(appName) {
-  xxx.appName = appName;
-};
-
 new QWebChannel(qt.webChannelTransport, function (channel) {
     window.qWebChannel = channel;
     bootstrap();

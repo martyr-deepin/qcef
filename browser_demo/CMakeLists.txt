@@ -37,21 +37,14 @@ find_package(Qt5Widgets REQUIRED)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-#pkg_search_module(LIBQCEF REQUIRED libqcef)
+pkg_search_module(LIBQCEF REQUIRED libqcef)
 include_directories(AFTER ${LIBQCEF_INCLUDE_DIRS})
 
-#set(LINK_LIBS
-#    Qt5::Gui
-#    Qt5::WebChannel
-#    Qt5::Widgets
-#    ${LIBQCEF_LDFLAGS}
-#    )
-
-# Use local libqcef version instead of system.
 set(LINK_LIBS
     Qt5::Gui
     Qt5::WebChannel
     Qt5::Widgets
+#    ${LIBQCEF_LDFLAGS}
     ${LIBQCEF_LIBRARIES}
     )
 
