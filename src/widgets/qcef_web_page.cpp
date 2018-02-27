@@ -383,8 +383,11 @@ void QCefWebPage::remapBrowserWindow(WId parent_window) {
 }
 
 void QCefWebPage::updateBrowserGeometry(const QSize& size) {
-  SetXWindowBounds(p_->browser_wid, 0, 0, size.width(), size.height());
-  SetXWindowBounds(p_->parent_window, 0, 0, size.width(), size.height());
+  const qreal ratio = view()->devicePixelRatioF();
+  const int width = static_cast<int>(ratio * size.width());
+  const int height = static_cast<int>(ratio * size.height());
+  SetXWindowBounds(p_->browser_wid, 0, 0, width, height);
+  SetXWindowBounds(p_->parent_window, 0, 0, width, height);
 }
 
 void QCefWebPage::connectTransportChannel() {

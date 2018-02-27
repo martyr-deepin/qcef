@@ -57,6 +57,7 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
     arguments.push_back({"ppapi-flash-version",
                          settings.getPepperFlashVersion()});
   }
+
   switch (settings.proxyType()) {
     case QCefGlobalSettings::ProxyType::NoProxy: {
       arguments.push_back({"--no-proxy-server", ""});
@@ -77,6 +78,13 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
     default: {
       break;
     }
+  }
+
+  // Check hiDPI option.
+  const QByteArray scale_factor_bytes = qgetenv("QT_SCALE_FACTOR");
+  if (!scale_factor_bytes.isEmpty()) {
+    arguments.push_back({"--force-device-scale-factor",
+                         scale_factor_bytes.constData()});
   }
 
   client_app->appendCommandLineSwitches(arguments);
