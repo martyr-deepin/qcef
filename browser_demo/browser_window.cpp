@@ -190,6 +190,7 @@ void BrowserWindow::initUI() {
   toolbar_layout->addWidget(p_->home_button);
   toolbar_layout->addSpacing(5);
   toolbar_layout->addWidget(p_->address_edit);
+  toolbar_layout->addWidget(new BrowserAddressEdit(this));
   toolbar_layout->addSpacing(5);
   toolbar_layout->addWidget(p_->settings_button);
   p_->address_bar->setLayout(toolbar_layout);
