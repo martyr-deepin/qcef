@@ -319,7 +319,7 @@ bool QCefClientHandlerDelegate::OnContextMenuCommand(
 
 void QCefClientHandlerDelegate::OnClipboardChanged(const char* text_data,
                                                    size_t text_len) {
-  QString text = QString::fromLatin1(text_data, text_len);
+  QString text = QString::fromUtf8(text_data, text_len);
   QTimer::singleShot(10, [=]() {
     QClipboard* clipboard = qApp->clipboard();
     clipboard->blockSignals(true);
