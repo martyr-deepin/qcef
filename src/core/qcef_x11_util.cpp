@@ -26,6 +26,8 @@
 
 #include "include/base/cef_logging.h"
 
+namespace {
+
 int XErrorHandlerImpl(Display* display, XErrorEvent* event) {
   (void)display;
 
@@ -43,6 +45,8 @@ int XIOErrorHandlerImpl(Display* display) {
   (void)display;
   return 0;
 }
+
+}  // namespace
 
 void SetXErrorHandler() {
   XSetErrorHandler(XErrorHandlerImpl);
