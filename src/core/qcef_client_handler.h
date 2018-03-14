@@ -67,6 +67,8 @@ class QCefClientHandler : public CefClient,
 
     virtual void OnTitleChanged(const CefString& title) = 0;
 
+    virtual void OnClipboardChanged(const char* text_data, size_t text_len) = 0;
+
     virtual bool OnPreKeyEvent(QKeyEvent* event) = 0;
 
     virtual bool OnBeforeBrowse(const CefString& url, bool is_redirect) = 0;
@@ -164,6 +166,8 @@ class QCefClientHandler : public CefClient,
                          CefRefPtr<CefDownloadItemCallback> callback) override;
 
   // CefKeyboardHandler methods:
+  void OnClipboardChanged(const char* text_data, size_t text_len) override;
+
   bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
                      const CefKeyEvent& event,
                      CefEventHandle os_event,

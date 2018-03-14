@@ -269,6 +269,13 @@ void QCefClientHandler::NotifyFavicon(const CefString& icon_url,
   }
 }
 
+void QCefClientHandler::OnClipboardChanged(const char* text_data,
+                                           size_t text_len) {
+  if (delegate_ != nullptr) {
+    delegate_->OnClipboardChanged(text_data, text_len);
+  }
+}
+
 bool QCefClientHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
                                       const CefKeyEvent& event,
                                       CefEventHandle os_event,

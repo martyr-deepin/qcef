@@ -86,6 +86,9 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
   // Returns true if this key event is grabbed and handled by Qt Application.
   bool OnPreKeyEvent(QKeyEvent* event) override;
 
+  // Update Qt clipboard when cef update its internal clipboard data.
+  void OnClipboardChanged(const char* text_data, size_t text_len) override;
+
  private:
   CefRefPtr<CefBrowser> cef_browser_ = nullptr;
   QCefWebPage* web_page_ = nullptr;
