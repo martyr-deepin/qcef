@@ -218,6 +218,10 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
                  widgets/qcef_notification_service.h
                  )
   target_link_libraries(notification-test ${LINK_LIBS})
+
+  add_executable(xevent-tracer
+                 tests/xevent-tracer.c)
+  target_link_libraries(xevent-tracer ${LINK_LIBS})
 endif ()
 
 
