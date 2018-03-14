@@ -192,6 +192,8 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   QCefBrowserEventDelegate* getEventDelegate() const;
   void setEventDelegate(QCefBrowserEventDelegate* delegate);
 
+  bool eventFilter(QObject* watched, QEvent* event) override;
+
  signals:
   void renderContextCreated();
 

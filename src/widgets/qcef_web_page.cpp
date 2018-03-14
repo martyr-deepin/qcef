@@ -17,6 +17,7 @@
 
 #include "widgets/qcef_web_page.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QJsonObject>
 #include <QLayout>
@@ -180,6 +181,8 @@ QCefWebPage::QCefWebPage(QObject* parent)
   p_->client_handler = new QCefClientHandler(p_->delegate);
   p_->settings = new QCefWebSettings();
   p_->channel = new QWebChannel();
+
+  qApp->installEventFilter(this);
 }
 
 QCefWebPage::~QCefWebPage() {
@@ -388,6 +391,7 @@ void QCefWebPage::updateBrowserGeometry(const QSize& size) {
   const int height = static_cast<int>(ratio * size.height());
   SetXWindowBounds(p_->browser_wid, 0, 0, width, height);
   SetXWindowBounds(p_->parent_window, 0, 0, width, height);
+  p_->browser()->GetHost()->NotifyMoveOrResizeStarted();
 }
 
 void QCefWebPage::connectTransportChannel() {
@@ -427,4 +431,17 @@ void QCefWebPage::updateTitle(const QString& title) {
 void QCefWebPage::updateUrl(const QUrl& url) {
   p_->url = url;
   emit this->urlChanged(p_->url);
+}
+
+bool QCefWebPage::eventFilter(QObject* watched, QEvent* event) {
+  switch (event->type()) {
+    case QEvent::Move: {
+      this->updateBrowserGeometry(QSize(view()->width(), view()->height() + 1));
+      this->updateBrowserGeometry(view()->size());
+      break;
+    }
+    default: {
+    }
+  }
+  return QObject::eventFilter(watched, event);
 }
