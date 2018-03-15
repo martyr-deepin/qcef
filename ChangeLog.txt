@@ -1,36 +1,45 @@
+2018-03-15 1.1.4 LiuLang <gsushzhsosgsu@gmail.com>
+    * Update cef to 60.0.3112.113
+    * Auto update cef window position on move event
+    * Implement OnClipboardUpdated() methods in CefClientHandler
+    * Support QShortcut
+    * Replace QWindow with XWindow
+    * Support updating browser locale
+    * Support HiDPI screen
+
 2017-11-17 1.1.3 LiuLang <gsushzhsosgsu@gmail.com>
-	* Fix libqcef library path error
-	* Update package dependency
-	* Support specifying override-path at runtime
+    * Fix libqcef library path error
+    * Update package dependency
+    * Support specifying override-path at runtime
 
 2017-11-10 1.1.2 LiuLang <gsushzhsosgsu@gmail.com>
-	* WebView: set update-geometry-timer as single shot
-	* Add QCEF_EXTERNAL_MESSAGE_PUMP option
-	* Remove EMBED_WEBCHANNEL option
-	* Remove QCEF_OVERRIDE_PATH option
+    * WebView: set update-geometry-timer as single shot
+    * Add QCEF_EXTERNAL_MESSAGE_PUMP option
+    * Remove EMBED_WEBCHANNEL option
+    * Remove QCEF_OVERRIDE_PATH option
 
 2017-11-09 1.1.1 LiuLang <gsushzhsosgsu@gmail.com>
-	* Update so version
+    * Update so version
 
 2017-11-09 1.1.0 LiuLang <gsushzhsosgsu@gmail.com>
 
-	* Add event filter to web view
-	* Add iframe demo
-	* Add internal MessagePumpHandler
-	* Add localstorage demo
-	* Add redirect page demo
-	* Add web notification API
-	* Support appending command line arguments
-	* Support embed qwebchannel library
-	* Support filetype filter in file-chooser-dialog
-	* Support network proxy
-	* Support refreshing web page
-	* Support zoom-in / zoom-out web page
-	* Fix double free pointer in debug mode
-	* Fix iconChanged() signal
-	* Fix segfault in updateBrowserGeometry()
-	* Fix WindowOpenDisposition invalid in GCC5
+    * Add event filter to web view
+    * Add iframe demo
+    * Add internal MessagePumpHandler
+    * Add localstorage demo
+    * Add redirect page demo
+    * Add web notification API
+    * Support appending command line arguments
+    * Support embed qwebchannel library
+    * Support filetype filter in file-chooser-dialog
+    * Support network proxy
+    * Support refreshing web page
+    * Support zoom-in / zoom-out web page
+    * Fix double free pointer in debug mode
+    * Fix iconChanged() signal
+    * Fix segfault in updateBrowserGeometry()
+    * Fix WindowOpenDisposition invalid in GCC5
 
 2017-09-05 1.0.0 LiuLang <gsushzhsosgsu@gmail.com>
 
-	* Initial release
+    * Initial release
