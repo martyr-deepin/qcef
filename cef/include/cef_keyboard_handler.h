@@ -49,6 +49,10 @@
 class CefKeyboardHandler : public virtual CefBaseRefCounted {
  public:
   ///
+  // Called after ui::ClipboardAuraX11::WriteText().
+  virtual void OnClipboardChanged(const char* text_data, size_t text_len) { }
+
+  ///
   // Called before a keyboard event is sent to the renderer. |event| contains
   // information about the keyboard event. |os_event| is the operating system
   // event message, if any. Return true if the event was handled or false

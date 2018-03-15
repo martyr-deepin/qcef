@@ -57,6 +57,10 @@ typedef struct _cef_keyboard_handler_t {
   ///
   cef_base_ref_counted_t base;
 
+  void(CEF_CALLBACK* on_clipboard_changed)(struct _cef_keyboard_handler_t* self,
+                                           const char* text_data,
+                                           size_t text_len);
+
   ///
   // Called before a keyboard event is sent to the renderer. |event| contains
   // information about the keyboard event. |os_event| is the operating system

@@ -19,6 +19,18 @@ namespace {
 
 // MEMBER FUNCTIONS - Body may be edited by hand.
 
+void CEF_CALLBACK
+keyboard_handler_on_clipboard_changed(struct _cef_keyboard_handler_t* self,
+                                      const char* text_data,
+                                      size_t text_len) {
+  DCHECK(self);
+  if (!self)
+    return;
+
+  // Execute
+  CefKeyboardHandlerCppToC::Get(self)->OnClipboardChanged(text_data, text_len);
+}
+
 int CEF_CALLBACK
 keyboard_handler_on_pre_key_event(struct _cef_keyboard_handler_t* self,
                                   cef_browser_t* browser,
@@ -101,6 +113,7 @@ keyboard_handler_on_key_event(struct _cef_keyboard_handler_t* self,
 // CONSTRUCTOR - Do not edit by hand.
 
 CefKeyboardHandlerCppToC::CefKeyboardHandlerCppToC() {
+  GetStruct()->on_clipboard_changed = keyboard_handler_on_clipboard_changed;
   GetStruct()->on_pre_key_event = keyboard_handler_on_pre_key_event;
   GetStruct()->on_key_event = keyboard_handler_on_key_event;
 }

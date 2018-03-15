@@ -111,11 +111,6 @@ class CefCToCppScoped : public BaseName {
   DISALLOW_COPY_AND_ASSIGN(CefCToCppScoped);
 };
 
-#ifdef __clang__
-    template <class ClassName, class BaseName, class StructName>
-    CefWrapperType CefCToCppScoped<ClassName, BaseName, StructName>::kWrapperType;
-#endif
-
 template <class ClassName, class BaseName, class StructName>
 struct CefCToCppScoped<ClassName, BaseName, StructName>::WrapperStruct {
   CefWrapperType type_;
