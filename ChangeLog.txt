@@ -1,3 +1,6 @@
+2018-03-16 1.1.4.1 LiuLang <gsushzhsosgsu@gmail.com>
+    * Update cef x86-64 tarball
+
 2018-03-15 1.1.4 LiuLang <gsushzhsosgsu@gmail.com>
     * Update cef to 60.0.3112.113
     * Auto update cef window position on move event
