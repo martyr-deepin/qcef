@@ -28,13 +28,11 @@
 #include "include/cef_path_util.h"
 #include "include/wrapper/cef_helpers.h"
 
-#ifndef QCEF_EXTERNAL_MESSAGE_PUMP
 namespace {
 
 QTimer* g_cef_timer = nullptr;
 
 }  // namespace
-#endif  // QCEF_EXTERNAL_MESSAGE_PUMP
 
 int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
   SetXErrorHandler();
@@ -183,12 +181,8 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
       settings.acceptLanguageList().toStdString();
   CefString(&cef_settings.locale) = settings.locale().toStdString();
 
-#ifndef QCEF_EXTERNAL_MESSAGE_PUMP
   // Integrate CEF message with Qt Message Loop.
   cef_settings.external_message_pump = 0;
-#else
-  cef_settings.external_message_pump = 1;
-#endif  // QCEF_EXTERNAL_MESSAGE_PUMP
 
   // Initialize CEF for the browser process.
   if (!CefInitialize(main_args, cef_settings, client_app.get(), nullptr)) {
@@ -203,26 +197,22 @@ void QCefBindApp(QCoreApplication* app) {
   QObject::connect(app, &QCoreApplication::aboutToQuit, QCefStopTimer);
   QObject::connect(app, &QCoreApplication::destroyed, CefShutdown);
 
-#ifndef QCEF_EXTERNAL_MESSAGE_PUMP
   Q_ASSERT(g_cef_timer == nullptr);
   g_cef_timer = new QTimer();
   g_cef_timer->setInterval(1);
   QObject::connect(g_cef_timer, &QTimer::timeout, CefDoMessageLoopWork);
   g_cef_timer->start();
-#endif  // QCEF_EXTERNAL_MESSAGE_PUMP
 }
 
 void QCefStopTimer() {
   qDebug() << Q_FUNC_INFO;
   QCefFlushCookies();
   QThread::msleep(300);
-#ifndef QCEF_EXTERNAL_MESSAGE_PUMP
   if (g_cef_timer != nullptr) {
     g_cef_timer->stop();
     delete g_cef_timer;
     g_cef_timer = nullptr;
   }
-#endif  // QCEF_EXTERNAL_MESSAGE_PUMP
 }
 
 void QCefShutdown() {
