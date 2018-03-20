@@ -205,7 +205,6 @@ void QCefBindApp(QCoreApplication* app) {
 }
 
 void QCefStopTimer() {
-  qDebug() << Q_FUNC_INFO;
   QCefFlushCookies();
   QThread::msleep(300);
   if (g_cef_timer != nullptr) {

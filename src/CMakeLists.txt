@@ -168,6 +168,8 @@ set(WIDGETS_FILES
     widgets/qcef_browser_event_delegate_p.h
     widgets/qcef_client_handler_delegate.cpp
     widgets/qcef_client_handler_delegate.h
+    widgets/qcef_native_event_filter.cpp
+    widgets/qcef_native_event_filter.h
     widgets/qcef_notification_service.cpp
     widgets/qcef_notification_service.h
     widgets/qcef_ssl_status.h

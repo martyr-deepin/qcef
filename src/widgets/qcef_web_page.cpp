@@ -30,6 +30,7 @@
 #include "core/qcef_string_visitor.h"
 #include "core/qcef_x11_util.h"
 #include "widgets/qcef_client_handler_delegate.h"
+#include "widgets/qcef_native_event_filter.h"
 #include "widgets/qcef_web_settings.h"
 
 namespace {
@@ -183,6 +184,7 @@ QCefWebPage::QCefWebPage(QObject* parent)
   p_->channel = new QWebChannel();
 
   qApp->installEventFilter(this);
+  QCefNativeEventFilter::install();
 }
 
 QCefWebPage::~QCefWebPage() {
