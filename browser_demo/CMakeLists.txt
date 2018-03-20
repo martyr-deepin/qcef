@@ -60,12 +60,14 @@ set(BROWSER_DEMO_FILES
     browser_tab_widget.h
     browser_window.cpp
     browser_window.h
+    channel.cpp
+    channel.h
     sync_methods.cpp
     sync_methods.h
 
     images/images.qrc
     resources/resources.qrc
-    channel.cpp channel.h)
+    )
 
 add_executable(browser-demo
                ${BROWSER_DEMO_FILES})

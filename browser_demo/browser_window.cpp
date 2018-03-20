@@ -96,7 +96,7 @@ BrowserWindow::BrowserWindow(QWidget* parent)
   connect(t, &QShortcut::activated, []() {
     qDebug() << "Ctrl+Alt+A activated";
   });
-  
+
   p_->address_edit->setFocus();
 }
 
