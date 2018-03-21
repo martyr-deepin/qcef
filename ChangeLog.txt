@@ -1,3 +1,6 @@
+2018-03-21 1.1.4.3 LiuLang <gsushzhsosgsu@gmail.com>
+    * Add _NET_WM_PID flag to chrome wrapper window
+
 2018-03-21 1.1.4.2 LiuLang <gsushzhsosgsu@gmail.com>
     * Add NativeEventFilter to handle mouse press event
     * Add window flag to chrome windows

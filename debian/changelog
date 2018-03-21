@@ -1,3 +1,9 @@
+qcef (1.1.4.3) stable; urgency=medium
+
+  * Add _NET_WM_PID flag to chrome wrapper window
+
+ -- Liu Lang <gsushzhsosgsu@gmail.com>  Wed, 21 Mar 2018 15:13:01 +0800
+
 qcef (1.1.4.2) stable; urgency=medium
 
   * Add NativeEventFilter to handle mouse press event
