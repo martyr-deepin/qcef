@@ -17,9 +17,9 @@
 
 #include "core/qcef_x11_util.h"
 
-//#include <gdk/gdkx.h>
-//#include <gtk/gtk.h>
 #include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <unistd.h>
 //
 //#undef Success     // Definition conflicts with cef_message_router.h
 //#undef RootWindow  // Definition conflicts with root_window.h
@@ -27,6 +27,8 @@
 #include "include/base/cef_logging.h"
 
 namespace {
+
+const char kNetWMPid[] = "_NET_WM_PID";
 
 int XErrorHandlerImpl(Display* display, XErrorEvent* event) {
   (void)display;
@@ -97,6 +99,18 @@ unsigned long InitCefBrowserWindow(int width, int height) {
                                 &swa);
   long event_mask = FocusChangeMask | StructureNotifyMask | PropertyChangeMask;
   XSelectInput(xdisplay, window, event_mask);
+
+  // Add PID flag to window.
+  long pid = getpid();
+  const Atom pid_atom = XInternAtom(xdisplay, kNetWMPid, false);
+  XChangeProperty(xdisplay,
+                  window,
+                  pid_atom,
+                  XA_CARDINAL,
+                  32,
+                  PropModeReplace,
+                  reinterpret_cast<unsigned char*>(&pid), 1);
+
   XFlush(xdisplay);
 
   return window;
