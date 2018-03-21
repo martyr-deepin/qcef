@@ -1,3 +1,11 @@
+qcef (1.1.4.2) stable; urgency=medium
+
+  * Add NativeEventFilter to handle mouse press event
+  * Add window flag to chrome windows
+  * Remove QCEF_EXTERNAL_MESSAGE_PUMP flag
+
+ -- Liu Lang <gsushzhsosgsu@gmail.com>  Wed, 21 Mar 2018 09:20:27 +0800
+
 qcef (1.1.4.1) stable; urgency=medium
 
   * Update cef x86-64 tarball

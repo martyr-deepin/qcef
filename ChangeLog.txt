@@ -1,3 +1,8 @@
+2018-03-21 1.1.4.2 LiuLang <gsushzhsosgsu@gmail.com>
+    * Add NativeEventFilter to handle mouse press event
+    * Add window flag to chrome windows
+    * Remove QCEF_EXTERNAL_MESSAGE_PUMP flag
+
 2018-03-16 1.1.4.1 LiuLang <gsushzhsosgsu@gmail.com>
     * Update cef x86-64 tarball
 
