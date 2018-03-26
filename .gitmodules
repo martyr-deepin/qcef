@@ -1,0 +1,4 @@
+[submodule "qcef-chromium"]
+	path = qcef-chromium
+	url = https://cr.deepin.io/qcef-chromium
+	branch = master
