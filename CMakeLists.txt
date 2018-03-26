@@ -122,6 +122,7 @@ project(qcef)
 # Use folders in the resulting project files.
 set_property(GLOBAL PROPERTY OS_FOLDERS ON)
 
+include(cmake/build-cef.cmake)
 
 #
 # CEF_ROOT setup.

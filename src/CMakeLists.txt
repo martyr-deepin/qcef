@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 3.0)
 project(qcef CXX C)
 
 set(CMAKE_C_STANDARD 11)
@@ -10,23 +9,17 @@ set(QCEF_VERSION_MINOR 1)
 set(QCEF_VERSION_MICRO 4)
 
 if (CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-rpath,'\$ORIGIN'/qcef")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-rpath,'\$ORIGIN'/qcef")
 endif ()
-
-# Only generate Debug and Release configuration types.
-set(CMAKE_CONFIGURATION_TYPES Debug Release)
-if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
-endif()
 
 if (NOT DEFINED QCEF_INSTALL_PATH)
   set(QCEF_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/lib")
   if (CMAKE_BUILD_TYPE MATCHES Debug)
     set(QCEF_OVERRIDE_PATH "${CMAKE_CURRENT_BINARY_DIR}/qcef")
-  else()
+  else ()
     set(QCEF_OVERRIDE_PATH "${QCEF_INSTALL_PATH}/qcef")
-  endif()
-else()
+  endif ()
+else ()
   set(QCEF_OVERRIDE_PATH "${QCEF_INSTALL_PATH}/qcef")
 endif ()
 
@@ -45,14 +38,14 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
   # -fsanitize=address, Enable memory address sanitizer.
   #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
   # -fsanitize=leak, Enable memory leak sanitizer.
-#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak")
+  #   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=leak")
   # -fsanitize=memory, Enable detecting uninitited memory sanitizer.
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=memory "
   #    "-fsanitize-memory-track-origins -fPIC -pie -fno-omit-frame-pointer")
 
   # Enable Qt builtin debug mode
   add_definitions("-DQT_MESSAGELOGCONTEXT")
-else()
+else ()
   # -Wl, -O2 Enable linker optimizations
   #-Wl, --gc-sections Remove unused code resulting from -fdsta-sections and -ffunction-sections
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2")
@@ -62,7 +55,7 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,-O1 -Wl,--gc-sections")
   endif ()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fno-rtti -Wno-unused-result -fPIC")
-endif()
+endif ()
 
 find_package(PkgConfig REQUIRED)
 find_package(Qt5Core REQUIRED)
@@ -149,7 +142,7 @@ if (EMBED_WEBCHANNEL)
   set(CORE_FILES
       ${CORE_FILES}
       third_party/webchannel/resources.qrc)
-endif()
+endif ()
 
 set(CORE_EXPORT_FILES
     core/qcef_context.h
@@ -202,24 +195,30 @@ ADD_LOGICAL_TARGET("libcef_lib"
                    "${CEF_TARGET_OUT_DIR}/qcef/libcef.so"
                    "${CEF_TARGET_OUT_DIR}/qcef/libcef.so")
 
-
-if (CMAKE_BUILD_TYPE MATCHES Debug)
-
-  add_executable(notification-test
-                 tests/notification_test.cpp
-
-                 tests/notification_window.cpp
-                 tests/notification_window.h
-                 widgets/qcef_notification_service.cpp
-                 widgets/qcef_notification_service.h
-                 )
-  target_link_libraries(notification-test ${LINK_LIBS})
-
-  add_executable(xevent-tracer
-                 tests/xevent-tracer.c)
-  target_link_libraries(xevent-tracer ${LINK_LIBS})
-endif ()
-
+add_custom_command(OUTPUT _copy-cef
+                   COMMAND echo "COPY CEF!!!!"
+                   COMMAND rm -rvf qcef/
+                   COMMAND mkdir -pv qcef/
+                   COMMAND cp -vrf
+                   ${CMAKE_SOURCE_DIR}/cef/Release/chrome-sandbox
+                   ${CMAKE_SOURCE_DIR}/cef/Release/natives_blob.bin
+                   ${CMAKE_SOURCE_DIR}/cef/Release/snapshot_blob.bin
+                   ${CMAKE_SOURCE_DIR}/cef/Release/libcef.so
+                   ${CMAKE_SOURCE_DIR}/cef/Resources/locales
+                   ${CMAKE_SOURCE_DIR}/cef/Resources/cef.pak
+                   ${CMAKE_SOURCE_DIR}/cef/Resources/cef_100_percent.pak
+                   ${CMAKE_SOURCE_DIR}/cef/Resources/cef_200_percent.pak
+                   ${CMAKE_SOURCE_DIR}/cef/Resources/cef_extensions.pak
+                   ${CMAKE_SOURCE_DIR}/cef/Resources/devtools_resources.pak
+                   ${CMAKE_SOURCE_DIR}/cef/Resources/icudtl.dat
+                   qcef/
+                   WORKING_DIRECTORY "${CEF_TARGET_OUT_DIR}"
+                   VERBATIM
+                   )
+add_custom_target(copy-cef DEPENDS
+                  build-cef
+                  _copy-cef
+                  VERBATIM)
 
 # Executable target.
 add_library(${CEF_TARGET} SHARED
@@ -228,7 +227,10 @@ add_library(${CEF_TARGET} SHARED
             ${WIDGETS_FILES}
             )
 SET_LIBRARY_TARGET_PROPERTIES(${CEF_TARGET})
-add_dependencies(${CEF_TARGET} libcef_dll_wrapper)
+add_dependencies(${CEF_TARGET}
+                 copy-cef
+                 libcef_dll_wrapper
+                 )
 target_link_libraries(${CEF_TARGET}
                       ${LINK_LIBS}
                       libcef_lib
@@ -250,39 +252,24 @@ set_target_properties(${CEF_TARGET}
 set(QCEF_PKG_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/libqcef.pc)
 configure_file(data/libqcef.pc.in ${QCEF_PKG_CONFIG_FILE})
 
-# Extract CEF binary files
-macro(EXTRACT_CEF_TARBALL target)
-  add_custom_command(
-    TARGET ${target}
-    PRE_BUILD
-    COMMAND rm -rvf qcef/
-    COMMAND mkdir -pv qcef/
-    COMMAND tar xvf "${CMAKE_CURRENT_SOURCE_DIR}/../cef/cef.${PROJECT_ARCH}.tar.gz"
-    COMMAND mv -vf Release/chrome-sandbox Release/natives_blob.bin
-        Release/snapshot_blob.bin Release/libcef.so
-        qcef/
-    COMMAND rm -rf Release/
-    COMMAND rm -rf locales/
-    COMMAND mv -vf Resources/locales Resources/cef.pak
-        Resources/cef_100_percent.pak Resources/cef_200_percent.pak
-        Resources/cef_extensions.pak Resources/devtools_resources.pak
-        Resources/icudtl.dat
-        qcef/
-    COMMAND rm -rf Resources/
-    WORKING_DIRECTORY "${CEF_TARGET_OUT_DIR}"
-    VERBATIM
-  )
-endmacro()
-# Add logical library
-add_library(CEF_TARBALL base/macros.h)
-add_dependencies(${CEF_TARGET} CEF_TARBALL)
-# Copy binary and resource files to the target output directory.
-EXTRACT_CEF_TARBALL("CEF_TARBALL")
-
 if (CMAKE_BUILD_TYPE MATCHES Debug)
+  add_executable(notification-test
+                 tests/notification_test.cpp
+
+                 tests/notification_window.cpp
+                 tests/notification_window.h
+                 widgets/qcef_notification_service.cpp
+                 widgets/qcef_notification_service.h
+                 )
+  target_link_libraries(notification-test ${LINK_LIBS})
+
+  add_executable(xevent-tracer
+                 tests/xevent-tracer.c)
+  target_link_libraries(xevent-tracer ${LINK_LIBS})
+
   add_executable(qt-version tests/qt_version_test.cpp)
   target_link_libraries(qt-version ${QT_LIBS})
-endif()
+endif ()
 
 ## Installation
 install(TARGETS "${CEF_TARGET}"

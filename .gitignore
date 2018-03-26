@@ -1,3 +1,7 @@
+# Cef binary files
+cef/Release
+cef/Resources
+
 cmake-build-debug/
 cmake-build-release/
 debian/debhelper-build-stamp
