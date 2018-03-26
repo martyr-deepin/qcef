@@ -9,6 +9,13 @@ DH_AUTO_ARGS = --parallel --buildsystem=cmake
 
 # Override qcef exe path to /usr/lib/qcef.
 override_dh_auto_configure:
+ifneq (,$(wildcard .git/config))
+	git submodule update --init --recursive
+	git submodule update --remote
+else
+	rm -rf cef
+	git clone https://cr.deepin.io/cef-binary cef
+endif
 	dh_auto_configure -- \
 	  -DCMAKE_BUILD_TYPE=Release \
 	  -DPROJECT_ARCH=${DEB_TARGET_GNU_CPU} \

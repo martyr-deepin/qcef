@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: LiuLang <gsushzhsosgsu@gmail.com>
 Build-Depends: debhelper (>= 9),
  cmake,
+ git,
  libasound2,
  libfl-dev,
  libfontconfig1-dev,
