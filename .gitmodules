@@ -1,0 +1,3 @@
+[submodule "cef"]
+	path = cef
+	url = https://cr.deepin.io/cef-binary

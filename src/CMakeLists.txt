@@ -199,26 +199,25 @@ add_custom_command(OUTPUT _copy-cef
                    COMMAND echo "COPY CEF!!!!"
                    COMMAND rm -rvf qcef/
                    COMMAND mkdir -pv qcef/
-                   COMMAND cp -vrf
-                   ${CMAKE_SOURCE_DIR}/cef/Release/chrome-sandbox
-                   ${CMAKE_SOURCE_DIR}/cef/Release/natives_blob.bin
-                   ${CMAKE_SOURCE_DIR}/cef/Release/snapshot_blob.bin
-                   ${CMAKE_SOURCE_DIR}/cef/Release/libcef.so
-                   ${CMAKE_SOURCE_DIR}/cef/Resources/locales
-                   ${CMAKE_SOURCE_DIR}/cef/Resources/cef.pak
-                   ${CMAKE_SOURCE_DIR}/cef/Resources/cef_100_percent.pak
-                   ${CMAKE_SOURCE_DIR}/cef/Resources/cef_200_percent.pak
-                   ${CMAKE_SOURCE_DIR}/cef/Resources/cef_extensions.pak
-                   ${CMAKE_SOURCE_DIR}/cef/Resources/devtools_resources.pak
-                   ${CMAKE_SOURCE_DIR}/cef/Resources/icudtl.dat
+                   COMMAND tar xvf "${CMAKE_CURRENT_SOURCE_DIR}/../cef/cef.${PROJECT_ARCH}.tar.gz"
+                   COMMAND mv -vf
+                   Release/chrome-sandbox
+                   Release/natives_blob.bin
+                   Release/snapshot_blob.bin
+                   Release/libcef.so
+                   Resources/locales
+                   Resources/cef.pak
+                   Resources/cef_100_percent.pak
+                   Resources/cef_200_percent.pak
+                   Resources/cef_extensions.pak
+                   Resources/devtools_resources.pak
+                   Resources/icudtl.dat
                    qcef/
+                   COMMAND rm -rf Release Resources
                    WORKING_DIRECTORY "${CEF_TARGET_OUT_DIR}"
                    VERBATIM
                    )
-add_custom_target(copy-cef DEPENDS
-                  build-cef
-                  _copy-cef
-                  VERBATIM)
+add_custom_target(copy-cef DEPENDS _copy-cef)
 
 # Executable target.
 add_library(${CEF_TARGET} SHARED
