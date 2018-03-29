@@ -3,6 +3,7 @@ Section: libdevel
 Priority: optional
 Maintainer: LiuLang <gsushzhsosgsu@gmail.com>
 Build-Depends: debhelper (>= 9),
+ ca-certificates,
  cmake,
  git,
  libasound2,
