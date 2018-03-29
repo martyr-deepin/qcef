@@ -1,3 +1,7 @@
+2018-03-29 1.1.4.4 LiuLang <gsushzhsosgsu@gmail.com>
+    * Move cef to submodule
+    * Update cef binary package
+
 2018-03-21 1.1.4.3 LiuLang <gsushzhsosgsu@gmail.com>
     * Add _NET_WM_PID flag to chrome wrapper window
 

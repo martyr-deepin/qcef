@@ -1,3 +1,10 @@
+qcef (1.1.4.4) stable; urgency=medium
+
+  * Move cef to submodule
+  * Update cef binary package
+
+ -- Liu Lang <gsushzhsosgsu@gmail.com>  Thu, 29 Mar 2018 16:20:02 +0800
+
 qcef (1.1.4.3) stable; urgency=medium
 
   * Add _NET_WM_PID flag to chrome wrapper window
