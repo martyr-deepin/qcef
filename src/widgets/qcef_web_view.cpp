@@ -37,7 +37,6 @@ QCefWebView::QCefWebView(QWidget* parent)
 }
 
 QCefWebView::~QCefWebView() {
-  qDebug() << Q_FUNC_INFO;
   if (p_ != nullptr) {
 
     if (p_->page != nullptr) {
