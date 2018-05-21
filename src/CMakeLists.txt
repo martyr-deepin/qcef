@@ -268,6 +268,11 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 
   add_executable(qt-version tests/qt_version_test.cpp)
   target_link_libraries(qt-version ${QT_LIBS})
+
+  add_executable(web-demo tests/web_demo.cpp)
+  target_link_libraries(web-demo
+                        ${LINK_LIBS}
+                        ${CEF_TARGET})
 endif ()
 
 ## Installation
