@@ -14,11 +14,7 @@ endif ()
 
 if (NOT DEFINED QCEF_INSTALL_PATH)
   set(QCEF_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/lib")
-  if (CMAKE_BUILD_TYPE MATCHES Debug)
-    set(QCEF_OVERRIDE_PATH "${CMAKE_CURRENT_BINARY_DIR}/qcef")
-  else ()
-    set(QCEF_OVERRIDE_PATH "${QCEF_INSTALL_PATH}/qcef")
-  endif ()
+  set(QCEF_OVERRIDE_PATH "${CMAKE_CURRENT_BINARY_DIR}/qcef")
 else ()
   set(QCEF_OVERRIDE_PATH "${QCEF_INSTALL_PATH}/qcef")
 endif ()
@@ -268,12 +264,12 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 
   add_executable(qt-version tests/qt_version_test.cpp)
   target_link_libraries(qt-version ${QT_LIBS})
-
-  add_executable(web-demo tests/web_demo.cpp)
-  target_link_libraries(web-demo
-                        ${LINK_LIBS}
-                        ${CEF_TARGET})
 endif ()
+
+add_executable(web-demo tests/web_demo.cpp)
+target_link_libraries(web-demo
+                      ${LINK_LIBS}
+                      ${CEF_TARGET})
 
 ## Installation
 install(TARGETS "${CEF_TARGET}"

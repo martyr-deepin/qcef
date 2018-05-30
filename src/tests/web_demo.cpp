@@ -16,6 +16,10 @@
  */
 
 #include <QApplication>
+#include <QLineEdit>
+#include <QVBoxLayout>
+#include <QThread>
+#include <QDebug>
 
 #include "core/qcef_context.h"
 #include "widgets/qcef_web_view.h"
@@ -42,9 +46,20 @@ int main(int argc, char** argv) {
   QApplication app(argc, argv);
   QCefBindApp(&app);
 
+  QWidget window;
+  QVBoxLayout* layout = new QVBoxLayout();
+  window.setLayout(layout);
+
+  QLineEdit* edit = new QLineEdit();
+  layout->addWidget(edit);
+
   QCefWebView view;
+  layout->addWidget(&view);
   view.show();
   view.setUrl(QUrl("https://www.bing.com"));
+
+  window.resize(860, 640);
+  window.show();
 
   return app.exec();
 }
