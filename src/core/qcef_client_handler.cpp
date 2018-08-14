@@ -15,6 +15,10 @@
 #include "include/wrapper/cef_helpers.h"
 #include "qcef_x11_util.h"
 
+#include <X11/Xlib.h>
+#undef KeyPress
+#undef KeyRelease
+
 class QCefClientDownloadImageCallback : public CefDownloadImageCallback {
  public:
   explicit QCefClientDownloadImageCallback(
@@ -329,5 +333,43 @@ bool QCefClientHandler::OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
     return delegate_->OnBeforeBrowse(request->GetURL().ToString(), is_redirect);
   } else {
     return false;
+  }
+}
+
+void QCefClientHandler::OnGotFocus(CefRefPtr<CefBrowser> browser)
+{
+  if (delegate_) {
+    Display *cef_display = cef_get_xdisplay();
+    WId window_handle = browser->GetHost()->GetWindowHandle();
+    Window cef_focus_window = 0;
+    int revert_to = 0;
+
+    XGetInputFocus(cef_display, &cef_focus_window, &revert_to);
+
+    Window root_window = 0;
+    Window parent_window = cef_focus_window;
+
+    // cef中当鼠标enter到cef窗口区域时就会触发此事件
+    // 所以此处需要判断当前的焦点窗口是不是对应的cef窗口，或它的子窗口
+    forever {
+      if (parent_window == window_handle) {
+        delegate_->OnGotFocus(browser);
+        break;
+      }
+
+      // 已经是顶层窗口
+      if (parent_window == root_window)
+        break;
+
+      Window *child = 0;
+      uint child_count = 0;
+      Status s = XQueryTree(cef_display, parent_window, &root_window, &parent_window, &child, &child_count);
+
+      if (!child)
+        XFree(child);
+
+      if (s == 0) // error
+        break;
+    }
   }
 }

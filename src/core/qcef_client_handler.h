@@ -20,7 +20,8 @@ class QCefClientHandler : public CefClient,
                           public CefKeyboardHandler,
                           public CefLifeSpanHandler,
                           public CefLoadHandler,
-                          public CefRequestHandler {
+                          public CefRequestHandler,
+                          public CefFocusHandler {
  public:
   class Delegate {
    public:
@@ -83,6 +84,8 @@ class QCefClientHandler : public CefClient,
                                       CefRefPtr<CefContextMenuParams> params,
                                       int command_id) = 0;
 
+    virtual void OnGotFocus(CefRefPtr<CefBrowser> browser) {Q_UNUSED(browser)}
+
    protected:
     virtual ~Delegate() {}
   };
@@ -117,6 +120,10 @@ class QCefClientHandler : public CefClient,
   }
 
   CefRefPtr<CefRequestHandler> GetRequestHandler() override {
+    return this;
+  }
+
+  CefRefPtr<CefFocusHandler> GetFocusHandler() override {
     return this;
   }
 
@@ -216,6 +223,8 @@ class QCefClientHandler : public CefClient,
   // CefRequestHandler methods:
   bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
                       CefRefPtr<CefRequest> request, bool is_redirect) override;
+
+  void OnGotFocus(CefRefPtr<CefBrowser> browser) override;
 
  private:
   void NotifyFavicon(const CefString& icon_url, CefRefPtr<CefImage> icon);

@@ -238,6 +238,7 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void reload();
   void reloadIgnoreCache();
   void stop();
+  void setFocus(bool focus);
 
  private:
   friend class QCefWebView;

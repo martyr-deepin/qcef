@@ -83,3 +83,12 @@ void QCefWebView::resizeEvent(QResizeEvent* event) {
   QWidget::resizeEvent(event);
   page()->updateBrowserGeometry(event->size());
 }
+
+void QCefWebView::focusInEvent(QFocusEvent *event)
+{
+  if (p_->page) {
+    p_->page->setFocus(true);
+  }
+
+  QWidget::focusInEvent(event);
+}

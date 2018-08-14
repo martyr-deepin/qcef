@@ -58,7 +58,8 @@ void QCefNativeEventFilter::install() {
   if (g_filter == nullptr) {
     g_filter = new QCefNativeEventFilter();
     Q_ASSERT(g_filter != nullptr);
-    qApp->installNativeEventFilter(g_filter);
+    // 禁用，使用Qt本地事件实现鼠标按下后转移窗口焦点
+//    qApp->installNativeEventFilter(g_filter);
   }
 }
 

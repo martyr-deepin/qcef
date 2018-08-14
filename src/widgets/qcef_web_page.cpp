@@ -184,7 +184,8 @@ QCefWebPage::QCefWebPage(QObject* parent)
   p_->channel = new QWebChannel();
 
   qApp->installEventFilter(this);
-  QCefNativeEventFilter::install();
+  // 禁用，使用Qt本地事件实现鼠标按下后转移窗口焦点
+//  QCefNativeEventFilter::install();
 }
 
 QCefWebPage::~QCefWebPage() {
@@ -354,6 +355,11 @@ void QCefWebPage::stop() {
   p_->browser()->StopLoad();
 }
 
+void QCefWebPage::setFocus(bool focus)
+{
+  p_->browser()->GetHost()->SetFocus(focus);
+}
+
 void QCefWebPage::toHtml(Callback callback) const {
   p_->browser()->GetMainFrame()->GetSource(new StringVisitor(callback));
 }
@@ -438,9 +444,19 @@ void QCefWebPage::updateUrl(const QUrl& url) {
 bool QCefWebPage::eventFilter(QObject* watched, QEvent* event) {
   switch (event->type()) {
     case QEvent::Move: {
-      this->updateBrowserGeometry(QSize(view()->width(), view()->height() + 1));
-      this->updateBrowserGeometry(view()->size());
+        // why ? ###(zccrs): 不知道这里为什么要这样做
+//      this->updateBrowserGeometry(QSize(view()->width(), view()->height() + 1));
+//      this->updateBrowserGeometry(view()->size());
       break;
+    }
+    case QEvent::MouseButtonPress: {
+        // 当焦点处于cef窗口时，点击Qt主窗口将不会发生焦点转移
+        QWindow *window = qobject_cast<QWindow*>(watched);
+
+        if (window && window->winId() == p_->view->topLevelWidget()->winId()) {
+          window->requestActivate();
+        }
+        break;
     }
     default: {
     }

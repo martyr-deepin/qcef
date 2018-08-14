@@ -22,6 +22,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QtGui/private/qguiapplication_p.h>
+#include <QApplication>
 #include <QTimer>
 
 #include "core/qcef_web_channel_consts.h"
@@ -324,4 +325,14 @@ void QCefClientHandlerDelegate::OnClipboardChanged(const char* text_data,
     clipboard->setText(text);
     clipboard->blockSignals(false);
   });
+}
+
+// 当浏览器窗口获得焦点时，应该将Qt窗口焦点对象设置为对应的QCefWebView
+void QCefClientHandlerDelegate::OnGotFocus(CefRefPtr<CefBrowser> browser)
+{
+  Q_UNUSED(browser)
+
+  if (qApp->focusWidget() && qApp->focusWidget() != web_page_->view()) {
+    qApp->focusWidget()->clearFocus();
+  }
 }

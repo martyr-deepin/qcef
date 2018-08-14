@@ -89,6 +89,8 @@ class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
   // Update Qt clipboard when cef update its internal clipboard data.
   void OnClipboardChanged(const char* text_data, size_t text_len) override;
 
+  void OnGotFocus(CefRefPtr<CefBrowser> browser) override;
+
  private:
   CefRefPtr<CefBrowser> cef_browser_ = nullptr;
   QCefWebPage* web_page_ = nullptr;
