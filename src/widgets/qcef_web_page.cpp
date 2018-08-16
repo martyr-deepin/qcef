@@ -444,9 +444,10 @@ void QCefWebPage::updateUrl(const QUrl& url) {
 bool QCefWebPage::eventFilter(QObject* watched, QEvent* event) {
   switch (event->type()) {
     case QEvent::Move: {
-        // why ? ###(zccrs): 不知道这里为什么要这样做
-//      this->updateBrowserGeometry(QSize(view()->width(), view()->height() + 1));
-//      this->updateBrowserGeometry(view()->size());
+        // ###(zccrs): 此处是为了通知cef窗口相对于屏幕的位置改变了
+        //             不然会导致网页内部窗口显示位置错误
+      this->updateBrowserGeometry(QSize(view()->width(), view()->height() + 1));
+      this->updateBrowserGeometry(view()->size());
       break;
     }
     case QEvent::MouseButtonPress: {
