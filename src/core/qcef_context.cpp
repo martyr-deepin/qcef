@@ -133,6 +133,7 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
 
   // Merge CEF global settings.
   CefSettings cef_settings;
+  cef_settings.background_color = settings.backgroundColor();
   cef_settings.single_process = settings.singleProcess() ? 1 : 0;
   cef_settings.no_sandbox = settings.noSandbox() ? 1 : 0;
   cef_settings.command_line_args_disabled =

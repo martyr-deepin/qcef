@@ -266,6 +266,14 @@ class QCEF_CORE_EXPORT QCefGlobalSettings {
   void setLocale(const QString& locale);
   QString locale() const;
 
+  /**
+   * set default background color
+   * Default background color is white
+   * @param color with 32bit(argb): 0xff0000ff(blue)
+   */
+  void setBackgroundColor(unsigned int color);
+  unsigned int backgroundColor() const;
+
  private:
   QCefGlobalSettingsPrivate* p_ = nullptr;
 };

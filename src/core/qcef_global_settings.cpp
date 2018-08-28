@@ -70,6 +70,8 @@ struct QCefGlobalSettingsPrivate {
 
   // Read current locale.
   QString locale = QLocale().name();
+
+  unsigned int background_color = 0xffffffff;
 };
 
 QCefGlobalSettings::QCefGlobalSettings()
@@ -325,4 +327,14 @@ QString QCefGlobalSettings::locale() const {
     const int index = p_->locale.indexOf('_');
     return p_->locale.left(index);
   }
+}
+
+void QCefGlobalSettings::setBackgroundColor(unsigned int color)
+{
+    p_->background_color = color;
+}
+
+unsigned int QCefGlobalSettings::backgroundColor() const
+{
+  return p_->background_color;
 }
