@@ -28,73 +28,80 @@ class QCefContextMenu;
 
 // Implements delegate of QCefClientHandler, to let QCefWebPage be notified
 // about state change of cef browser.
-class QCefClientHandlerDelegate : public QCefClientHandler::Delegate {
- public:
-  explicit QCefClientHandlerDelegate(QCefWebPage* web_page);
+class QCefClientHandlerDelegate : public QCefClientHandler::Delegate
+{
+public:
+    explicit QCefClientHandlerDelegate(QCefWebPage *web_page);
 
-  ~QCefClientHandlerDelegate() override;
+    ~QCefClientHandlerDelegate() override;
 
-  bool OnBeforeBrowse(const CefString& url, bool is_redirect) override;
+    bool OnBeforeBrowse(const CefString &url, bool is_redirect) override;
 
-  void OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
-                           CefRefPtr<CefFrame> frame,
-                           CefRefPtr<CefContextMenuParams> params,
-                           CefRefPtr<CefMenuModel> model) override;
+    void OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
+                             CefRefPtr<CefFrame> frame,
+                             CefRefPtr<CefContextMenuParams> params,
+                             CefRefPtr<CefMenuModel> model) override;
 
-  bool OnContextMenuCommand(CefRefPtr<CefBrowser> browser,
-                            CefRefPtr<CefFrame> frame,
-                            CefRefPtr<CefContextMenuParams> params,
-                            int command_id) override;
+    bool OnContextMenuCommand(CefRefPtr<CefBrowser> browser,
+                              CefRefPtr<CefFrame> frame,
+                              CefRefPtr<CefContextMenuParams> params,
+                              int command_id) override;
 
-  bool OnBeforePopup(
-      const CefString& target_url,
-      CefLifeSpanHandler::WindowOpenDisposition target_disposition) override;
+    bool OnBeforePopup(
+        const CefString &target_url,
+        CefLifeSpanHandler::WindowOpenDisposition target_disposition) override;
 
-  void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
+    void OnBrowserCreated(CefRefPtr<CefBrowser> browser) override;
 
-  void DoClose(CefRefPtr<CefBrowser> browser) override;
+    void DoClose(CefRefPtr<CefBrowser> browser) override;
 
-  void OnFaviconURLChange(const CefString& icon_url,
-                          CefRefPtr<CefImage> icon) override;
+    void OnFaviconURLChange(const CefString &icon_url,
+                            CefRefPtr<CefImage> icon) override;
 
-  void OnLoadStarted(CefRefPtr<CefBrowser> browser,
-                     CefRefPtr<CefFrame> frame) override;
+    void OnLoadStarted(CefRefPtr<CefBrowser> browser,
+                       CefRefPtr<CefFrame> frame) override;
 
-  void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
-                            bool is_loading,
-                            bool can_go_back,
-                            bool can_go_forward) override;
+    void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+                              bool is_loading,
+                              bool can_go_back,
+                              bool can_go_forward) override;
 
-  void OnLoadEnd(CefRefPtr<CefBrowser> browser,
-                 CefRefPtr<CefFrame> frame,
-                 int httpStatusCode) override;
+    void OnLoadEnd(CefRefPtr<CefBrowser> browser,
+                   CefRefPtr<CefFrame> frame,
+                   int httpStatusCode) override;
 
-  QString OnLoadError(CefRefPtr<CefBrowser> browser,
-                      CefRefPtr<CefFrame> frame,
-                      int errorCode) override;
+    QString OnLoadError(CefRefPtr<CefBrowser> browser,
+                        CefRefPtr<CefFrame> frame,
+                        int errorCode) override;
 
-  bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-                                CefProcessId source_process,
-                                CefRefPtr<CefProcessMessage> message) override;
+    bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+                                  CefProcessId source_process,
+                                  CefRefPtr<CefProcessMessage> message) override;
 
-  void OnSetFullscreen(bool fullscreen) override;
+    void OnSetFullscreen(bool fullscreen) override;
 
-  void OnTitleChanged(const CefString& title) override;
+    void OnTitleChanged(const CefString &title) override;
 
-  void OnUrlChanged(const CefString& url) override;
+    void OnUrlChanged(const CefString &url) override;
 
-  // Returns true if this key event is grabbed and handled by Qt Application.
-  bool OnPreKeyEvent(QKeyEvent* event) override;
+    // Returns true if this key event is grabbed and handled by Qt Application.
+    bool OnPreKeyEvent(QKeyEvent *event) override;
 
-  // Update Qt clipboard when cef update its internal clipboard data.
-  void OnClipboardChanged(const char* text_data, size_t text_len) override;
+    // Update Qt clipboard when cef update its internal clipboard data.
+    void OnClipboardChanged(const char *text_data, size_t text_len) override;
 
-  void OnGotFocus(CefRefPtr<CefBrowser> browser) override;
+    void OnGotFocus(CefRefPtr<CefBrowser> browser) override;
 
- private:
-  CefRefPtr<CefBrowser> cef_browser_ = nullptr;
-  QCefWebPage* web_page_ = nullptr;
-  QCefContextMenu* context_menu_ = nullptr;
+    CefRequestHandler::ReturnValue OnBeforeResourceLoad(
+        CefRefPtr<CefBrowser> browser,
+        CefRefPtr<CefFrame> frame,
+        CefRefPtr<CefRequest> request,
+        CefRefPtr<CefRequestCallback> callback) override;
+
+private:
+    CefRefPtr<CefBrowser> cef_browser_ = nullptr;
+    QCefWebPage *web_page_ = nullptr;
+    QCefContextMenu *context_menu_ = nullptr;
 };
 
 #endif  // QCEF_WIDGETS_QCEF_CLIENT_HANDLER_DELEGATE_H

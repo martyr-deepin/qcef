@@ -34,7 +34,7 @@ class QCefSchemeHandlerFactory : public CefSchemeHandlerFactory {
                                        CefRefPtr<CefRequest> request) override;
 
  private:
-  IMPLEMENT_REFCOUNTING(QCefSchemeHandlerFactory);
+  IMPLEMENT_REFCOUNTING(QCefSchemeHandlerFactory)
 
   QCefSchemeHandler custom_scheme_handler_ = nullptr;
 };

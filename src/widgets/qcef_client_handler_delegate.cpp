@@ -31,308 +31,352 @@
 #include "qcef_browser_event_delegate_p.h"
 #include "widgets/qcef_web_settings.h"
 
-QCefClientHandlerDelegate::QCefClientHandlerDelegate(QCefWebPage* web_page)
-    : web_page_(web_page) {
+QCefClientHandlerDelegate::QCefClientHandlerDelegate(QCefWebPage *web_page)
+    : web_page_(web_page)
+{
 }
 
-QCefClientHandlerDelegate::~QCefClientHandlerDelegate() {
-  if (cef_browser_ != nullptr) {
-    auto host = cef_browser_->GetHost();
-    cef_browser_ = nullptr;
-    host->CloseBrowser(true);
-  }
+QCefClientHandlerDelegate::~QCefClientHandlerDelegate()
+{
+    if (cef_browser_ != nullptr) {
+        auto host = cef_browser_->GetHost();
+        cef_browser_ = nullptr;
+        host->CloseBrowser(true);
+    }
 
-  if (context_menu_ != nullptr) {
-    delete context_menu_;
-    context_menu_ = nullptr;
-  }
+    if (context_menu_ != nullptr) {
+        delete context_menu_;
+        context_menu_ = nullptr;
+    }
 }
 
 bool QCefClientHandlerDelegate::OnBeforePopup(
-    const CefString& target_url,
-    CefLifeSpanHandler::WindowOpenDisposition target_dispositio) {
-  if (cef_browser_ != nullptr) {
-    const QUrl url(target_url.ToString().c_str());
-    QCefWindowOpenDisposition disposition =
-        static_cast<QCefWindowOpenDisposition>(target_dispositio);
-    auto event_delegate = web_page_->getEventDelegate();
-    if (event_delegate != nullptr) {
-      return event_delegate->onBeforePopup(url, disposition);
+    const CefString &target_url,
+    CefLifeSpanHandler::WindowOpenDisposition target_dispositio)
+{
+    if (cef_browser_ != nullptr) {
+        const QUrl url(target_url.ToString().c_str());
+        QCefWindowOpenDisposition disposition =
+            static_cast<QCefWindowOpenDisposition>(target_dispositio);
+        auto event_delegate = web_page_->getEventDelegate();
+        if (event_delegate != nullptr) {
+            return event_delegate->onBeforePopup(url, disposition);
+        }
     }
-  }
-  return true;
+    return true;
 }
 
 void
-QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser) {
-  if (cef_browser_ == nullptr) {
-    cef_browser_ = browser;
-  }
+QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser)
+{
+    if (cef_browser_ == nullptr) {
+        cef_browser_ = browser;
+    }
 
-  // Set Cross-Origin white list.
-  const auto white_list = web_page_->settings()->crossOriginWhiteList();
-  for (const QCefWebSettings::CrossOriginEntry& entry : white_list) {
-    CefAddCrossOriginWhitelistEntry(entry.source.toString().toStdString(),
-                                    entry.target.scheme().toStdString(),
-                                    entry.target.host().toStdString(),
-                                    true);
-  }
+    // Set Cross-Origin white list.
+    const auto white_list = web_page_->settings()->crossOriginWhiteList();
+    for (const QCefWebSettings::CrossOriginEntry &entry : white_list) {
+        CefAddCrossOriginWhitelistEntry(entry.source.toString().toStdString(),
+                                        entry.target.scheme().toStdString(),
+                                        entry.target.host().toStdString(),
+                                        true);
+    }
 }
 
-void QCefClientHandlerDelegate::DoClose(CefRefPtr<CefBrowser> browser) {
-  if (cef_browser_ != nullptr &&
-      cef_browser_->GetIdentifier() == browser->GetIdentifier()) {
-    cef_browser_ = nullptr;
+void QCefClientHandlerDelegate::DoClose(CefRefPtr<CefBrowser> browser)
+{
+    if (cef_browser_ != nullptr &&
+            cef_browser_->GetIdentifier() == browser->GetIdentifier()) {
+        cef_browser_ = nullptr;
 
-    // Close web view.
-    emit web_page_->windowClosed();
-  }
+        // Close web view.
+        emit web_page_->windowClosed();
+    }
 }
 
-void QCefClientHandlerDelegate::OnFaviconURLChange(const CefString& icon_url,
-                                                   CefRefPtr<CefImage> icon) {
-  QPixmap pixmap;
-  int pixel_width = 0;
-  int pixel_height = 0;
-  const int scale_factor = 1;
-  CefRefPtr<CefBinaryValue> binary = icon->GetAsPNG(scale_factor, true,
-                                                    pixel_width, pixel_height);
-  if (binary != nullptr) {
-    const size_t image_size = binary->GetSize();
-    unsigned char* data = (unsigned char*)malloc(image_size);
-    const size_t read = binary.get()->GetData(data, image_size, 0);
-    pixmap.loadFromData(data, static_cast<uint>(read));
-    free(data);
-  }
-  const QUrl url(QString::fromStdString(icon_url));
-  if (!pixmap.isNull()) {
-    QIcon qicon(pixmap);
-    web_page_->updateFavicon(url, qicon);
-  } else {
-    web_page_->updateFavicon(url, QIcon());
-  }
+void QCefClientHandlerDelegate::OnFaviconURLChange(const CefString &icon_url,
+        CefRefPtr<CefImage> icon)
+{
+    QPixmap pixmap;
+    int pixel_width = 0;
+    int pixel_height = 0;
+    const int scale_factor = 1;
+    CefRefPtr<CefBinaryValue> binary = icon->GetAsPNG(scale_factor, true,
+                                       pixel_width, pixel_height);
+    if (binary != nullptr) {
+        const size_t image_size = binary->GetSize();
+        unsigned char *data = (unsigned char *)malloc(image_size);
+        const size_t read = binary.get()->GetData(data, image_size, 0);
+        pixmap.loadFromData(data, static_cast<uint>(read));
+        free(data);
+    }
+    const QUrl url(QString::fromStdString(icon_url));
+    if (!pixmap.isNull()) {
+        QIcon qicon(pixmap);
+        web_page_->updateFavicon(url, qicon);
+    } else {
+        web_page_->updateFavicon(url, QIcon());
+    }
 }
 
 void QCefClientHandlerDelegate::OnLoadStarted(CefRefPtr<CefBrowser> browser,
-                                              CefRefPtr<CefFrame> frame) {
-  if (cef_browser_ != nullptr &&
-      browser->GetIdentifier() == cef_browser_->GetIdentifier() &&
-      browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
-    emit web_page_->loadStarted();
-  }
+        CefRefPtr<CefFrame> frame)
+{
+    if (cef_browser_ != nullptr &&
+            browser->GetIdentifier() == cef_browser_->GetIdentifier() &&
+            browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
+        emit web_page_->loadStarted();
+    }
 }
 
 void QCefClientHandlerDelegate::OnLoadingStateChange(
     CefRefPtr<CefBrowser> browser,
     bool is_loading,
     bool can_go_back,
-    bool can_go_forward) {
-  if (cef_browser_ != nullptr &&
-      browser->GetIdentifier() == cef_browser_->GetIdentifier()) {
-    emit web_page_->loadingStateChanged(is_loading,
-                                        can_go_back,
-                                        can_go_forward);
-  }
+    bool can_go_forward)
+{
+    if (cef_browser_ != nullptr &&
+            browser->GetIdentifier() == cef_browser_->GetIdentifier()) {
+        emit web_page_->loadingStateChanged(is_loading,
+                                            can_go_back,
+                                            can_go_forward);
+    }
 }
 
 void QCefClientHandlerDelegate::OnLoadEnd(CefRefPtr<CefBrowser> browser,
-                                          CefRefPtr<CefFrame> frame,
-                                          int httpStatusCode) {
-  Q_UNUSED(httpStatusCode);
-  if (cef_browser_ != nullptr &&
-      browser->GetIdentifier() == cef_browser_->GetIdentifier() &&
-      browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
-    emit web_page_->loadFinished(true);
-  }
+        CefRefPtr<CefFrame> frame,
+        int httpStatusCode)
+{
+    Q_UNUSED(httpStatusCode);
+    if (cef_browser_ != nullptr &&
+            browser->GetIdentifier() == cef_browser_->GetIdentifier() &&
+            browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
+        emit web_page_->loadFinished(true);
+    }
 }
 
 QString QCefClientHandlerDelegate::OnLoadError(
     CefRefPtr<CefBrowser> browser,
     CefRefPtr<CefFrame> frame,
-    int errorCode) {
-  Q_UNUSED(errorCode);
-  if (cef_browser_ != nullptr &&
-      browser->GetIdentifier() == cef_browser_->GetIdentifier() &&
-      browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
-    emit web_page_->loadFinished(false);
-  }
+    int errorCode)
+{
+    Q_UNUSED(errorCode);
+    if (cef_browser_ != nullptr &&
+            browser->GetIdentifier() == cef_browser_->GetIdentifier() &&
+            browser->GetMainFrame()->GetIdentifier() == frame->GetIdentifier()) {
+        emit web_page_->loadFinished(false);
+    }
 
-  // TODO(LiuLang): Pass |errorCode|.
-  return web_page_->pageErrorContent();
+    // TODO(LiuLang): Pass |errorCode|.
+    return web_page_->pageErrorContent();
 }
 
 bool QCefClientHandlerDelegate::OnProcessMessageReceived(
     CefRefPtr<CefBrowser> browser,
     CefProcessId source_process,
-    CefRefPtr<CefProcessMessage> message) {
-  Q_UNUSED(source_process);
+    CefRefPtr<CefProcessMessage> message)
+{
+    Q_UNUSED(source_process);
 
-  if (cef_browser_ != nullptr &&
-      browser->GetIdentifier() != cef_browser_->GetIdentifier()) {
-    return false;
-  }
-
-  const QString name(message->GetName().ToString().c_str());
-  if (name == kQCefRenderContextCreated) {
-    web_page_->connectTransportChannel();
-    emit web_page_->renderContextCreated();
-    return true;
-  }
-  if (name == kQCefRenderContextReleased) {
-    web_page_->disconnectTransportChannel();
-    return true;
-  }
-
-  if (name == kQCefRenderQtMessage) {
-    CefRefPtr<CefListValue> args = message->GetArgumentList();
-    if (args->GetSize() != 1) {
-      qWarning() << __FUNCTION__ << "args size mismatch, expect 1, got"
-                 << args->GetSize();
-      return false;
+    if (cef_browser_ != nullptr &&
+            browser->GetIdentifier() != cef_browser_->GetIdentifier()) {
+        return false;
     }
-    const QString msg = QString::fromStdString(args->GetString(0));
-    const QJsonDocument doc(QJsonDocument::fromJson(msg.toUtf8()));
-    if (doc.isObject()) {
-      web_page_->handleWebMessage(doc.object());
-    } else {
-      qWarning() << __FUNCTION__ << " invalid json message:" << msg;
-    }
-    return true;
-  }
 
-  // Web Notification.
-  if (name == kQCefWebNotificationBody) {
-    CefRefPtr<CefListValue> args = message->GetArgumentList();
-    if (args->GetSize() < 2) {
-      qCritical() << "Invalid web notification body, parameters mismatch";
-      return false;
+    const QString name(message->GetName().ToString().c_str());
+    if (name == kQCefRenderContextCreated) {
+        web_page_->connectTransportChannel();
+        emit web_page_->renderContextCreated();
+        return true;
     }
-    const QString title = QString::fromStdString(args->GetString(1).ToString());
+    if (name == kQCefRenderContextReleased) {
+        web_page_->disconnectTransportChannel();
+        return true;
+    }
 
-    QString body;
-    QIcon icon;
-    if (args->GetSize() > 2) {
-      // Parse notification option.
-      CefRefPtr<CefDictionaryValue> dict = args->GetDictionary(2);
-      CefDictionaryValue::KeyList keys;
-      if (dict->GetKeys(keys)) {
-        for (const CefString& key : keys) {
-          CefString value = dict->GetString(key);
-          if (key == "body") {
-            body = QString::fromStdString(value.ToString());
-          } else if (key == "icon") {
-            // TODO(LiuLang): call DownloadImage()
-            //icon = QIcon(QString::fromStdString(value.ToString()));
-          }
+    if (name == kQCefRenderQtMessage) {
+        CefRefPtr<CefListValue> args = message->GetArgumentList();
+        if (args->GetSize() != 1) {
+            qWarning() << __FUNCTION__ << "args size mismatch, expect 1, got"
+                       << args->GetSize();
+            return false;
         }
-      }
+        const QString msg = QString::fromStdString(args->GetString(0));
+        const QJsonDocument doc(QJsonDocument::fromJson(msg.toUtf8()));
+        if (doc.isObject()) {
+            web_page_->handleWebMessage(doc.object());
+        } else {
+            qWarning() << __FUNCTION__ << " invalid json message:" << msg;
+        }
+        return true;
+    }
+
+    // Web Notification.
+    if (name == kQCefWebNotificationBody) {
+        CefRefPtr<CefListValue> args = message->GetArgumentList();
+        if (args->GetSize() < 2) {
+            qCritical() << "Invalid web notification body, parameters mismatch";
+            return false;
+        }
+        const QString title = QString::fromStdString(args->GetString(1).ToString());
+
+        QString body;
+        QIcon icon;
+        if (args->GetSize() > 2) {
+            // Parse notification option.
+            CefRefPtr<CefDictionaryValue> dict = args->GetDictionary(2);
+            CefDictionaryValue::KeyList keys;
+            if (dict->GetKeys(keys)) {
+                for (const CefString &key : keys) {
+                    CefString value = dict->GetString(key);
+                    if (key == "body") {
+                        body = QString::fromStdString(value.ToString());
+                    } else if (key == "icon") {
+                        // TODO(LiuLang): call DownloadImage()
+                        //icon = QIcon(QString::fromStdString(value.ToString()));
+                    }
+                }
+            }
 //      web_page_->showNotification(title, body, icon);
 //      return true;
+        }
+
+        emit web_page_->notificationReceived(title, body);
+        return true;
     }
 
-    emit web_page_->notificationReceived(title, body);
-    return true;
-  }
-
-  return false;
-}
-
-void QCefClientHandlerDelegate::OnSetFullscreen(bool fullscreen) {
-  emit web_page_->fullscreenRequested(fullscreen);
-}
-
-void QCefClientHandlerDelegate::OnTitleChanged(const CefString& title) {
-  web_page_->updateTitle(QString::fromStdString(title));
-}
-
-void QCefClientHandlerDelegate::OnUrlChanged(const CefString& url) {
-  web_page_->updateUrl(QUrl(QString::fromStdString(url)));
-}
-
-bool QCefClientHandlerDelegate::OnPreKeyEvent(QKeyEvent* event) {
-  return QGuiApplicationPrivate::instance()->shortcutMap.tryShortcut(event);
-}
-
-bool QCefClientHandlerDelegate::OnBeforeBrowse(const CefString& url,
-                                               bool is_redirect) {
-  auto event_delegate = web_page_->getEventDelegate();
-  if (event_delegate != nullptr) {
-    const QUrl qUrl(QString::fromStdString(url.ToString()));
-    return event_delegate->onBeforeBrowse(qUrl, is_redirect);
-  } else {
     return false;
-  }
+}
+
+void QCefClientHandlerDelegate::OnSetFullscreen(bool fullscreen)
+{
+    emit web_page_->fullscreenRequested(fullscreen);
+}
+
+void QCefClientHandlerDelegate::OnTitleChanged(const CefString &title)
+{
+    web_page_->updateTitle(QString::fromStdString(title));
+}
+
+void QCefClientHandlerDelegate::OnUrlChanged(const CefString &url)
+{
+    web_page_->updateUrl(QUrl(QString::fromStdString(url)));
+}
+
+bool QCefClientHandlerDelegate::OnPreKeyEvent(QKeyEvent *event)
+{
+    return QGuiApplicationPrivate::instance()->shortcutMap.tryShortcut(event);
+}
+
+bool QCefClientHandlerDelegate::OnBeforeBrowse(const CefString &url,
+        bool is_redirect)
+{
+    auto event_delegate = web_page_->getEventDelegate();
+    if (event_delegate != nullptr) {
+        const QUrl qUrl(QString::fromStdString(url.ToString()));
+        return event_delegate->onBeforeBrowse(qUrl, is_redirect);
+    } else {
+        return false;
+    }
 }
 
 void QCefClientHandlerDelegate::OnBeforeContextMenu(
     CefRefPtr<CefBrowser> browser,
     CefRefPtr<CefFrame> frame,
     CefRefPtr<CefContextMenuParams> params,
-    CefRefPtr<CefMenuModel> model) {
-  Q_UNUSED(browser);
-  Q_UNUSED(frame);
-  auto event_delegate = web_page_->getEventDelegate();
-  if (event_delegate != nullptr) {
-    QCefContextMenuParams qcef_params;
-    qcef_params.p_->params = params;
-    if (context_menu_ == nullptr) {
-      context_menu_ = new QCefContextMenu();
+    CefRefPtr<CefMenuModel> model)
+{
+    Q_UNUSED(browser);
+    Q_UNUSED(frame);
+    auto event_delegate = web_page_->getEventDelegate();
+    if (event_delegate != nullptr) {
+        QCefContextMenuParams qcef_params;
+        qcef_params.p_->params = params;
+        if (context_menu_ == nullptr) {
+            context_menu_ = new QCefContextMenu();
+        }
+        context_menu_->clear();
+        event_delegate->onBeforeContextMenu(web_page_, context_menu_, qcef_params);
+        model->Clear();
+        for (const QCefContextMenu::MenuItem &item : context_menu_->items()) {
+            switch (item.type) {
+            case QCefContextMenu::ItemType::Separator: {
+                model->AddSeparator();
+                break;
+            }
+            case QCefContextMenu::ItemType::Item: {
+                model->AddItem(item.id, item.label.toStdString());
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+        }
     }
-    context_menu_->clear();
-    event_delegate->onBeforeContextMenu(web_page_, context_menu_, qcef_params);
-    model->Clear();
-    for (const QCefContextMenu::MenuItem& item : context_menu_->items()) {
-      switch (item.type) {
-        case QCefContextMenu::ItemType::Separator: {
-          model->AddSeparator();
-          break;
-        }
-        case QCefContextMenu::ItemType::Item: {
-          model->AddItem(item.id, item.label.toStdString());
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-    }
-  }
 }
 
 bool QCefClientHandlerDelegate::OnContextMenuCommand(
     CefRefPtr<CefBrowser> browser,
     CefRefPtr<CefFrame> frame,
     CefRefPtr<CefContextMenuParams> params,
-    int command_id) {
-  Q_UNUSED(browser);
-  Q_UNUSED(frame);
-  Q_UNUSED(params);
-  if (context_menu_ != nullptr) {
-    if (context_menu_->callbacks().contains(command_id)) {
-      context_menu_->callbacks().value(command_id)(web_page_);
-      return true;
+    int command_id)
+{
+    Q_UNUSED(browser);
+    Q_UNUSED(frame);
+    Q_UNUSED(params);
+    if (context_menu_ != nullptr) {
+        if (context_menu_->callbacks().contains(command_id)) {
+            context_menu_->callbacks().value(command_id)(web_page_);
+            return true;
+        }
     }
-  }
-  return false;
+    return false;
 }
 
-void QCefClientHandlerDelegate::OnClipboardChanged(const char* text_data,
-                                                   size_t text_len) {
-  const QString text = QString::fromUtf8(text_data, text_len);
-  QTimer::singleShot(10, [=]() {
-    QClipboard* clipboard = qApp->clipboard();
-    clipboard->blockSignals(true);
-    clipboard->setText(text);
-    clipboard->blockSignals(false);
-  });
+void QCefClientHandlerDelegate::OnClipboardChanged(const char *text_data,
+        size_t text_len)
+{
+    const QString text = QString::fromUtf8(text_data, text_len);
+    QTimer::singleShot(10, [ = ]() {
+        QClipboard *clipboard = qApp->clipboard();
+        clipboard->blockSignals(true);
+        clipboard->setText(text);
+        clipboard->blockSignals(false);
+    });
 }
 
 // 当浏览器窗口获得焦点时，应该将Qt窗口焦点对象设置为对应的QCefWebView
 void QCefClientHandlerDelegate::OnGotFocus(CefRefPtr<CefBrowser> browser)
 {
-  Q_UNUSED(browser)
+    Q_UNUSED(browser)
 
-  if (qApp->focusWidget() && qApp->focusWidget() != web_page_->view()) {
-    qApp->focusWidget()->clearFocus();
-  }
+    if (qApp->focusWidget() && qApp->focusWidget() != web_page_->view()) {
+        qApp->focusWidget()->clearFocus();
+    }
+}
+
+
+CefRequestHandler::ReturnValue QCefClientHandlerDelegate::OnBeforeResourceLoad(
+    CefRefPtr<CefBrowser> browser,
+    CefRefPtr<CefFrame> frame,
+    CefRefPtr<CefRequest> request,
+    CefRefPtr<CefRequestCallback> callback)
+{
+    Q_UNUSED(browser);
+    Q_UNUSED(frame);
+    Q_UNUSED(request);
+    Q_UNUSED(callback);
+
+    CefRequest::HeaderMap hdrMap;
+    request->GetHeaderMap(hdrMap);
+
+    auto customHeaders = web_page_->settings()->customHeaders();
+    for (auto header : customHeaders.keys()) {
+        auto value = customHeaders.value(header);
+        hdrMap.insert(std::make_pair(header.toStdString(), value.toStdString()));
+    }
+    request->SetHeaderMap(hdrMap);
+
+    return RV_CONTINUE;
 }
