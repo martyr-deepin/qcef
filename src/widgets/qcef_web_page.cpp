@@ -134,11 +134,11 @@ QCefWebPagePrivate::~QCefWebPagePrivate() {
     if (transport != nullptr) {
       channel->disconnectFrom(transport);
     }
-    delete channel;
+    channel->deleteLater();
     channel = nullptr;
   }
   if (transport != nullptr) {
-    delete transport;
+    transport->deleteLater();
     transport = nullptr;
   }
   if (client_handler != nullptr) {

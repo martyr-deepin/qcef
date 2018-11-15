@@ -210,7 +210,7 @@ void QCefStopTimer() {
   QThread::msleep(300);
   if (g_cef_timer != nullptr) {
     g_cef_timer->stop();
-    delete g_cef_timer;
+    g_cef_timer->deleteLater();
     g_cef_timer = nullptr;
   }
 }

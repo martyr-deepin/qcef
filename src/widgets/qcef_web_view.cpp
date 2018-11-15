@@ -40,7 +40,7 @@ QCefWebView::~QCefWebView() {
   if (p_ != nullptr) {
 
     if (p_->page != nullptr) {
-      delete p_->page;
+      p_->page->deleteLater();
       p_->page = nullptr;
     }
 

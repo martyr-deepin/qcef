@@ -15,7 +15,7 @@ QCefApp::QCefApp() : message_handler_(new QCefMessagePumpHandler()) {
 
 QCefApp::~QCefApp() {
   if (message_handler_ != nullptr) {
-    delete message_handler_;
+    message_handler_->deleteLater();
     message_handler_ = nullptr;
   }
 }
