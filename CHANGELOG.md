@@ -1,3 +1,17 @@
+<a name="1.1.4.6"></a>
+## 1.1.4.6 (2019-01-02)
+
+
+#### Bug Fixes
+
+*   destory qobject with deleteLater ([9e55466a](https://github.com/linuxdeepin/qcef/commit/9e55466afdcd12d33a323507b6436f48b05ae76b))
+
+#### Features
+
+*   support add custom header ([dc4890c2](https://github.com/linuxdeepin/qcef/commit/dc4890c279c80b09ae3db0f714b882cdb4b59448))
+
+
+
 <a name="1.1.4.5"></a>
 ## 1.1.4.5 (2018-10-18)
 
