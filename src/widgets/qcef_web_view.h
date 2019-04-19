@@ -37,6 +37,7 @@ class QCefWebSettings;
 class QCEF_WIDGETS_EXPORT QCefWebView : public QWidget {
   Q_OBJECT
   Q_PROPERTY(QUrl url READ url WRITE setUrl)
+  Q_PROPERTY(bool autoZoom READ autoZoom WRITE setAutoZoom)
 
  public:
   explicit QCefWebView(QWidget* parent = nullptr);
@@ -58,13 +59,22 @@ class QCEF_WIDGETS_EXPORT QCefWebView : public QWidget {
 
   QCefWebPage* page() const;
 
- protected:
+  bool autoZoom() const;
+
+public Q_SLOTS:
+  void setAutoZoom(bool autoZoom);
+
+protected:
   void showEvent(QShowEvent* event) override;
 
   void resizeEvent(QResizeEvent* event) override;
   void focusInEvent(QFocusEvent *event) override;
+  bool event(QEvent *event) override;
 
  private:
+  void updateWebZoom();
+  Q_SLOT void onScreenScaleChanged(QScreen *screen);
+
   QCefWebViewPrivate* p_ = nullptr;
 };
 
