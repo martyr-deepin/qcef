@@ -21,12 +21,14 @@
 #include <QDebug>
 #include <QResizeEvent>
 #include <QTimer>
+#include <QWindow>
 
 #include "widgets/qcef_web_page.h"
 
 struct QCefWebViewPrivate {
   QCefWebPage* page = nullptr;
   bool window_mapped = false;
+  bool auto_zoom = true;
 };
 
 QCefWebView::QCefWebView(QWidget* parent)
@@ -34,6 +36,14 @@ QCefWebView::QCefWebView(QWidget* parent)
       p_(new QCefWebViewPrivate()) {
   this->setAttribute(Qt::WA_NativeWindow, true);
   this->setAttribute(Qt::WA_DontCreateNativeAncestors, true);
+
+  connect(page(), &QCefWebPage::renderContextCreated,
+          this, &QCefWebView::updateWebZoom, Qt::QueuedConnection);
+
+  if (qApp->metaObject()->indexOfSignal("screenDevicePixelRatioChanged(QScreen*)") >= 0) {
+    connect(qApp, SIGNAL(screenDevicePixelRatioChanged(QScreen*)),
+            this, SLOT(onScreenScaleChanged(QScreen*)), Qt::QueuedConnection);
+  }
 }
 
 QCefWebView::~QCefWebView() {
@@ -69,11 +79,26 @@ QCefWebPage* QCefWebView::page() const {
   return p_->page;
 }
 
+bool QCefWebView::autoZoom() const
+{
+  return p_->auto_zoom;
+}
+
+void QCefWebView::setAutoZoom(bool autoZoom)
+{
+  if (p_->auto_zoom == autoZoom)
+    return;
+
+  p_->auto_zoom = autoZoom;
+
+  updateWebZoom();
+}
+
 void QCefWebView::showEvent(QShowEvent* event) {
   QWidget::showEvent(event);
   if (!p_->window_mapped) {
     p_->window_mapped = true;
-    QTimer::singleShot(1, [=]() {
+    QTimer::singleShot(1, this, [=]() {
       page()->remapBrowserWindow(this->winId());
     });
   }
@@ -91,4 +116,28 @@ void QCefWebView::focusInEvent(QFocusEvent *event)
   }
 
   QWidget::focusInEvent(event);
+}
+
+bool QCefWebView::event(QEvent *event)
+{
+  if (event->type() == QEvent::ScreenChangeInternal) {
+    updateWebZoom();
+  }
+
+  return QWidget::event(event);
+}
+
+void QCefWebView::updateWebZoom()
+{
+  if (autoZoom())
+    page()->setZoomFactor(devicePixelRatioF());
+  else
+    page()->setZoomFactor(0);
+}
+
+void QCefWebView::onScreenScaleChanged(QScreen *screen)
+{
+  if (window()->windowHandle() && window()->windowHandle()->screen() == screen) {
+    updateWebZoom();
+  }
 }

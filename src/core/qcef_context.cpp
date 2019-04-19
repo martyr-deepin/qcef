@@ -78,13 +78,6 @@ int QCefInit(int argc, char** argv, const QCefGlobalSettings& settings) {
     }
   }
 
-  // Check hiDPI option.
-  const QByteArray scale_factor_bytes = qgetenv("QT_SCALE_FACTOR");
-  if (!scale_factor_bytes.isEmpty()) {
-    arguments.push_back({"--force-device-scale-factor",
-                         scale_factor_bytes.constData()});
-  }
-
   client_app->appendCommandLineSwitches(arguments);
 
   client_app->addCustomSchemes(settings.customSchemes());
