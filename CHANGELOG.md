@@ -1,3 +1,13 @@
+<a name="1.1.5.1"></a>
+## 1.1.5.1 (2019-04-22)
+
+
+#### Bug Fixes
+
+*   d'not setting zoom factor if the window is not mapped ([61b09442](https://github.com/linuxdeepin/qcef/commit/61b094424d492691ac3a72bdac030ff3cfbba386))
+
+
+
 <a name="1.1.4.7"></a>
 ## 1.1.4.7 (2019-04-22)
 
