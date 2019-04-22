@@ -101,6 +101,7 @@ void QCefWebView::showEvent(QShowEvent* event) {
     QTimer::singleShot(1, this, [=]() {
       page()->remapBrowserWindow(this->winId());
     });
+    updateWebZoom();
   }
 }
 
@@ -129,10 +130,13 @@ bool QCefWebView::event(QEvent *event)
 
 void QCefWebView::updateWebZoom()
 {
+  if (!p_->window_mapped)
+    return;
+
   if (autoZoom())
     page()->setZoomFactor(devicePixelRatioF());
   else
-    page()->setZoomFactor(0);
+    page()->resetZoomFactor();
 }
 
 void QCefWebView::onScreenScaleChanged(QScreen *screen)
