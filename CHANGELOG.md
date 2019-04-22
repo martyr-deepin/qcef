@@ -1,3 +1,13 @@
+<a name="1.1.4.7"></a>
+## 1.1.4.7 (2019-04-22)
+
+
+#### Features
+
+*   web zoom follow the QWidget::devicePixelRatioF ([0603275f](https://github.com/linuxdeepin/qcef/commit/0603275f5424c62a3e50d7aefd24410eaa3ea10e))
+
+
+
 <a name="1.1.4.6"></a>
 ## 1.1.4.6 (2019-01-02)
 
