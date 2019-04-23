@@ -259,6 +259,7 @@ private:
     void NotifyFavicon(const CefString &icon_url, CefRefPtr<CefImage> icon);
 
     friend class QCefClientDownloadImageCallback;
+    friend class QCefWebPagePrivate;
 
     Delegate *delegate_ = nullptr;
 

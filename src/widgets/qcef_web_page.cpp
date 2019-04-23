@@ -142,6 +142,7 @@ QCefWebPagePrivate::~QCefWebPagePrivate() {
     transport = nullptr;
   }
   if (client_handler != nullptr) {
+    client_handler->delegate_ = nullptr;
     client_handler = nullptr;
   }
 

@@ -23,6 +23,8 @@
 #include <QTimer>
 #include <QWindow>
 
+#include <cmath>
+
 #include "widgets/qcef_web_page.h"
 
 struct QCefWebViewPrivate {
@@ -133,10 +135,13 @@ void QCefWebView::updateWebZoom()
   if (!p_->window_mapped)
     return;
 
-  if (autoZoom())
-    page()->setZoomFactor(devicePixelRatioF());
-  else
+  if (autoZoom()) {
+    // chromium 中缩放比例以 20% 递增，因此，zoomLevel 的值实际上表示递增的倍数
+    // 如，值为1时表示缩放为1.2倍，值为2时表示缩放为1.2*1.2倍
+    page()->setZoomFactor(std::log(devicePixelRatioF()) / std::log(1.2));
+  } else {
     page()->resetZoomFactor();
+  }
 }
 
 void QCefWebView::onScreenScaleChanged(QScreen *screen)
