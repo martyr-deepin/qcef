@@ -1,3 +1,13 @@
+<a name="1.1.6"></a>
+## 1.1.6 (2019-04-24)
+
+
+#### Bug Fixes
+
+*   crash on window close ([5bec3536](https://github.com/linuxdeepin/qcef/commit/5bec3536539a20cc3e353c15d5a11aa772fdd085))
+
+
+
 <a name="1.1.5.1"></a>
 ## 1.1.5.1 (2019-04-22)
 
