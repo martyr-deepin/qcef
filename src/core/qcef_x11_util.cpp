@@ -61,7 +61,6 @@ void ReparentWindow(CefWindowHandle parent, CefWindowHandle child) {
   XUnmapWindow(xdisplay, child);
   XReparentWindow(xdisplay, child, parent, 0, 0);
   XMapWindow(xdisplay, child);
-  XSetInputFocus(xdisplay, child, RevertToParent, CurrentTime);
   XFlush(xdisplay);
 }
 
