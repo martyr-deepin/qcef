@@ -73,6 +73,10 @@ QCefClientHandlerDelegate::OnBrowserCreated(CefRefPtr<CefBrowser> browser)
         cef_browser_ = browser;
     }
 
+
+    cef_browser_->GetHost()->SetFocus(true);
+    cef_browser_->GetHost()->SendFocusEvent(true);
+
     // Set Cross-Origin white list.
     const auto white_list = web_page_->settings()->crossOriginWhiteList();
     for (const QCefWebSettings::CrossOriginEntry &entry : white_list) {
