@@ -55,13 +55,20 @@ void SetXErrorHandler() {
   XSetIOErrorHandler(XIOErrorHandlerImpl);
 }
 
-void ReparentWindow(CefWindowHandle parent, CefWindowHandle child) {
+void ReparentWindow(CefWindowHandle parent, CefWindowHandle child, CefWindowHandle container) {
   ::Display* xdisplay = cef_get_xdisplay();
   DCHECK(xdisplay != nullptr);
   XUnmapWindow(xdisplay, child);
   XReparentWindow(xdisplay, child, parent, 0, 0);
   XMapWindow(xdisplay, child);
-  XSetInputFocus(xdisplay, child, RevertToParent, CurrentTime);
+  if (container != 0)
+  {
+      XSetInputFocus(xdisplay, container, RevertToParent, CurrentTime);
+  }
+  else
+  {
+      XSetInputFocus(xdisplay, child, RevertToParent, CurrentTime);
+  }
   XFlush(xdisplay);
 }
 

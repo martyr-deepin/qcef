@@ -101,7 +101,7 @@ void QCefWebView::showEvent(QShowEvent* event) {
   if (!p_->window_mapped) {
     p_->window_mapped = true;
     QTimer::singleShot(1, this, [=]() {
-      page()->remapBrowserWindow(this->winId());
+      page()->remapBrowserWindow(this->winId(), 0);
     });
     updateWebZoom();
   }

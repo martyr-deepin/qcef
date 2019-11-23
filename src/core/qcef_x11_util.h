@@ -28,7 +28,7 @@ void SetXErrorHandler();
 Qt::KeyboardModifiers NativeToQtKeyboardModifiers(uint32 native);
 
 // Wraps XReparentWindow().
-void ReparentWindow(CefWindowHandle parent, CefWindowHandle child);
+void ReparentWindow(CefWindowHandle parent, CefWindowHandle child, CefWindowHandle container);
 
 unsigned long InitCefBrowserWindow(int width, int height);
 

@@ -390,8 +390,8 @@ void QCefWebPage::setEventDelegate(QCefBrowserEventDelegate* delegate) {
   p_->event_delegate = delegate;
 }
 
-void QCefWebPage::remapBrowserWindow(WId parent_window) {
-  ReparentWindow(parent_window, p_->parent_window);
+void QCefWebPage::remapBrowserWindow(WId parent_window, WId container_window) {
+    ReparentWindow(parent_window, p_->parent_window, container_window);
 }
 
 void QCefWebPage::updateBrowserGeometry(const QSize& size) {

@@ -170,6 +170,14 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   void zoomIn();
   void zoomOut();
 
+  /**
+   * because cef browser view auto focus to itself, modify this function for moving focus to it's container window
+   * @brief remapBrowserWindow
+   * @param parent_window
+   * @param container_window
+   */
+  void remapBrowserWindow(WId parent_window, WId container_window);
+
   // Editing.
   void undo();
   void redo();
@@ -245,7 +253,6 @@ class QCEF_WIDGETS_EXPORT QCefWebPage : public QObject {
   friend class QCefClientHandlerDelegate;
 
   void updateBrowserGeometry(const QSize& size);
-  void remapBrowserWindow(WId parent_window);
 
   /**
    * Handle messages received from renderer process.
